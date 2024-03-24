@@ -1,4 +1,4 @@
-# Prerequisites
+﻿# Prerequisites
 *.d
 
 # Compiled Object files
@@ -31,3 +31,9 @@
 *.out
 *.app
 /.vs/Puppetry
+
+# Visual Studio
+x64/
+/x64/Debug/graphics_test.pdb
+/备份/libs/glfw/include/GLFW
+/备份3.2/libs/glfw/include/GLFW
