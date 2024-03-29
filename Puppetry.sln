@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Puppetry", "Puppetry\Puppet
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphics_test", "graphics_test\graphics_test.vcxproj", "{ED1CA0D3-77E4-46FB-A892-7C064A03769C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opengl3_test", "opengl3_test\opengl3_test.vcxproj", "{874782E2-8201-4C43-89E5-F4876B719AE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{ED1CA0D3-77E4-46FB-A892-7C064A03769C}.Release|x64.Build.0 = Release|x64
 		{ED1CA0D3-77E4-46FB-A892-7C064A03769C}.Release|x86.ActiveCfg = Release|Win32
 		{ED1CA0D3-77E4-46FB-A892-7C064A03769C}.Release|x86.Build.0 = Release|Win32
+		{874782E2-8201-4C43-89E5-F4876B719AE1}.Debug|x64.ActiveCfg = Debug|x64
+		{874782E2-8201-4C43-89E5-F4876B719AE1}.Debug|x64.Build.0 = Debug|x64
+		{874782E2-8201-4C43-89E5-F4876B719AE1}.Debug|x86.ActiveCfg = Debug|Win32
+		{874782E2-8201-4C43-89E5-F4876B719AE1}.Debug|x86.Build.0 = Debug|Win32
+		{874782E2-8201-4C43-89E5-F4876B719AE1}.Release|x64.ActiveCfg = Release|x64
+		{874782E2-8201-4C43-89E5-F4876B719AE1}.Release|x64.Build.0 = Release|x64
+		{874782E2-8201-4C43-89E5-F4876B719AE1}.Release|x86.ActiveCfg = Release|Win32
+		{874782E2-8201-4C43-89E5-F4876B719AE1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

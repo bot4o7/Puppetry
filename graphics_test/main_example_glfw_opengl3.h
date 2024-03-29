@@ -1,6 +1,13 @@
 ﻿#pragma once
 
+// 未来，程序编译时使用 "OpenGL3", 还是 "DirectX11" 之类的， 将会根据编译标记决定 “def", "ifdef", "else", "endif"
+
 #include <cstdio>
+
+// We will here use stb_image.h to load images from disk.
+// 我们将在这里使用 stb_image.h 从磁盘加载图像。
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -11,6 +18,50 @@
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 //#include "GLFW/glfw3.h"
 
+
+
+int my_image_width;
+int my_image_height;
+GLuint my_image_texture;
+bool ret;
+
+// Simple helper function to load an image into a OpenGL texture with common settings
+bool LoadTextureFromFile(const char* filename, GLuint* out_texture, int* out_width, int* out_height)
+{
+	// Load from file
+	int image_width = 0;
+	int image_height = 0;
+	unsigned char* image_data = stbi_load(filename, &image_width, &image_height, NULL, 4);
+	if (image_data == NULL)
+		return false;
+
+	// Create a OpenGL texture identifier
+	GLuint image_texture;
+	glGenTextures(1, &image_texture);
+	glBindTexture(GL_TEXTURE_2D, image_texture);
+
+	// Setup filtering parameters for display
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // This is required on WebGL for non power-of-two textures
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // Same
+
+	// Upload pixels into texture
+	#if defined(GL_UNPACK_ROW_LENGTH) && !defined(__EMSCRIPTEN__)
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+	#endif
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+	stbi_image_free(image_data);
+
+	*out_texture = image_texture;
+	*out_width = image_width;
+	*out_height = image_height;
+
+	return true;
+}
+
+
+// 未来，这个 AppGLFW_GL3 应该 继承 / 实现 某个 抽象类 / 接口
 class AppGLFW_GL3
 {
 public:
@@ -121,6 +172,21 @@ private:
 		show_another_window = false;
 		clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+
+
+		// Load our texture after initializing OpenGL loader (for example after glewInit()):
+		// 初始化 OpenGL 加载器后加载纹理（例如在 glewInit() 之后）：
+		my_image_width = 0;
+		my_image_height = 0;
+		my_image_texture = 0;
+		ret = LoadTextureFromFile("data/Meursault.png", &my_image_texture, &my_image_width, &my_image_height);
+		my_image_height /= 2;
+		my_image_width /= 2;
+		IM_ASSERT(ret);
+		// In the snippet of code above, we added an assert IM_ASSERT(ret) to check if the image file was loaded correctly.You may also use your Debugger and confirm that my_image_texture is not zero and that my_image_width my_image_width are correct.
+		// 在上面的代码片段中，我们添加了一个断言 IM_ASSERT(ret) 来检查图像文件是否已正确加载。您还可以使用调试器并确认 my_image_texture 不为零并且 my_image_width my_image_width 正确。
+		// Now that we have an OpenGL texture and its dimensions, we can display it in our main loop :
+		// 现在我们有了 OpenGL 纹理及其尺寸，我们可以在主循环中显示它：
 		return 0;
 	};
 
@@ -149,12 +215,113 @@ private:
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
+			// bool ImGui::ImageButton(ImTextureID user_texture_id, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, int frame_padding, const ImVec4& bg_col, const ImVec4& tint_col)
 
-			// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-			if (show_demo_window)
-				ImGui::ShowDemoWindow(); // Show demo window! :)
 
-			// 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+
+			//const char* filename = "graphics_test\\data\\Meursault.png";
+			// Now that we have an OpenGL texture and its dimensions, we can display it in our main loop :
+			// 现在我们有了 OpenGL 纹理及其尺寸，我们可以在主循环中显示它：
+
+			// 下面这些窗口基本属性设置的参考——如有无菜单栏、有无标题栏
+			// Demonstrate the various window flags. Typically you would just use the default!
+			//static bool no_titlebar = false;
+			//static bool no_scrollbar = false;
+			//static bool no_menu = false;
+			//static bool no_move = false;
+			//static bool no_resize = false;
+			//static bool no_collapse = false;
+			//static bool no_close = false;
+			//static bool no_nav = false;
+			//static bool no_background = false;
+			//static bool no_bring_to_front = false;
+			//static bool unsaved_document = false;
+
+			//ImGuiWindowFlags window_flags = 0;
+			//if (no_titlebar)        window_flags |= ImGuiWindowFlags_NoTitleBar;
+			//if (no_scrollbar)       window_flags |= ImGuiWindowFlags_NoScrollbar;
+			//if (!no_menu)           window_flags |= ImGuiWindowFlags_MenuBar;
+			//if (no_move)            window_flags |= ImGuiWindowFlags_NoMove;
+			//if (no_resize)          window_flags |= ImGuiWindowFlags_NoResize;
+			//if (no_collapse)        window_flags |= ImGuiWindowFlags_NoCollapse;
+			//if (no_nav)             window_flags |= ImGuiWindowFlags_NoNav;
+			//if (no_background)      window_flags |= ImGuiWindowFlags_NoBackground;
+			//if (no_bring_to_front)  window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+			//if (unsaved_document)   window_flags |= ImGuiWindowFlags_UnsavedDocument;
+			//if (no_close)           p_open = NULL; // Don't pass our bool* to Begin
+
+			//// We specify a default position/size in case there's no data in the .ini file.
+			//// We only do it to make the demo applications a little more welcoming, but typically this isn't required.
+			//const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+			//ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 650, main_viewport->WorkPos.y + 20), ImGuiCond_FirstUseEver);
+			//ImGui::SetNextWindowSize(ImVec2(550, 680), ImGuiCond_FirstUseEver);
+
+			//// Main body of the Demo window starts here.
+			//if (!ImGui::Begin("Dear ImGui Demo", p_open, window_flags)) {
+			//	// Early out if the window is collapsed, as an optimization.
+			//	ImGui::End();
+			//	return;
+			//}
+
+			static bool no_titlebar = true;
+			static bool no_scrollbar = true;
+			static bool no_menu = true;
+			static bool no_move = false;
+			static bool no_resize = false;
+			static bool no_collapse = true;
+			static bool no_close = false;
+			static bool no_nav = true;
+			static bool no_background = false;
+			static bool no_bring_to_front = false;
+			static bool unsaved_document = false;
+
+			ImGuiWindowFlags window_flags = 0;
+			if (no_titlebar)        window_flags |= ImGuiWindowFlags_NoTitleBar;
+			if (no_scrollbar)       window_flags |= ImGuiWindowFlags_NoScrollbar;
+			if (!no_menu)           window_flags |= ImGuiWindowFlags_MenuBar;
+			if (no_move)            window_flags |= ImGuiWindowFlags_NoMove;
+			if (no_resize)          window_flags |= ImGuiWindowFlags_NoResize;
+			if (no_collapse)        window_flags |= ImGuiWindowFlags_NoCollapse;
+			if (no_nav)             window_flags |= ImGuiWindowFlags_NoNav;
+			if (no_background)      window_flags |= ImGuiWindowFlags_NoBackground;
+			if (no_bring_to_front)  window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+			if (unsaved_document)   window_flags |= ImGuiWindowFlags_UnsavedDocument;
+			static bool flag_true = true;
+			static bool* p_open = &flag_true; // void ImGui::ShowDemoWindow(bool* p_open);
+			if (no_close)           p_open = NULL; // Don't pass our bool* to Begin
+
+			// We specify a default position/size in case there's no data in the .ini file.
+			// We only do it to make the demo applications a little more welcoming, but typically this isn't required.
+			/*const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+			ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 650, main_viewport->WorkPos.y + 20), ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowSize(ImVec2(550, 680), ImGuiCond_FirstUseEver);*/
+
+			// Main body of the Demo window starts here.
+			//if (!ImGui::Begin("OpenGL Texture", p_open, window_flags)) {
+			ImGui::Begin("OpenGL Texture", p_open, window_flags);
+			// Early out if the window is collapsed, as an optimization.
+			ImGui::Text("pointer = %x", my_image_texture);
+			ImGui::Text("size = %d x %d", my_image_width, my_image_height);
+			ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(my_image_width, my_image_height));
+			ImGui::End();
+			//return;
+		//}
+		//ImGui::Begin("OpenGL Texture Text");
+		//ImGui::Text("pointer = %x", my_image_texture);
+		//ImGui::Text("size = %d x %d", my_image_width, my_image_height);
+		//ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(my_image_width, my_image_height));
+		//ImGui::End();
+
+
+
+		//ImGui::ImageButton(texture, w, h, padding, color, alpha, bordercolor, borderalpha);
+		//ImGui::Text("This is some useless text.");
+
+		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+		//if (show_demo_window)
+			//ImGui::ShowDemoWindow(); // Show demo window! :)
+
+		// 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
 			{
 				static float f = 0.0f;
 				static int counter = 0;
