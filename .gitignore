@@ -37,3 +37,10 @@ x64/
 /x64/Debug/graphics_test.pdb
 /备份/libs/glfw/include/GLFW
 /备份3.2/libs/glfw/include/GLFW
+/libs/stb/stb_image.h
+/libs/math/linmath.h
+/libs/glad/src/glad.c
+/libs/glad/include/KHR/khrplatform.h
+/libs/glad/include/glad/glad.h
+/libs/glad/include/glad/gl.h
+/graphics_test/data/Meursault.png
