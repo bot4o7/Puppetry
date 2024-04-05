@@ -14,4 +14,47 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="script\Script.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="script\unit\scene\Scene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="script\unit\act\Act.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="script\plot\Plot.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="script\unit\line\Line.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="script\unit\line\sentence\Sentence.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="script\Script.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="script\unit\scene\Scene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="script\unit\act\Act.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="script\plot\Plot.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="script\unit\line\Line.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="script\unit\line\sentence\Sentence.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>
