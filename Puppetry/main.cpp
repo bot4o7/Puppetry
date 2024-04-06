@@ -5,59 +5,91 @@
 
 #include<condition_variable>
 #include<queue>
-
+#include<vector>
+#include<functional>
 
 #define Println(x) std::cout << x << std::endl
 #define Print(x) std::cout << x << " "
 #define Println(x, y) std::cout << x << y << std::endl
 
-std::queue<int> goods_queue;
-std::condition_variable goods_cv;
-
-std::mutex mtx;
-
-void Producer()
+class ThreadPool
 {
-	for (int i = 0; i < 10; ++i) {
-		// 这个大括号 {} 限定了 unique_lock 的作用域
-		// 去掉大括号 {} 后，一旦上锁，就需要整个 for 循环结束才解锁
+public:
+	ThreadPool(int numThreads) : isStop(false)
+	{
+		for (int i = 0; i < numThreads; ++i) {
+			threads.emplace_back([this] {
+				while (1) {
+					std::unique_lock<std::mutex> lock(mtx);
+					condition.wait(lock, [this] {
+						return !tasks.empty() || isStop;
+						});
+
+					if (isStop && tasks.empty()) {
+						return;
+					}
+
+					std::function<void()> task(std::move(tasks.front()));
+					tasks.pop();
+					lock.unlock();
+					task();
+				}
+				});
+		}
+	}
+
+	~ThreadPool()
+	{
+		//{
+
+		std::unique_lock<std::mutex> lock(mtx);
+		isStop = true;
+		//}
+
+		condition.notify_all();
+		for (auto& t : threads) {
+			t.join();
+		}
+	}
+
+	// 函数模板中，使用右值引用是万能引用（既能传入左值引用，也能传入右值引用）
+	template<class F, class... Args>
+	void enqueue(F&& f, Args&&... args)
+	{
+		// 因为上面的 f 和 args 既可能是左值引用，也可能是右值引用，需要在下面表现出来：使用完美转发
+		std::function<void()> task =
+			std::bind(std::forward<F>(f), std::forward<Args>(args)...);
+
 		{
 			std::unique_lock<std::mutex> lock(mtx);
-			goods_queue.push(i);
-			// 通知消费者来取任务
-			goods_cv.notify_one();
-			//Println("Producer : ", i);
-			std::cout << "Producer : " << i << std::endl;
+			// std::move, 如果 task 是一个左值，那么会将它转化为一个右值传进去
+			tasks.emplace(std::move(task));
 		}
-		std::this_thread::sleep_for(std::chrono::microseconds(100));
-
+		condition.notify_one();
 	}
-}
+private:
+	std::vector<std::thread> threads;
+	std::queue <std::function<void()>> tasks;
 
-void Consumer()
-{
-	while (1) {
-		std::unique_lock<std::mutex> lock(mtx);
-		// 如果队列为空，就要等待
-		goods_cv.wait(lock, []() {
-			return !goods_queue.empty();
-			});
-		// wait 的时候会释放锁，这时候 Producer 就能干活了
+	std::mutex mtx;
+	std::condition_variable condition;
 
-		int value = goods_queue.front();
-		goods_queue.pop();
+	bool isStop;
+};
 
-		std::cout << "Consumer : " << value << std::endl;
-		//Println("Consumer : ", value);
-	}
-}
 
 int main()
 {
-	std::thread t1(Producer);
-	std::thread t2(Consumer);
+	ThreadPool pool(4);
 
-	t1.join();
-	t2.join();
+	for (int i = 0; i < 10; ++i) {
+		pool.enqueue([i] {
+			std::cout << "task : " << i << " is running" << std::endl;
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+			std::cout << "task : " << i << " is done" << std::endl;
+
+			});
+	}
+
 	return 0;
 }

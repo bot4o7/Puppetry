@@ -1,80 +1,199 @@
 ﻿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <cstdlib>
-#include <cstdio>
+#include <iostream>
 
-static void error_callback(int error, const char* description)
+#define Println(x) std::cout << x << std::endl
+#define Println2(x, y) std::cout << x << y << std::endl
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow* window);
+
+
+
+// 设置
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+const char* vertexShaderSource = "#version 330 core\n"
+"layout (location = 0) in vec3 aPos;\n"
+"void main()\n"
+"{\n"
+"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"}\0";
+const char* fragmentShaderSource = "#version 330 core\n"
+"out vec4 FragColor;\n"
+"void main()\n"
+"{\n"
+"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"}\n\0";
+
+int main()
 {
-	fprintf(stderr, "Error: %s\n", description);
-}
-
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GLFW_TRUE);
-}
-
-int main(void)
-{
-	glfwSetErrorCallback(error_callback);
-
-	if (!glfwInit())
-		exit(EXIT_FAILURE);
-
+	// 1.GLFW 初始化
+	// glfw: initialize and configure
+	// ------------------------------
+	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Full screen windows 全屏窗口
-	// To create a full screen window, you need to specify which monitor the window should use.In most cases, the user's primary monitor is a good choice. For more information about retrieving monitors, see Retrieving monitors.
-	// 要创建全屏窗口，您需要指定窗口应使用哪个监视器。在大多数情况下，用户的主显示器是一个不错的选择。有关检索监视器的更多信息，请参阅检索监视器。
-	//
-	// Windowed mode windows can be made full screen by setting a monitor with glfwSetWindowMonitor, and full screen ones can be made windowed by unsetting it with the same function.
-	// 窗口模式窗口可以通过使用 glfwSetWindowMonitor 设置监视器来设置为全屏，并且可以通过使用相同的函数取消设置来设置全屏窗口。
-	//
-	// Each field of the GLFWvidmode structure corresponds to a function parameter or window hint and combine to form the desired video mode for that window.The supported video mode most closely matching the desired video mode will be set for the chosen monitor as long as the window has input focus.For more information about retrieving video modes, see Video modes.
-	// GLFWvidmode 结构的每个字段对应于一个函数参数或窗口提示，并组合起来形成该窗口所需的视频模式。只要窗口具有输入焦点，就会为所选显示器设置与所需视频模式最匹配的支持视频模式。有关检索视频模式的更多信息，请参阅视频模式。
-	GLFWwindow* window = glfwCreateWindow(640, 480, "OpenGL Window", glfwGetPrimaryMonitor(), NULL);
-	// Not full screen window
-	//GLFWwindow* window = glfwCreateWindow(640, 480, "OpenGL Window", NULL, NULL);
-	if (!window) {
+	#ifdef __APPLE__
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	#endif
+
+	// 2.GLFW 创建窗口
+	// glfw window creation
+	// --------------------
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+	if (window == NULL) {
+		Println("Failed to create GLFW window");
 		glfwTerminate();
-		exit(EXIT_FAILURE);
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+	// 3.设置 GLAD
+	// glad: load all OpenGL function pointers
+	// ---------------------------------------
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		Println("Failed to initialize GLAD");
+		return -1;
 	}
 
+	// 4.构建、编译 着色器 程序
+	// build and compile our shader program
+	// ------------------------------------
+	// 4.1.顶点着色器
+	// vertex shader
+	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+	// 4.1.2.检查编译是否出错
+	// check for shader compile errors
+	int success;
+	char infoLog[512];
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		Println2("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n", infoLog);
+	}
+	// 4.2.片段着色器
+	// fragment shader
+	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+	// 4.2.2.检查编译是否通过
+	// check for shader compile errors
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		Println2("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n", infoLog);
+	}
+	// 4.3.链接 着色器 程序
+	// link shaders
+	unsigned int shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+	// 4.3.2.检查编译是否通过
+	// check for linking errors
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		Println2("ERROR::SHADER::PROGRAM::LINKING_FAILED\n", infoLog);
+	}
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
 
-	glfwSetKeyCallback(window, key_callback);
+	// 5.设置顶点的数据（和缓存区），并且设置顶点的属性
+	// set up vertex data (and buffer(s)) and configure vertex attributes
+	// ------------------------------------------------------------------
+	float vertices[] = {
+		-0.5f, -0.5f, 0.0f, // left  
+		 0.5f, -0.5f, 0.0f, // right 
+		 0.0f,  0.5f, 0.0f  // top   
+	};
 
-	glfwMakeContextCurrent(window);
+	unsigned int VBO, VAO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	// 6.先绑定顶点数组对象、再绑定顶点缓冲、最后设置顶点的属性
+	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+	glBindVertexArray(VAO);
 
-	//gladLoadGL(glfwGetProcAddress);
-	// 方案一:
-	//gladLoadGL(); 
-	// 方案二:
-	//gladLoadGLloader((GLADloadproc) glfwGetProcAdderess);
-	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-	glfwSwapInterval(1);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	// NOTE: OpenGL error checks have been omitted for brevity
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// 允许这样做：
+	// 调用 glVertexAttribPointer 来注册（到） VBO，作为顶点的属性的绑定的VBO，因此之后可以安全地 解除绑定
+	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	//之后可以解除VAO的绑定，这样其他VAO调用就不会意外修改此VAO，但这种情况很少发生。无论如何，修改其他VAO都需要调用glBindVertexArray，因此在不直接需要时，我们通常不会解除VAO（或VBO）的绑定。
+	// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+	// VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+	glBindVertexArray(0);
+
+	//取消注释此调用以在线框多边形中绘制。
+	// uncomment this call to draw in wireframe polygons.
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	// 7.渲染循环
+	// render loop
+	// -----------
 	while (!glfwWindowShouldClose(window)) {
-		int width, height;
-		glfwGetFramebufferSize(window, &width, &height);
-		const float ratio = width / (float)height;
+		// input
+		// -----
+		processInput(window);
 
-		glViewport(0, 0, width, height);
+		// render
+		// ------
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		
 
+		// draw our first triangle
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+		//鉴于我们只有一个VAO，没有必要每次都绑定它，但我们这样做是为了让事情更有条理
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		// glBindVertexArray(0); // no need to unbind it every time 
+		//无需每次都解除绑定
+
+		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	glfwDestroyWindow(window);
+	// optional: de-allocate all resources once they've outlived their purpose:
+	// ------------------------------------------------------------------------
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteProgram(shaderProgram);
 
+	// glfw: terminate, clearing all previously allocated GLFW resources.
+	// ------------------------------------------------------------------
 	glfwTerminate();
-	exit(EXIT_SUCCESS);
+	return 0;
 }
 
-//! [code]
+// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// ---------------------------------------------------------------------------------------------------------
+void processInput(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+}
+
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	// make sure the viewport matches the new window dimensions; note that width and 
+	// height will be significantly larger than specified on retina displays.
+	glViewport(0, 0, width, height);
+}
