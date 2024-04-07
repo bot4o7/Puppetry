@@ -27,6 +27,12 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "{\n"
 "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 "}\n\0";
+const char* fragmentShaderSource2 = "#version 330 core\n"
+"out vec4 FragColor;\n"
+"void main()\n"
+"{\n"
+"   FragColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);\n"
+"}\n\0";
 
 int main()
 {
@@ -44,7 +50,7 @@ int main()
 		Println("Failed to create GLFW window");
 		glfwTerminate();
 		return -1;
-}
+	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -80,6 +86,15 @@ int main()
 		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
 		Println2("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n", infoLog);
 	}
+	unsigned int fragmentShader2 = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader2, 1, &fragmentShaderSource2, NULL);
+	glCompileShader(fragmentShader2);
+	// 4.2.2.检查编译是否通过
+	glGetShaderiv(fragmentShader2, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		glGetShaderInfoLog(fragmentShader2, 512, NULL, infoLog);
+		Println2("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n", infoLog);
+	}
 	// 4.3.链接 着色器 程序
 	unsigned int shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
@@ -91,31 +106,53 @@ int main()
 		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
 		Println2("ERROR::SHADER::PROGRAM::LINKING_FAILED\n", infoLog);
 	}
+	unsigned int shaderProgram2 = glCreateProgram();
+	glAttachShader(shaderProgram2, vertexShader);
+	glAttachShader(shaderProgram2, fragmentShader2);
+	glLinkProgram(shaderProgram2);
+	// 4.3.2.检查编译是否通过
+	glGetProgramiv(shaderProgram2, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetProgramInfoLog(shaderProgram2, 512, NULL, infoLog);
+		Println2("ERROR::SHADER::PROGRAM::LINKING_FAILED\n", infoLog);
+	}
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
+	glDeleteShader(fragmentShader2);
 
 	// 5.设置顶点的数据（和缓存区），并且设置顶点的属性
 	// ------------------------------
+	//float vertices[] = {
+	//0.5f, 0.5f, 0.0f,   // 右上角
+	//0.5f, -0.5f, 0.0f,  // 右下角
+	//-0.5f, -0.5f, 0.0f, // 左下角
+	//-0.5f, 0.5f, 0.0f   // 左上角
+	//};
 	float vertices[] = {
-	0.5f, 0.5f, 0.0f,   // 右上角
-	0.5f, -0.5f, 0.0f,  // 右下角
-	-0.5f, -0.5f, 0.0f, // 左下角
-	-0.5f, 0.5f, 0.0f   // 左上角
+		-0.5f, 0.0f, 0.0f,
+		-0.5f, 0.5f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		0.5f, 0.0f, 0.0f,
+		0.5f, 0.5f, 0.0f,
 	};
 	unsigned int indices[] = {
 		// 注意索引从0开始! 
 		// 此例的索引(0,1,2,3)就是顶点数组vertices的下标，
 		// 这样可以由下标代表顶点组合成矩形
-		0, 1, 3, // 第一个三角形
-		1, 2, 3  // 第二个三角形
+		0, 1, 2, // 第一个三角形
+		//0, 1, 2 // 第一个三角形
+		2, 3, 4  // 第二个三角形
+	};
+	unsigned int indices2[] = {
+		2, 3, 4
 	};
 
 
-	unsigned int VBO, VAO, EBO;
+	unsigned int VBO, VAO, EBO, EBO2;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
-
+	glGenBuffers(1, &EBO2);
 
 	// 6.先绑定顶点数组对象、再绑定顶点缓冲、最后设置顶点的属性
 	glBindVertexArray(VAO);
@@ -136,6 +173,7 @@ int main()
 	//之后可以解除VAO的绑定，这样其他VAO调用就不会意外修改此VAO，但这种情况很少发生。无论如何，修改其他VAO都需要调用glBindVertexArray，因此在不直接需要时，我们通常不会解除VAO（或VBO）的绑定。
 	glBindVertexArray(0);
 
+
 	//取消注释此调用以在线框多边形中绘制。线框模式
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -155,10 +193,23 @@ int main()
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
 		//鉴于我们只有一个VAO，没有必要每次都绑定它，但我们这样做是为了让事情更有条理
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		// 画两个
+
+		// 这里是为了用另一个 fragment shader 来渲染右边的三角形
+		// 我看参考答案中,VAO, VBO, EBO 都用了两个， 我这里只用了一个大的 vertex数组装下 2个三角形， 然后在 glDrawArrays中指定 0, 3 （从第0个顶点开始的3个点  和 2, 3 （从第2个顶点开始的3个点）    两个三角形只有 5 个点， vertex[2] 这个点是公共点。
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glUseProgram(shaderProgram2);
+		glDrawArrays(GL_TRIANGLES, 2, 3);
+
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO2);
+		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices2), indices2, GL_STATIC_DRAW);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 		glBindVertexArray(0);
 		//无需每次都解除绑定
+
+
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// ------------------------
@@ -170,6 +221,7 @@ int main()
 	// --------------------------
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 	glDeleteProgram(shaderProgram);
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
