@@ -30,4 +30,10 @@
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="graphics\shaders\fragment_texture" />
+    <None Include="graphics\shaders\vertex_texture" />
+    <None Include="graphics\shaders\fragment" />
+    <None Include="graphics\shaders\vertex" />
+  </ItemGroup>
 </Project>

@@ -1,7 +1,10 @@
 ﻿#pragma once
 #include "Shader.h"
 
+
 #include <GLFW/glfw3.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 
 #define Println(x) std::cout << x << std::endl
@@ -9,17 +12,29 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-
+float transparent_input = 0.2f;
+float transparent_pace = 0.005f;
+void transparent_input_call_back(bool isUp)
+{
+	if (isUp) {
+		transparent_input = transparent_input > transparent_pace ? transparent_input - transparent_pace : 0.0f;
+	} else {
+		transparent_input = transparent_input < 1 - transparent_pace ? transparent_input + transparent_pace : 1.0f;
+	}
+}
 
 
 // 设置
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1600;
+const unsigned int SCR_HEIGHT = 900;
 
 const std::string ShaderPath = "graphics/shaders/";
+const std::string PicPath = "pic/";
 
-const std::string vertexShaderSource = ShaderPath + "vertex";
-const std::string fragmentShaderSource = ShaderPath + "fragment";
+//const std::string vertexShaderSource = ShaderPath + "vertex";
+//const std::string fragmentShaderSource = ShaderPath + "fragment";
+const std::string vertexShaderSource = ShaderPath + "vertex_texture";
+const std::string fragmentShaderSource = ShaderPath + "fragment_texture";
 
 int main()
 {
@@ -51,42 +66,27 @@ int main()
 
 	// 4.构建、编译 着色器 程序
 	// ------------------------------------
-	Shader ourShader1(vertexShaderSource.c_str(), fragmentShaderSource.c_str());
-	Shader ourShader2(vertexShaderSource.c_str(), fragmentShaderSource.c_str());
+	Shader ourShader(vertexShaderSource.c_str(), fragmentShaderSource.c_str());
+
 
 	// 5.设置顶点的数据（和缓存区），并且设置顶点的属性
-	// ------------------------------
-	//float vertices[] = {
-	//0.5f, 0.5f, 0.0f,   // 右上角
-	//0.5f, -0.5f, 0.0f,  // 右下角
-	//-0.5f, -0.5f, 0.0f, // 左下角
-	//-0.5f, 0.5f, 0.0f   // 左上角
-	//};
 	float vertices[] = {
-		-0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-		-0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-		0.5f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.0f,  0.0f, 0.0f, 1.0f
+		// positions          // colors           // texture coords
+		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
 	};
 	unsigned int indices[] = {
-		// 注意索引从0开始! 
-		// 此例的索引(0,1,2,3)就是顶点数组vertices的下标，
-		// 这样可以由下标代表顶点组合成矩形
-		0, 1, 2, // 第一个三角形
-		//0, 1, 2 // 第一个三角形
-		2, 3, 4  // 第二个三角形
-	};
-	unsigned int indices2[] = {
-		2, 3, 4
+		0, 1, 3, // first triangle
+		1, 2, 3  // second triangle
 	};
 
 
-	unsigned int VBO, VAO, EBO, EBO2;
+	unsigned int VBO, VAO, EBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
-	glGenBuffers(1, &EBO2);
 
 	// 6.先绑定顶点数组对象、再绑定顶点缓冲、最后设置顶点的属性
 	glBindVertexArray(VAO);
@@ -97,74 +97,102 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	// texture coord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 
+	// load and create a texture 
+	// -------------------------
+	unsigned int texture1, texture2;
+	// texture 1
+	// ---------
+	glGenTextures(1, &texture1);
+	glBindTexture(GL_TEXTURE_2D, texture1);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	// set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	// 注意，这是允许的，对glVertexAttribPointer的调用将VBO注册为顶点属性的绑定顶点缓冲区对象，这样之后我们就可以安全地解除绑定
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	// load image, create texture and generate mipmaps
+	int width, height, nrChannels;
+	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
+	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+	//unsigned char* data = stbi_load(FileSystem::getPath("resources/textures/container.jpg").c_str(), &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load((PicPath + "fumo.jpg").c_str(), &width, &height, &nrChannels, 0);
+	if (data) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	} else {
+		Println("Failed to load texture");
+	}
+	stbi_image_free(data);
+	// texture 2
+	// ---------
+	glGenTextures(1, &texture2);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// load image, create texture and generate mipmaps
+	//data = stbi_load(FileSystem::getPath("resources/textures/awesomeface.png").c_str(), &width, &height, &nrChannels, 0);
+	data = stbi_load((PicPath + "ys.png").c_str(), &width, &height, &nrChannels, 0);
+	if (data) {
+		// note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	} else {
+		Println("Failed to load texture");
+	}
+	stbi_image_free(data);
+
+	// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
+	// ----------------------------
+	ourShader.use(); // don't forget to activate/use the shader before setting uniforms!
+	// either set it manually like so:
+	glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0);
+	// or set it via the texture class
+	ourShader.setInt("texture2", 1);
 
 
-
-	//之后可以解除VAO的绑定，这样其他VAO调用就不会意外修改此VAO，但这种情况很少发生。无论如何，修改其他VAO都需要调用glBindVertexArray，因此在不直接需要时，我们通常不会解除VAO（或VBO）的绑定。
-	glBindVertexArray(0);
-
-
-	//取消注释此调用以在线框多边形中绘制。线框模式
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-
-	int nrAttributes;
-	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-	Println2("Maximum nr of vertex attributes supported: ", nrAttributes);
-	// 7.渲染循环
+	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window)) {
 		// input
 		// -----
 		processInput(window);
-
+		ourShader.setFloat("transparent_input", transparent_input);
 		// render
 		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// draw our first triangle
-		float time = glfwGetTime();
+		// bind textures on corresponding texture units
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
 
-		ourShader1.use();
-
-		ourShader1.setVec4f("offset", sin(time), 0.0f, 0.0f, 0.0f);
+		// render container
+		ourShader.use();
 
 		glBindVertexArray(VAO);
-		//鉴于我们只有一个VAO，没有必要每次都绑定它，但我们这样做是为了让事情更有条理
-		// 画两个
-
-		// 这里是为了用另一个 fragment shader 来渲染右边的三角形
-		// 我看参考答案中,VAO, VBO, EBO 都用了两个， 我这里只用了一个大的 vertex数组装下 2个三角形， 然后在 glDrawArrays中指定 0, 3 （从第0个顶点开始的3个点  和 2, 3 （从第2个顶点开始的3个点）    两个三角形只有 5 个点， vertex[2] 这个点是公共点。
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		time = glfwGetTime();
-		ourShader2.use();
-		ourShader2.setVec4f("offset", sin(time), 0.0f, 0.0f, 0.0f);
-
-		glDrawArrays(GL_TRIANGLES, 2, 3);
-
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO2);
-		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices2), indices2, GL_STATIC_DRAW);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-		glBindVertexArray(0);
-		//无需每次都解除绑定
-
-
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-		// ------------------------
+		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -187,6 +215,10 @@ void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+	else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		transparent_input_call_back(true);
+	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		transparent_input_call_back(false);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
