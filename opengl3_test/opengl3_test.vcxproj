@@ -106,7 +106,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)libs\glfw\include;$(SolutionDir)libs\glad\include;$(SolutionDir)libs\glad\src;$(SolutionDir)libs\math;$(SolutionDir)libs\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libs\glfw\include;$(SolutionDir)libs\glad\include;$(SolutionDir)libs\glad\src;$(SolutionDir)libs\math;$(SolutionDir)libs\stb;$(SolutionDir)libs;$(SolutionDir)libs\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

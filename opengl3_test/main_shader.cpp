@@ -5,20 +5,21 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-
 #define Println(x) std::cout << x << std::endl
 #define Println2(x, y) std::cout << x << y << std::endl
-#define Println3(x, y, z) std::cout << x << y << z << std::endl
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 float transparent_input = 0.2f;
 float transparent_pace = 0.005f;
-void transparent_input_call_back(bool isUp);
+void transparent_input_call_back(bool isUp)
+{
+	if (isUp) {
+		transparent_input = transparent_input > transparent_pace ? transparent_input - transparent_pace : 0.0f;
+	} else {
+		transparent_input = transparent_input < 1 - transparent_pace ? transparent_input + transparent_pace : 1.0f;
+	}
+}
 
 
 // 设置
@@ -33,7 +34,7 @@ const std::string PicPath = "pic/";
 const std::string vertexShaderSource = ShaderPath + "vertex_texture";
 const std::string fragmentShaderSource = ShaderPath + "fragment_texture";
 
-int main()
+int main2()
 {
 	// 1.GLFW 初始化
 	// ------------------------------
@@ -74,7 +75,6 @@ int main()
 		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
 		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
 	};
-
 	unsigned int indices[] = {
 		0, 1, 3, // first triangle
 		1, 2, 3  // second triangle
@@ -83,7 +83,6 @@ int main()
 
 	unsigned int VBO, VAO, EBO;
 	glGenVertexArrays(1, &VAO);
-	//glGenVertexArrays(1, &VAO2);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 
@@ -95,6 +94,7 @@ int main()
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
 
 	// position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -163,7 +163,7 @@ int main()
 	glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0);
 	// or set it via the texture class
 	ourShader.setInt("texture2", 1);
-	ourShader.setFloat("transparent_input", transparent_input);
+
 
 	// render loop
 	// -----------
@@ -171,16 +171,7 @@ int main()
 		// input
 		// -----
 		processInput(window);
-
-		// GLM transform
-		float time = glfwGetTime();
-		glm::mat4 trans = glm::mat4(1.0f);
-		trans = glm::translate(trans, glm::vec3(sin(time) / 2.0f, cos(time) / 2.0f, 0.0f));
-		trans = glm::rotate(trans, time, glm::vec3(0.0, 0.0, 1.0));
-		trans = glm::scale(trans, glm::vec3(sin(time) / 2.0f + 0.4f, cos(time) / 2.0f + 0.4f, 1.0));
-		unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-
+		ourShader.setFloat("transparent_input", transparent_input);
 		// render
 		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -197,19 +188,6 @@ int main()
 
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-
-		time = glfwGetTime();
-		trans = glm::mat4(1.0f);
-		trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
-		//trans = glm::rotate(trans, time, glm::vec3(0.0, 0.0, 1.0));
-		trans = glm::scale(trans, glm::vec3(sin(time) / 4.0f + 0.25f, sin(time) / 4.0f + 0.25f, 1.0));
-		//trans = glm::scale(trans, glm::vec3(0.25f, 0.25f, 1.0));
-
-		transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
@@ -249,13 +227,3 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	// height will be significantly larger than specified on retina displays.
 	glViewport(0, 0, width, height);
 }
-
-void transparent_input_call_back(bool isUp)
-{
-	if (isUp) {
-		transparent_input = transparent_input > transparent_pace ? transparent_input - transparent_pace : 0.0f;
-	} else {
-		transparent_input = transparent_input < 1 - transparent_pace ? transparent_input + transparent_pace : 1.0f;
-	}
-}
-
