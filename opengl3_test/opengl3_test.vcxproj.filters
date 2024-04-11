@@ -35,5 +35,7 @@
     <None Include="graphics\shaders\vertex_texture" />
     <None Include="graphics\shaders\fragment" />
     <None Include="graphics\shaders\vertex" />
+    <None Include="graphics\shaders\fragment_tex3d" />
+    <None Include="graphics\shaders\vertex_tex3d" />
   </ItemGroup>
 </Project>

@@ -141,8 +141,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="graphics\shaders\fragment" />
+    <None Include="graphics\shaders\fragment_tex3d" />
     <None Include="graphics\shaders\fragment_texture" />
     <None Include="graphics\shaders\vertex" />
+    <None Include="graphics\shaders\vertex_tex3d" />
     <None Include="graphics\shaders\vertex_texture" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
