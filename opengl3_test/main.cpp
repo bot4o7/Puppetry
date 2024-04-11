@@ -221,7 +221,8 @@ int main()
 		// create transformations
 		glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		glm::mat4 projection = glm::mat4(1.0f);
-		projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		projection = glm::perspective(glm::radians(45.0f + (float)sin(glfwGetTime()) * 5.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT + (float)sin(glfwGetTime()) / 4.0f, 0.1f, 100.0f);
+		//projection = glm::perspective(glm::radians(45.0f + (float)sin(glfwGetTime()) * 22.5f), (float)SCR_WIDTH / (float)SCR_HEIGHT + (float)sin(glfwGetTime()) / 4.0f, 0.1f, 100.0f);
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 		// pass transformation matrices to the shader
 		ourShader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
@@ -231,13 +232,25 @@ int main()
 		glBindVertexArray(VAO);
 
 		float time = glfwGetTime();
-		for (unsigned int i = 0; i < 10; ++i) {
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, cubePositions[0]);
+		//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		model = glm::translate(model, glm::vec3(sin(time) / 10.0f, 0.0f, sin(time) / 10.0f));
+		model = glm::rotate(model, glm::radians(0.0f) + time, glm::vec3(sin(0 + time), cos(time), sin(time) + cos(time)));
+		ourShader.setMat4("model", model);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		for (unsigned int i = 1; i < 10; ++i) {
+
 			// calculate the model matrix for each object and pass it to shader before drawing
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, cubePositions[i]);
-			float angle = 20.0f * i;
-			//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			model = glm::rotate(model, glm::radians(angle) + time, glm::vec3(sin(i + time), cos(i + time), sin(i + time) + cos(i + time)));
+			if (i % 3 == 0) {
+				float angle = 20.0f * i;
+				//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+				model = glm::translate(model, glm::vec3(sin(time) / 4.0f, 0.0f, sin(time) / 4.0f));
+				model = glm::rotate(model, glm::radians(angle) + time, glm::vec3(sin(i + time), cos(i + time), sin(i + time) + cos(i + time)));
+			}
 			ourShader.setMat4("model", model);
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
