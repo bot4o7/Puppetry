@@ -18,14 +18,14 @@
     <ClCompile Include="glad.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -37,5 +37,7 @@
     <None Include="graphics\shaders\vertex" />
     <None Include="graphics\shaders\fragment_tex3d" />
     <None Include="graphics\shaders\vertex_tex3d" />
+    <None Include="graphics\shaders\fragment_camera.glsl" />
+    <None Include="graphics\shaders\vertex_camera.glsl" />
   </ItemGroup>
 </Project>
