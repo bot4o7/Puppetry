@@ -14,6 +14,8 @@
 #define Println3(x, y, z) std::cout << x << y << z << std::endl
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 float transparent_input = 0.2f;
 float transparent_pace = 0.005f;
@@ -68,7 +70,11 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 
+	// tell GLFW to capture our mouse
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	// 3.设置 GLAD
 	// glad: load all OpenGL function pointers
 	// ---------------------------------------
@@ -236,67 +242,17 @@ int main()
 		// activate shader
 		ourShader.use();
 
-		// camera
-		// 相机位置坐标
-		//glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-		// 相机 所看着的点 先设为朝向原点
-		//glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-		// 相机的坐标 减去 相机所盯着的点， 就能得到相机方向 （这个方向跟相机实际看着的方向，是相反的）
-		// 方向向量(Direction Vector)并不是最好的名字，因为它实际上指向从它到目标向量的相反方向（译注：注意看前面的那个图，蓝色的方向向量大概指向z轴的正方向，与摄像机实际指向的方向是正好相反的）。
-		//glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
-		// 右轴
-		// 右向量(Right Vector)，它代表摄像机空间的x轴的正方向。为获取右向量我们需要先使用一个小技巧：先定义一个上向量(Up Vector)。接下来把上向量和第二步得到的方向向量进行叉乘。两个向量叉乘的结果会同时垂直于两向量，因此我们会得到指向x轴正方向的那个向量（如果我们交换两个向量叉乘的顺序就会得到相反的指向x轴负方向的向量）：
-		//glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-		//glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-		// 上轴
-		// 现在我们已经有了x轴向量和z轴向量，获取一个指向摄像机的正y轴向量就相对简单了：我们把右向量和方向向量进行叉乘：
-		//glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-		// Look At
-		// 使用矩阵的好处之一是如果你使用3个相互垂直（或非线性）的轴定义了一个坐标空间，你可以用这3个轴外加一个平移向量来创建一个矩阵，并且你可以用这个矩阵乘以任何向量来将其变换到那个坐标空间。这正是LookAt矩阵所做的，现在我们有了3个相互垂直的轴和一个定义摄像机空间的位置坐标，我们可以创建我们自己的LookAt矩阵了：
-		/**
-		LookAt =
-				| Rx   Ry   Rz   0 |   | 1   0   0   -Px |
-				| Ux   Uy   Uz   0 | * | 0   1   0   -Py |
-				| Dx   Dy   Dz   0 |   | 0   0   1   -Pz |
-				|  0    0    0   1 |   | 0   0   0    1  |
-		*/
-		// 其中R 是右向量，U 是上向量，D 是方向向量 P 是摄像机位置向量。注意，位置向量是相反的，因为我们最终希望把世界平移到与我们自身移动的相反方向。把这个LookAt矩阵作为观察矩阵可以很高效地把所有世界坐标变换到刚刚定义的观察空间。LookAt矩阵就像它的名字表达的那样：它会创建一个看着(Look at)给定目标的观察矩阵。
-		// 幸运的是，GLM已经提供了这些支持。我们要做的只是定义一个摄像机位置，一个目标位置和一个表示世界空间中的上向量的向量（我们计算右向量使用的那个上向量）。接着GLM就会创建一个LookAt矩阵，我们可以把它当作我们的观察矩阵：
-		//glm::mat4 view = glm::lookAt(
-		//	glm::vec3(0.0f, 0.0f, 3.0f),
-		//	glm::vec3(0.0f, 0.0f, 0.0f),
-		//	glm::vec3(0.0f, 1.0f, 0.0f)
-		//);
-
-		// camera 从原点， 随着时间增加角度， 绕 y 轴 旋转的 相机
-		//glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-		//float radius = 10.0f;
-		//float camX = static_cast<float>(sin(glfwGetTime()) * radius);
-		//float camZ = static_cast<float>(cos(glfwGetTime()) * radius);
-		//view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		//ourShader.setMat4("view", view);
-
 		// 自由移动相机
-		glm::mat4 view = glm::mat4(1.0f);
-		// 下面这些放到全局变量里了
-		//glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-		//glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-		//glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
-		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
-
+		// camera/view transformation
+		glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 		ourShader.setMat4("view", view);
 
 		// create transformations
-		//glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		glm::mat4 projection = glm::mat4(1.0f);
-		projection = glm::perspective(glm::radians(45.0f + (float)sin(glfwGetTime()) * 5.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT + (float)sin(glfwGetTime()) / 4.0f, 0.1f, 100.0f);
-		//projection = glm::perspective(glm::radians(45.0f + (float)sin(glfwGetTime()) * 22.5f), (float)SCR_WIDTH / (float)SCR_HEIGHT + (float)sin(glfwGetTime()) / 4.0f, 0.1f, 100.0f);
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		// pass projection matrix to shader (note that in this case it could change every frame)
+		projection = glm::perspective(glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT + (float)sin(glfwGetTime()) / 4.0f, 0.1f, 100.0f);
 		// pass transformation matrices to the shader
 		ourShader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
-		//ourShader.setMat4("view", view);
 
 		// render boxes
 		glBindVertexArray(VAO);
@@ -304,41 +260,37 @@ int main()
 		float time = glfwGetTime();
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, cubePositions[0]);
-		//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 		model = glm::translate(model, glm::vec3(sin(time) / 10.0f, 0.0f, sin(time) / 10.0f));
 		model = glm::rotate(model, glm::radians(0.0f) + time, glm::vec3(sin(0 + time), cos(time), sin(time) + cos(time)));
 		ourShader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		for (unsigned int i = 1; i < 10; ++i) {
-
 			// calculate the model matrix for each object and pass it to shader before drawing
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, cubePositions[i]);
 			if (i % 3 == 0) {
 				float angle = 20.0f * i;
-				//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 				model = glm::translate(model, glm::vec3(sin(time) / 4.0f, 0.0f, sin(time) / 4.0f));
 				model = glm::rotate(model, glm::radians(angle) + time, glm::vec3(sin(i + time), cos(i + time), sin(i + time) + cos(i + time)));
 			}
 			ourShader.setMat4("model", model);
-
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-		// -------------------------------------------------------------------------------
+		// ---------------------------------
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
 	// optional: de-allocate all resources once they've outlived their purpose:
-	// ------------------------------------------------------------------------
+	// ----------------------
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
-	// ------------------------------------------------------------------
+	// -------------------------------------------
 	glfwTerminate();
 	return 0;
 }
@@ -354,7 +306,7 @@ void processInput(GLFWwindow* window)
 	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		transparent_input_call_back(false);
 
-	float cameraSpeed = 2.5f * deltaTime; // adjust accordingly
+	float cameraSpeed = static_cast<float>(2.5 * deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		cameraPos += cameraSpeed * cameraFront;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -383,3 +335,51 @@ void transparent_input_call_back(bool isUp)
 	}
 }
 
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+{
+	float xpos = static_cast<float>(xposIn);
+	float ypos = static_cast<float>(yposIn);
+
+	if (firstMouse) {
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+	lastX = xpos;
+	lastY = ypos;
+
+	float sensitivity = 0.1f; // change this value to your liking
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	yaw += xoffset;
+	pitch += yoffset;
+
+	// make sure that when pitch is out of bounds, screen doesn't get flipped
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	glm::vec3 front;
+	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	front.y = sin(glm::radians(pitch));
+	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraFront = glm::normalize(front);
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	fov -= (float)yoffset;
+	if (fov < 1.0f)
+		fov = 1.0f;
+	if (fov > 45.0f)
+		fov = 45.0f;
+}
