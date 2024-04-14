@@ -15,45 +15,48 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="script\Script.h">
+    <ClInclude Include="src\Puppetry\script\Script.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="script\unit\scene\Scene.h">
+    <ClInclude Include="src\Puppetry\script\unit\scene\Scene.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="script\unit\act\Act.h">
+    <ClInclude Include="src\Puppetry\script\unit\act\Act.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="script\plot\Plot.h">
+    <ClInclude Include="src\Puppetry\script\plot\Plot.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="script\unit\line\Line.h">
+    <ClInclude Include="src\Puppetry\script\unit\line\Line.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="script\unit\line\sentence\Sentence.h">
+    <ClInclude Include="src\Puppetry\script\unit\line\sentence\Sentence.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\test.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="script\Script.cpp">
+    <ClCompile Include="src\Puppetry\script\Script.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="script\unit\scene\Scene.cpp">
+    <ClCompile Include="src\Puppetry\script\unit\scene\Scene.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="script\unit\act\Act.cpp">
+    <ClCompile Include="src\Puppetry\script\unit\act\Act.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="script\plot\Plot.cpp">
+    <ClCompile Include="src\Puppetry\script\plot\Plot.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="script\unit\line\Line.cpp">
+    <ClCompile Include="src\Puppetry\script\unit\line\Line.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="script\unit\line\sentence\Sentence.cpp">
+    <ClCompile Include="src\Puppetry\script\unit\line\sentence\Sentence.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

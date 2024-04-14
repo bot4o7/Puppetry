@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphics_test", "graphics_t
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opengl3_test", "opengl3_test\opengl3_test.vcxproj", "{874782E2-8201-4C43-89E5-F4876B719AE1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj", "{B2B7C482-7C71-4E69-8835-BDE0CD20F62F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{874782E2-8201-4C43-89E5-F4876B719AE1}.Release|x64.Build.0 = Release|x64
 		{874782E2-8201-4C43-89E5-F4876B719AE1}.Release|x86.ActiveCfg = Release|Win32
 		{874782E2-8201-4C43-89E5-F4876B719AE1}.Release|x86.Build.0 = Release|Win32
+		{B2B7C482-7C71-4E69-8835-BDE0CD20F62F}.Debug|x64.ActiveCfg = Debug|x64
+		{B2B7C482-7C71-4E69-8835-BDE0CD20F62F}.Debug|x64.Build.0 = Debug|x64
+		{B2B7C482-7C71-4E69-8835-BDE0CD20F62F}.Debug|x86.ActiveCfg = Debug|Win32
+		{B2B7C482-7C71-4E69-8835-BDE0CD20F62F}.Debug|x86.Build.0 = Debug|Win32
+		{B2B7C482-7C71-4E69-8835-BDE0CD20F62F}.Release|x64.ActiveCfg = Release|x64
+		{B2B7C482-7C71-4E69-8835-BDE0CD20F62F}.Release|x64.Build.0 = Release|x64
+		{B2B7C482-7C71-4E69-8835-BDE0CD20F62F}.Release|x86.ActiveCfg = Release|Win32
+		{B2B7C482-7C71-4E69-8835-BDE0CD20F62F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
