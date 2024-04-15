@@ -15,7 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Game.cpp">
+    <ClInclude Include="src\cheap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\application.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\core.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\entry_point.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\cheap\application.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

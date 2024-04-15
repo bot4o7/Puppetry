@@ -33,7 +33,13 @@
     <ClInclude Include="src\Puppetry\script\unit\line\sentence\Sentence.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\test.h">
+    <ClInclude Include="src\Puppetry\Core.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Puppetry\Application.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bot4o7.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,7 +62,7 @@
     <ClCompile Include="src\Puppetry\script\unit\line\sentence\Sentence.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\test.cpp">
+    <ClCompile Include="src\Puppetry\Application.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

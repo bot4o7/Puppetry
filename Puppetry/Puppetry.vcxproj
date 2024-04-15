@@ -110,7 +110,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOT4O7_BUILD_DLL;BOT4O7_PLATFORM_WINDOWS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -126,7 +126,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOT4O7_BUILD_DLL;BOT4O7_PLATFORM_WINDOWS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -139,22 +139,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Puppetry\Application.h" />
+    <ClInclude Include="src\bot4o7.h" />
+    <ClInclude Include="src\Puppetry\Core.h" />
     <ClInclude Include="src\Puppetry\script\unit\line\Line.h" />
     <ClInclude Include="src\Puppetry\script\plot\Plot.h" />
     <ClInclude Include="src\Puppetry\script\unit\act\Act.h" />
     <ClInclude Include="src\Puppetry\script\unit\scene\Scene.h" />
     <ClInclude Include="src\Puppetry\script\Script.h" />
     <ClInclude Include="src\Puppetry\script\unit\line\sentence\Sentence.h" />
-    <ClInclude Include="src\test.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Puppetry\Application.cpp" />
     <ClCompile Include="src\Puppetry\script\unit\line\Line.cpp" />
     <ClCompile Include="src\Puppetry\script\plot\Plot.cpp" />
     <ClCompile Include="src\Puppetry\script\unit\act\Act.cpp" />
     <ClCompile Include="src\Puppetry\script\unit\scene\Scene.cpp" />
     <ClCompile Include="src\Puppetry\script\Script.cpp" />
     <ClCompile Include="src\Puppetry\script\unit\line\sentence\Sentence.cpp" />
-    <ClCompile Include="src\test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
