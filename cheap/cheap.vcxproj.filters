@@ -27,12 +27,18 @@
     <ClInclude Include="src\cheap\entry_point.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\cheap\utils\logger.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cheap\application.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\game.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\utils\logger.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

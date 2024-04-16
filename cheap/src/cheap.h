@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "cheap/utils/logger.h"
 #include "cheap/application.h"
 
 // we don't use Entry Point Now
