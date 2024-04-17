@@ -110,7 +110,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>BOT4O7_DEBUG;CP_CPU_64;CP_PLATFORM_WINDOWS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CP_GLFW_INPUT_API;BOT4O7_VC;BOT4O7_DEBUG;CP_CPU_64;CP_PLATFORM_WINDOWS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -126,7 +126,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>CP_CPU_64;CP_PLATFORM_WINDOWS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CP_GLFW_INPUT_API;CP_CPU_64;CP_PLATFORM_WINDOWS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -139,15 +139,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\cheap\utils\logger.h" />
+    <ClInclude Include="src\cheap\events\app_event.h" />
+    <ClInclude Include="src\cheap\events\event.h" />
+    <ClInclude Include="src\cheap\events\game_event.h" />
+    <ClInclude Include="src\cheap\events\input\key_code.h" />
+    <ClInclude Include="src\cheap\events\input\mouse_button.h" />
+    <ClInclude Include="src\cheap\events\input_event.h" />
+    <ClInclude Include="src\cheap\utils\log.h" />
     <ClInclude Include="src\cheap\application.h" />
     <ClInclude Include="src\cheap.h" />
     <ClInclude Include="src\cheap\core.h" />
     <ClInclude Include="src\cheap\entry_point.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\cheap\utils\logger.cpp" />
     <ClCompile Include="src\cheap\application.cpp" />
+    <ClCompile Include="src\cheap\events\app_event.cpp" />
     <ClCompile Include="src\game.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

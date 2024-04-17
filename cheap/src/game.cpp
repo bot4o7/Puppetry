@@ -5,12 +5,12 @@ class CheapGame : public cheap::Application
 public:
 	CheapGame()
 	{
-		LOG();
+		//LOG();
 	}
 
 	~CheapGame()
 	{
-		LOG();
+		//LOG();
 	}
 };
 
@@ -18,9 +18,8 @@ int main(int argc, char** argv)
 {
 	LOG();
 	CheapGame* app = new CheapGame();
-	app->Run();
+	//app->Run();
 	delete app;
-	LOG();
 	return 0;
 }
 

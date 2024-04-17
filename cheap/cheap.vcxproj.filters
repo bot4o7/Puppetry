@@ -27,7 +27,25 @@
     <ClInclude Include="src\cheap\entry_point.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\utils\logger.h">
+    <ClInclude Include="src\cheap\utils\log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\events\event.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\events\app_event.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\events\input_event.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\events\input\key_code.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\events\input\mouse_button.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\events\game_event.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,7 +56,7 @@
     <ClCompile Include="src\game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\utils\logger.cpp">
+    <ClCompile Include="src\cheap\events\app_event.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
