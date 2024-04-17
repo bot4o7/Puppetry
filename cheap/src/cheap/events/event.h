@@ -1,25 +1,23 @@
 ﻿#pragma once
 
 namespace cheap {
-
-	enum class EventType
-	{
-		App,
-		Input,
-		Game
-	};
-
-	class Event
+	class event
 	{
 	public:
+		enum class category
+		{
+			app,
+			input,
+			game
+		};
 		bool is_handled;
 
-		virtual EventType GetType() const = 0;
-		virtual int GetSubType() const = 0;
-		virtual bool IsSubType(const int sub_type) const = 0;
+		[[nodiscard]] virtual category get_category() const = 0;
+		[[nodiscard]] virtual int        get_type() const = 0;
+		[[nodiscard]] virtual bool       is_type(const int sub_type) const = 0;
 
-		virtual ~Event() = default;
+		virtual ~event() = default;
 	protected:
-		Event() :is_handled(false) { }
+		event() : is_handled(false) { }
 	};
 }

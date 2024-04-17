@@ -1,14 +1,15 @@
-﻿#include "cheap.h"
+﻿#include "pch.h"
+#include "cheap.h"
 
-class CheapGame : public cheap::Application
+class cheap_game final : public cheap::application
 {
 public:
-	CheapGame()
+	cheap_game()
 	{
 		//LOG();
 	}
 
-	~CheapGame()
+	~cheap_game() override
 	{
 		//LOG();
 	}
@@ -17,14 +18,10 @@ public:
 int main(int argc, char** argv)
 {
 	LOG();
-	CheapGame* app = new CheapGame();
-	//app->Run();
+	const auto app = new cheap_game();
+	app->run();
+
 	delete app;
+
 	return 0;
 }
-
-// if you use Entry Point, need this
-//cheap::Application* cheap::CreateApplication()
-//{
-//	return new CheapGame();
-//}

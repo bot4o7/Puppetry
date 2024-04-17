@@ -2,119 +2,142 @@
 #include "event.h"
 
 namespace cheap {
-	class AppEvent : Event
+	class app_event : event
 	{
 	public:
-		enum SubType
+		enum class type
 		{
-			AppUpdate,
-			AppRender,
-			AppWindowResize,
-			AppWindowMove,
-			AppWindowFullscreenModeUpdate
+			update,
+			render,
+			window_resize,
+			window_close,
+			window_move,
+			window_fullscreen_mode_update
 		};
 
-		EventType GetType() const override
+		[[nodiscard]] category get_category() const override
 		{
-			return EventType::App;
+			return category::app;
 		}
 
-		~AppEvent() override = default;
+		~app_event() override = default;
 	protected:
-		AppEvent() = default;
+		app_event() = default;
 	};
 
-	class AppUpdateEvent :AppEvent
+	class app_update_event :app_event
 	{
 	public:
-		int GetSubType() const override
+		[[nodiscard]] int get_type() const override
 		{
-			return AppUpdate;
-		}
-		bool IsSubType(const int sub_type) const override
-		{
-			return sub_type == AppUpdate;
+			return static_cast<int>(type::update);
 		}
 
-		AppUpdateEvent() = default;
-		~AppUpdateEvent() override = default;
+		[[nodiscard]] bool is_type(const int sub_type) const override
+		{
+			return sub_type == static_cast<int>(type::update);
+		}
+
+		app_update_event() = default;
+		~app_update_event() override = default;
 	};
 
-	class AppRenderEvent :AppEvent
+	class app_render_event :app_event
 	{
 	public:
-		int GetSubType() const override
+		[[nodiscard]] int get_type() const override
 		{
-			return AppUpdate;
-		}
-		bool IsSubType(const int sub_type) const override
-		{
-			return sub_type == AppUpdate;
+			return static_cast<int>(type::render);
 		}
 
-		AppRenderEvent() = default;
-		~AppRenderEvent() override = default;
+		[[nodiscard]] bool is_type(const int sub_type) const override
+		{
+			return sub_type == static_cast<int>(type::render);
+		}
+
+		app_render_event() = default;
+		~app_render_event() override = default;
 	};
 
-	class AppWindowResizeEvent :AppEvent
+	class app_window_resize_event final :app_event
 	{
 	public:
 		int m_width;
 		int m_height;
 
-		int GetSubType() const override
+		[[nodiscard]] int get_type() const override
 		{
-			return AppWindowResize;
-		}
-		bool IsSubType(const int sub_type) const override
-		{
-			return sub_type == AppWindowResize;
+			return static_cast<int>(type::window_resize);
 		}
 
-		AppWindowResizeEvent(const int width, const int height) : m_width(width), m_height(height) { }
-		~AppWindowResizeEvent() override = default;
+		[[nodiscard]] bool is_type(const int sub_type) const override
+		{
+			return sub_type == static_cast<int>(type::window_resize);
+		}
+
+		app_window_resize_event(const int width, const int height) : m_width(width), m_height(height) { }
+		~app_window_resize_event() override = default;
 	};
 
-	class AppWindowMoveEvent :AppEvent
+	class app_window_move_event final :app_event
 	{
 	public:
 		int m_x;
 		int m_y;
 
-		int GetSubType() const override
+		[[nodiscard]] int get_type() const override
 		{
-			return AppWindowMove;
-		}
-		bool IsSubType(const int sub_type) const override
-		{
-			return sub_type == AppWindowMove;
+			return static_cast<int>(type::window_move);
 		}
 
-		AppWindowMoveEvent(const int x, const int y) : m_x(x), m_y(y) { }
-		~AppWindowMoveEvent() override = default;
+		[[nodiscard]] bool is_type(const int sub_type) const override
+		{
+			return sub_type == static_cast<int>(type::window_move);
+		}
+
+		app_window_move_event(const int x, const int y) : m_x(x), m_y(y) { }
+		~app_window_move_event() override = default;
 	};
 
-	class AppWindowFullscreenModeUpdateEvent : AppEvent
+	class app_window_close_event final : app_event
 	{
 	public:
-		enum class Mode
+		[[nodiscard]] int get_type() const override
 		{
-			Window,
-			Broadless,
-			Fullscreen
+			return static_cast<int>(type::window_close);
+		}
+
+		[[nodiscard]] bool is_type(const int sub_type) const override
+		{
+			return sub_type == static_cast<int>(type::window_close);
+		}
+
+		app_window_close_event() = default;
+		~app_window_close_event() override = default;
+	};
+
+	class app_window_fullscreen_mode_update_event : app_event
+	{
+	public:
+		enum class mode
+		{
+			window,
+			no_broad,
+			fullscreen
 		};
-		Mode m_mode;
+		mode m_mode;
 
-		int GetSubType() const override
+		[[nodiscard]] int get_type() const override
 		{
-			return AppWindowFullscreenModeUpdate;
-		}
-		bool IsSubType(const int sub_type) const override
-		{
-			return sub_type == AppWindowFullscreenModeUpdate;
+			return static_cast<int>(type::window_fullscreen_mode_update);
 		}
 
-		AppWindowFullscreenModeUpdateEvent(const Mode mode) : m_mode(mode) { }
-		~AppWindowFullscreenModeUpdateEvent() override = default;
+		[[nodiscard]] bool is_type(const int sub_type) const override
+		{
+			return sub_type == static_cast<int>(type::window_fullscreen_mode_update);
+		}
+
+		explicit app_window_fullscreen_mode_update_event(const mode mode) : m_mode(mode) { }
+		~app_window_fullscreen_mode_update_event() override = default;
 	};
 }

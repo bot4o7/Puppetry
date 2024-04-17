@@ -2,11 +2,11 @@
 #include "event.h"
 
 namespace cheap {
-	class GameEvent : Event
+	class game_event : event
 	{
 	public:
 
-		GameEvent() = default;
-		~GameEvent() = default;
+		game_event() = default;
+		~game_event() override = default;
 	};
 }

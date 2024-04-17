@@ -18,13 +18,13 @@
     <ClInclude Include="src\cheap.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\application.h">
+    <ClInclude Include="src\cheap\core\application.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\core.h">
+    <ClInclude Include="src\cheap\core\core.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\entry_point.h">
+    <ClInclude Include="src\cheap\core\entry_point.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\cheap\utils\log.h">
@@ -48,15 +48,42 @@
     <ClInclude Include="src\cheap\events\game_event.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\pch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\core\window.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\events\event_system.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\cheap\application.cpp">
+    <ClCompile Include="src\cheap\core\application.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\cheap\events\app_event.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\utils\log.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\events\game_event.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\events\input_event.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\core\window.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\events\event_system.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
