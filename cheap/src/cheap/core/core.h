@@ -9,3 +9,10 @@
 #else
 #    error Only Support x64 Now.
 #endif
+
+#ifdef BOT4O7_DEBUG
+
+#include "../utils/log.h"
+
+#endif
+

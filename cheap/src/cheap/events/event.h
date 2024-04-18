@@ -20,4 +20,18 @@ namespace cheap {
 	protected:
 		event() : is_handled(false) { }
 	};
+
+	#define GET_CATEGORY(my_category) [[nodiscard]] category get_category() const override\
+	{\
+	return my_category;\
+	}
+
+	#define GET_TYPE_AND_IS_TYPE(my_type) [[nodiscard]] int get_type() const override\
+	{\
+		return static_cast<int>(my_type);\
+	}\
+	[[nodiscard]] bool is_type(const int sub_type) const override\
+	{\
+		return sub_type == get_type();\
+	}
 }

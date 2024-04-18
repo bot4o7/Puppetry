@@ -1,16 +1,18 @@
 ﻿#include "pch.h"
 
+
+
 namespace cheap {
-	void Print(const std::string& str)
+	void print(const std::string& str)
 	{
 		std::cout << str;
 	}
-	void Println(const std::string& str)
+	void println(const std::string& str)
 	{
 		std::cout << str << '\n';
 	}
 
-	void Log(const char* file, const char* func, long line)
+	void log(const char* file, const char* func, const long line)
 	{
 		std::cout << '[' << std::chrono::zoned_time{ std::chrono::current_zone(), std::chrono::system_clock::now()
 		} << "]  FILE:"

@@ -4,7 +4,7 @@
 #include "input/key_code.h"
 
 namespace cheap {
-	class input_event : event
+	class input_event : public event
 	{
 	public:
 		enum class device
@@ -15,14 +15,17 @@ namespace cheap {
 
 		[[nodiscard]] virtual device get_device() const = 0;
 
-		[[nodiscard]] category get_category() const override { return category::input; }
+		GET_CATEGORY(event::category::input);
 
 		~input_event() override = default;
 	protected:
 		input_event() = default;
 	};
+
+	#define GET_DEVICE(my_device) [[nodiscard]] device get_device() const override { return my_device; }
+
 	// -------------- KeyEvent 键盘事件 -------------------
-	class key_event : input_event
+	class key_event : public input_event
 	{
 	public:
 		int m_code;
@@ -35,44 +38,36 @@ namespace cheap {
 			typed
 		};
 
-		[[nodiscard]] device get_device() const override { return device::keyboard; }
+		GET_DEVICE(input_event::device::keyboard);
 
 		~key_event() override = default;
 	protected:
 		explicit key_event(const int key) : m_code(key) { }
 	};
 
-	class key_pressed_event final : key_event
+	class key_pressed_event final : public key_event
 	{
 	public:
 		bool m_is_repeat;
 
-		[[nodiscard]] int  get_type() const override { return pressed; }
-
-		[[nodiscard]] bool is_type(const int sub_type) const override { return sub_type == pressed; }
+		GET_TYPE_AND_IS_TYPE(key_event::type::pressed);
 
 		key_pressed_event(const int key, const bool is_repeat) : key_event(key), m_is_repeat(is_repeat) { }
 		~key_pressed_event() override = default;
-
-
-
 	};
 
-	class key_released_event : key_event
+	class key_released_event : public key_event
 	{
 	public:
-		int  get_type() const override { return released; }
-		bool is_type(const int sub_type) const override
-		{
-			return sub_type == released;
-		}
+		GET_TYPE_AND_IS_TYPE(key_event::type::released);
+
 
 		explicit key_released_event(const int key) : key_event(key) { }
 		~key_released_event() override = default;
 	};
 	// -------------- key_event 键盘事件 -------------------
 	// -------------- MouseEvent 鼠标事件 -----------------
-	class mouse_event : input_event
+	class mouse_event : public input_event
 	{
 	public:
 		int m_button;
@@ -87,9 +82,9 @@ namespace cheap {
 			moved
 		};
 
-		[[nodiscard]] device get_device() const override { return device::mouse; }
+		GET_DEVICE(input_event::device::mouse);
 
-		~mouse_event() override = default;
+		~mouse_event() override;
 
 	protected:
 		explicit mouse_event(const int button) : m_button(button), m_x(-1.0f), m_y(-1.0f) { }
@@ -99,15 +94,11 @@ namespace cheap {
 		mouse_event(const int button, const float x, const float y) : m_button(button), m_x(x), m_y(y) { }
 	};
 
-	class mouse_pressed_event final : mouse_event
+	class mouse_pressed_event final :public  mouse_event
 	{
 	public:
 
-		int get_type() const override { return pressed; }
-		bool is_type(const int sub_type) const override
-		{
-			return sub_type == pressed;
-		}
+		GET_TYPE_AND_IS_TYPE(mouse_event::type::pressed);
 
 		mouse_pressed_event() = delete;
 		explicit mouse_pressed_event(const int button) : mouse_event(button) { }
@@ -115,14 +106,10 @@ namespace cheap {
 		mouse_pressed_event(const int button, const float x, const float y) : mouse_event(button, x, y) { }
 	};
 
-	class mouse_released_event : mouse_event
+	class mouse_released_event :public  mouse_event
 	{
 	public:
-		int get_type() const override { return released; }
-		bool is_type(int sub_type) const override
-		{
-			return sub_type == released;
-		}
+		GET_TYPE_AND_IS_TYPE(mouse_event::type::released);
 
 		mouse_released_event() = delete;
 		explicit mouse_released_event(const int button) : mouse_event(button) { }
@@ -132,14 +119,10 @@ namespace cheap {
 		~mouse_released_event() override = default;
 	};
 
-	class mouse_scrolled_event : mouse_event
+	class mouse_scrolled_event : public mouse_event
 	{
 	public:
-		int get_type() const override { return scrolled; }
-		bool is_type(const int sub_type) const override
-		{
-			return sub_type == scrolled;
-		}
+		GET_TYPE_AND_IS_TYPE(mouse_event::type::scrolled);
 
 		mouse_scrolled_event() = delete;
 		explicit mouse_scrolled_event(const int button) = delete;
@@ -149,14 +132,10 @@ namespace cheap {
 		~mouse_scrolled_event() override = default;
 	};
 
-	class mouse_moved_event : mouse_event
+	class mouse_moved_event : public mouse_event
 	{
 	public:
-		int get_type() const override { return moved; }
-		bool is_type(const int sub_type) const override
-		{
-			return sub_type == moved;
-		}
+		GET_TYPE_AND_IS_TYPE(mouse_event::type::moved);
 
 		mouse_moved_event() = delete;
 		explicit mouse_moved_event(const int button) = delete;

@@ -18,19 +18,20 @@
 
 // ------------ 3rd party lib -------------
 
+//#ifdef CP_OPENGL_API
+
+//#endif
 
 
 // ------------ 3rd party lib -------------
 
 // ------------ my cheap lib ------------
-#    include "cheap/utils/log.h"
-
+#include "cheap/utils/log.h"
 
 // ------------ my cheap lib ------------
 
 
-#ifdef CP_PLATFORM_WINDOWS
-
-#endif
+//#ifdef CP_PLATFORM_WINDOWS
+//#endif
 
 
