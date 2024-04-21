@@ -108,6 +108,9 @@
     <ClInclude Include="src\cheap\graphics\base\base.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\cheap\utils\utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cheap\core\app.cpp">
@@ -126,6 +129,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\glad.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\utils\utils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\base\Font.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

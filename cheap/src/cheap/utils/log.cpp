@@ -1,8 +1,9 @@
 ﻿#include "pch.h"
+#include "log.h"
 
 
+namespace cheap::log {
 
-namespace cheap {
 	void print(const std::string& str)
 	{
 		std::cout << str;
@@ -12,10 +13,13 @@ namespace cheap {
 		std::cout << str << '\n';
 	}
 
-	void log(const char* file, const char* func, const long line)
+	void log()
 	{
-		std::cout << '[' << std::chrono::zoned_time{ std::chrono::current_zone(), std::chrono::system_clock::now()
-		} << "]  FILE:"
-			<< file << " \t" << func << "() \tLINE:" << line << "\n";
+		std::cout << '[' << std::chrono::zoned_time{ std::chrono::current_zone(), std::chrono::system_clock::now() } << "]  FILE:" << __FILE__ << " \t" << __func__ << "() \tLINE:" << __LINE__ << "\n"
+	}
+
+	void log(const std::string& message)
+	{
+		std::cout << '[' << std::chrono::zoned_time{ std::chrono::current_zone(), std::chrono::system_clock::now() } << "]  FILE:" << __FILE__ << " \t" << __func__ << "() \tLINE:" << __LINE__ << "\nLOG::INFO: " << message << '\n';
 	}
 }

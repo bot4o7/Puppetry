@@ -3,11 +3,8 @@
 
 #ifdef CP_OPENGL_API
 
-#include <glm/glm.hpp>
-
 namespace cheap {
 	// OpenGL texture slots has 16 at least.
-	#define OPENGL_SLOT_NUM 16
 	class shader_program final : public base
 	{
 	public:
@@ -41,7 +38,7 @@ namespace cheap {
 			LOG();
 			static const std::string m_uniform_vec1_texture_slot_array_name = "uTexSlots";
 
-			glUniform1iv(get_uniform_texture_slot_array_location(m_uniform_vec1_texture_slot_array_name.c_str()), OPENGL_SLOT_NUM, texture_slot_array);
+			glUniform1iv(get_uniform_texture_slot_array_location(m_uniform_vec1_texture_slot_array_name.c_str()), MAX_TEXTURES, texture_slot_array);
 		}
 
 		void set_uniform_mat4_projection_array(glm::mat4* projection_array) const
@@ -49,7 +46,7 @@ namespace cheap {
 			LOG();
 			static const std::string m_uniform_mat4_projection_array_name = "uProjection";
 
-			glUniformMatrix4fv(get_uniform_projection_array_location(m_uniform_mat4_projection_array_name.c_str()), OPENGL_SLOT_NUM, GL_FALSE, &projection_array[0][0][0]);
+			glUniformMatrix4fv(get_uniform_projection_array_location(m_uniform_mat4_projection_array_name.c_str()), MAX_TEXTURES, GL_FALSE, &projection_array[0][0][0]);
 		}
 
 
