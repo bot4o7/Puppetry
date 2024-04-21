@@ -22,7 +22,7 @@ namespace cheap {
 		void exit();
 
 		// functions of other classes use this function to pass event to app(this class)
-		void on_event(event* input_event);
+		void on_event(event* new_event);
 
 		// input* get_input() const;
 		window* get_window();

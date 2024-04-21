@@ -18,16 +18,11 @@
 
 // ------------ 3rd party lib -------------
 
-//#ifdef CP_OPENGL_API
-
-//#endif
-
-
 // ------------ 3rd party lib -------------
 
 // ------------ my cheap lib ------------
 #include "cheap/utils/log.h"
-
+#include "cheap/graphics/graphics_lib.h"
 // ------------ my cheap lib ------------
 
 

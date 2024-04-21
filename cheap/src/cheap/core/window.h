@@ -23,7 +23,6 @@ namespace cheap {
 		};
 	public:
 
-		//window(const std::string& title, unsigned int window_width, unsigned int window_height, const std::function<void(event*)>& event_callback_function, const std::function<void()>& update_callback);
 		window(
 			const std::string& title,
 			int                                window_width,

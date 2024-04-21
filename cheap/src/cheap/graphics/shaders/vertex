@@ -1,0 +1,23 @@
+﻿#version 330 core
+
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec4 color;
+layout(location = 2) in vec2 texCoords;
+layout(location = 3) in int texSlot;
+layout(location = 4) in bool isText;
+layout(location = 5) in int projSlot;
+out vec4 vColor;
+out vec2 vTexCoords;
+out int vTexSlot;
+out bool vIsText;
+
+uniform mat4 uProjection[16];
+
+void main()
+{
+	gl_Position = uProjection[projSlot] * vec4(position, 1.0);
+	vColor = color;
+	vTexCoords = texCoords;
+	vTexSlot = texSlot;
+	vIsText = isText;
+}

@@ -145,10 +145,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glfw3_mt.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\glfw\lib-vc2022-64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\cheap\core\window.h" />
+    <ClInclude Include="src\cheap\entity\entity.h" />
     <ClInclude Include="src\cheap\events\app_event.h" />
     <ClInclude Include="src\cheap\events\event.h" />
     <ClInclude Include="src\cheap\events\event_system.h" />
@@ -156,11 +158,27 @@
     <ClInclude Include="src\cheap\events\input\key_code.h" />
     <ClInclude Include="src\cheap\events\input\mouse_button.h" />
     <ClInclude Include="src\cheap\events\input_event.h" />
+    <ClInclude Include="src\cheap\graphics\base\base.h" />
+    <ClInclude Include="src\cheap\graphics\base\color.h" />
+    <ClInclude Include="src\cheap\graphics\base\font.h" />
+    <ClInclude Include="src\cheap\graphics\graphics_element.h" />
+    <ClInclude Include="src\cheap\graphics\graphics_lib.h" />
+    <ClInclude Include="src\cheap\graphics\image.h" />
+    <ClInclude Include="src\cheap\graphics\base\index_buffer.h" />
+    <ClInclude Include="src\cheap\graphics\rectangle.h" />
+    <ClInclude Include="src\cheap\graphics\renderer.h" />
+    <ClInclude Include="src\cheap\graphics\base\shader_program.h" />
+    <ClInclude Include="src\cheap\graphics\sprite.h" />
+    <ClInclude Include="src\cheap\graphics\text.h" />
+    <ClInclude Include="src\cheap\graphics\base\texture.h" />
+    <ClInclude Include="src\cheap\graphics\base\transform.h" />
+    <ClInclude Include="src\cheap\graphics\base\vertex_buffer.h" />
+    <ClInclude Include="src\cheap\graphics\base\vertex_array.h" />
+    <ClInclude Include="src\cheap\graphics\base\vertex_layout.h" />
     <ClInclude Include="src\cheap\utils\log.h" />
     <ClInclude Include="src\cheap\core\app.h" />
     <ClInclude Include="src\cheap.h" />
     <ClInclude Include="src\cheap\core\core.h" />
-    <ClInclude Include="src\cheap\core\entry_point.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -182,11 +200,16 @@
     </ClCompile>
     <ClCompile Include="src\glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\cheap\graphics\shaders\fragment" />
+    <None Include="src\cheap\graphics\shaders\vertex" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

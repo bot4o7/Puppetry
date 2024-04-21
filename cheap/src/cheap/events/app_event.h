@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "event.h"
-#include "event.h"
 
 namespace cheap {
 	class app_event : public event
@@ -12,7 +11,7 @@ namespace cheap {
 			render,
 			window_resize,
 			window_close,
-			window_move,
+			//window_move,
 			window_fullscreen_mode_update
 		};
 
@@ -53,17 +52,17 @@ namespace cheap {
 		~app_window_resize_event() override = default;
 	};
 
-	class app_window_move_event final :public app_event
-	{
-	public:
-		int m_x;
-		int m_y;
+	//class app_window_move_event final :public app_event
+	//{
+	//public:
+	//	int m_x;
+	//	int m_y;
 
-		GET_TYPE_AND_IS_TYPE(app_event::type::window_move);
+	//	GET_TYPE_AND_IS_TYPE(app_event::type::window_move);
 
-		app_window_move_event(const int x, const int y) : m_x(x), m_y(y) { }
-		~app_window_move_event() override = default;
-	};
+	//	app_window_move_event(const int x, const int y) : m_x(x), m_y(y) { }
+	//	~app_window_move_event() override = default;
+	//};
 
 	class app_window_close_event final : public app_event
 	{

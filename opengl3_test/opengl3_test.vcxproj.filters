@@ -38,6 +38,5 @@
     <None Include="graphics\shaders\fragment_tex3d" />
     <None Include="graphics\shaders\vertex_tex3d" />
     <None Include="graphics\shaders\fragment_camera.glsl" />
-    <None Include="graphics\shaders\vertex_camera.glsl" />
   </ItemGroup>
 </Project>

@@ -2,31 +2,14 @@
 #include "window.h"
 
 #include "../events/app_event.h"
-
-#ifdef CP_OPENGL_API
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
+#ifdef CP_OPENGL_API
 namespace cheap {
 
 	#define CP_GLFW_WINDOW_POINTER static_cast<GLFWwindow*>(m_raw_window_)
 	#define CP_STB_IMAGE_ICON_POINTER static_cast<GLFWimage*>(m_icons_)
 
-	//window::window(const std::string& title, unsigned int window_width, unsigned int window_height, const std::function<void(event*)>& event_callback_function, const std::function<void()>& update_callback)
-	//:
-	//m_raw_window_(nullptr),
-	//m_title_(title),
-		/*m_background_color_rgba()*/
-	//m_start_width_(window_width),
-	//m_start_height_(window_height),
-	//m_aspect_ration_(16.0f / 9.0f),
-	//m_x_(0),
-	//m_y_(0),
-	//m_window_data_(window_width, window_height, event_callback_function),
-	//m_is_fullscreen_(false),
-	//m_icons_(new GLFWimage(0, 0, nullptr)),
-	//m_update_callback_(update_callback){}
 	window::window(
 		const std::string& title,
 		const int                          window_width,
@@ -66,7 +49,7 @@ namespace cheap {
 			glfwDestroyWindow(CP_GLFW_WINDOW_POINTER);
 			glfwTerminate();
 		}
-		if (CP_STB_IMAGE_ICON_POINTER->pixels)
+		if (CP_STB_IMAGE_ICON_POINTER != nullptr && CP_STB_IMAGE_ICON_POINTER->pixels)
 			stbi_image_free(CP_STB_IMAGE_ICON_POINTER->pixels);
 	}
 
@@ -178,13 +161,13 @@ namespace cheap {
 
 	void* window::get_raw_window() const
 	{
-		LOG();
+		//LOG();
 		return m_raw_window_;
 	}
 
 	bool window::is_closed() const
 	{
-		LOG();
+		//LOG();
 		return glfwWindowShouldClose(CP_GLFW_WINDOW_POINTER) == GL_TRUE;
 	}
 
