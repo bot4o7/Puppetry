@@ -57,22 +57,25 @@
     <ClInclude Include="src\cheap\entity\entity.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\graphics\graphics_lib.h">
+    <ClInclude Include="src\cheap\utils\utils.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\graphics\rectangle.h">
+    <ClInclude Include="src\cheap\graphics\base\base.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\graphics\base\texture.h">
+    <ClInclude Include="src\cheap\graphics\base\color.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\graphics\image.h">
+    <ClInclude Include="src\cheap\graphics\base\font.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\cheap\graphics\base\index_buffer.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\cheap\graphics\base\shader_program.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\base\texture.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\cheap\graphics\base\transform.h">
@@ -87,28 +90,25 @@
     <ClInclude Include="src\cheap\graphics\base\vertex_layout.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\cheap\graphics\drawable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\graphics_lib.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\image.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\rectangle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="src\cheap\graphics\renderer.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\cheap\graphics\sprite.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\graphics\base\font.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\cheap\graphics\text.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cheap\graphics\drawable.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cheap\graphics\base\color.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cheap\graphics\base\base.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cheap\utils\utils.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\cheap\graphics\ui_entity.h">
@@ -137,13 +137,19 @@
     <ClCompile Include="src\cheap\utils\utils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\cheap\graphics\base\color.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="src\cheap\graphics\base\Font.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\graphics\renderer.cpp">
+    <ClCompile Include="src\cheap\graphics\base\index_buffer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\graphics\drawable.cpp">
+    <ClCompile Include="src\cheap\graphics\base\shader_program.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\base\texture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\cheap\graphics\base\transform.cpp">
@@ -158,16 +164,10 @@
     <ClCompile Include="src\cheap\graphics\base\vertex_layout.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\graphics\base\index_buffer.cpp">
+    <ClCompile Include="src\cheap\graphics\drawable.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\graphics\base\shader_program.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cheap\graphics\base\texture.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cheap\graphics\base\color.cpp">
+    <ClCompile Include="src\cheap\graphics\renderer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\cheap\graphics\ui_entity.cpp">

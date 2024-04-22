@@ -30,7 +30,6 @@ namespace cheap {
 	}
 	app::app(unsigned int width, unsigned int height) :m_window_(std::make_shared<window>("cheap game", width, height,
 		[this](event* input_event) {this->on_event(input_event); },
-		[this](event* input_event) {this->on_event(input_event); },
 		[this]() {this->update(); })), m_event_system_(std::make_shared <event_system>())
 	{
 		LOG();

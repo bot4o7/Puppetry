@@ -38,7 +38,8 @@ namespace cheap {
 	// Set the entity's alignment relative to the layout
 	void UIEntity::set_layout_position(const layout_position horizontal, const layout_position vertical) const
 	{
-		if (get_drawable()->get_parent_transform())
-			get_drawable()->set_parent_layout_pos(horizontal, vertical);
+		/*	if (get_drawable()->get_parent_transform())
+				get_drawable()->set_parent_layout_pos(horizontal, vertical);
+		*/
 	}
 }

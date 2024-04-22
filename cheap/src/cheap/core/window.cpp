@@ -2,8 +2,11 @@
 #include "window.h"
 
 #include "../events/app_event.h"
+
+#define STB_IMAGE_STATIC
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
+
 #ifdef CP_OPENGL_API
 namespace cheap {
 
