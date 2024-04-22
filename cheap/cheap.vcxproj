@@ -161,7 +161,7 @@
     <ClInclude Include="src\cheap\graphics\base\base.h" />
     <ClInclude Include="src\cheap\graphics\base\color.h" />
     <ClInclude Include="src\cheap\graphics\base\font.h" />
-    <ClInclude Include="src\cheap\graphics\graphics_element.h" />
+    <ClInclude Include="src\cheap\graphics\drawable.h" />
     <ClInclude Include="src\cheap\graphics\graphics_lib.h" />
     <ClInclude Include="src\cheap\graphics\image.h" />
     <ClInclude Include="src\cheap\graphics\base\index_buffer.h" />
@@ -175,6 +175,7 @@
     <ClInclude Include="src\cheap\graphics\base\vertex_buffer.h" />
     <ClInclude Include="src\cheap\graphics\base\vertex_array.h" />
     <ClInclude Include="src\cheap\graphics\base\vertex_layout.h" />
+    <ClInclude Include="src\cheap\graphics\ui_entity.h" />
     <ClInclude Include="src\cheap\utils\log.h" />
     <ClInclude Include="src\cheap\core\app.h" />
     <ClInclude Include="src\cheap.h" />
@@ -195,7 +196,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\cheap\graphics\base\color.cpp" />
     <ClCompile Include="src\cheap\graphics\base\Font.cpp" />
+    <ClCompile Include="src\cheap\graphics\base\index_buffer.cpp" />
+    <ClCompile Include="src\cheap\graphics\base\shader_program.cpp" />
+    <ClCompile Include="src\cheap\graphics\base\texture.cpp" />
+    <ClCompile Include="src\cheap\graphics\base\transform.cpp" />
+    <ClCompile Include="src\cheap\graphics\base\vertex_array.cpp" />
+    <ClCompile Include="src\cheap\graphics\base\vertex_layout.cpp" />
+    <ClCompile Include="src\cheap\graphics\drawable.cpp" />
+    <ClCompile Include="src\cheap\graphics\renderer.cpp" />
+    <ClCompile Include="src\cheap\graphics\base\vertex_buffer.cpp" />
+    <ClCompile Include="src\cheap\graphics\ui_entity.cpp" />
     <ClCompile Include="src\cheap\utils\utils.cpp" />
     <ClCompile Include="src\game.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>

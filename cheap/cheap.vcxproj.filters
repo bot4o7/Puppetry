@@ -99,7 +99,7 @@
     <ClInclude Include="src\cheap\graphics\text.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\graphics\graphics_element.h">
+    <ClInclude Include="src\cheap\graphics\drawable.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\cheap\graphics\base\color.h">
@@ -109,6 +109,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\cheap\utils\utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\ui_entity.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -135,6 +138,39 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\cheap\graphics\base\Font.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\renderer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\drawable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\base\transform.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\base\vertex_array.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\base\vertex_buffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\base\vertex_layout.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\base\index_buffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\base\shader_program.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\base\texture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\base\color.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\ui_entity.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

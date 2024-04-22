@@ -18,7 +18,7 @@ namespace cheap {
 	// Define constants
 	constexpr unsigned short MAX_DRAWABLE_ITEMS = 10000;
 	constexpr unsigned short MAX_VERTICES = MAX_DRAWABLE_ITEMS * 4; // 1 drawable = 4 vertices
-	//constexpr unsigned short MAX_INDICES = MAX_DRAWABLE_ITEMS * 6; // 1 drawable = 2 triangles = 2 * 3 vertices
+	constexpr unsigned short MAX_INDICES = MAX_DRAWABLE_ITEMS * 6; // 1 drawable = 2 triangles = 2 * 3 vertices
 	constexpr unsigned short MAX_TEXT_LENGTH = MAX_DRAWABLE_ITEMS;
 	constexpr unsigned char  MAX_TEXTURES = 15; // 1st slot = no texture
 

@@ -2,7 +2,7 @@
 #include "app.h"
 
 #include "../events/app_event.h"
-
+#include "../graphics/rectangle.h"
 #ifdef CP_OPENGL_API
 namespace cheap {
 	app::app(std::string& title, unsigned int width, unsigned int height) :
@@ -11,6 +11,7 @@ namespace cheap {
 			[this]() {this->update(); })),
 		/*mCursorManager(std::make_shared<CursorManager>()), mInput(std::make_shared<Input>()),
 		mRenderer(std::make_shared<Renderer>()), mEntityManager(std::make_shared<EntityManager>()),*/
+		m_renderer_(std::make_shared<renderer>()),
 		m_event_system_(std::make_shared <event_system>()
 			/*mInputManager(std::make_shared<InputManager>()), mFontManager(std::make_shared<FontManager>()),
 				mAudioManager(std::make_shared<AudioManager>()), mFileManager(std::make_shared<FileManager>()*/)
@@ -29,6 +30,7 @@ namespace cheap {
 	}
 	app::app(unsigned int width, unsigned int height) :m_window_(std::make_shared<window>("cheap game", width, height,
 		[this](event* input_event) {this->on_event(input_event); },
+		[this](event* input_event) {this->on_event(input_event); },
 		[this]() {this->update(); })), m_event_system_(std::make_shared <event_system>())
 	{
 		LOG();
@@ -45,13 +47,17 @@ namespace cheap {
 		// timing
 		float deltaTime = 0.0f;	// time between current frame and last frame
 		float lastFrame = 0.0f;
+		std::vector<std::unique_ptr<UIEntity>> m_entities;
+		m_entities.emplace_back(std::unique_ptr<UIEntity>());
+		m_entities.back()->set_layout_position(layout_position::mid_x, layout_position::mid_y);
+		//m_entities.back();
 		while (app::is_running()) {
 			// per-frame time logic
 	// --------------------
 			float currentFrame = static_cast<float>(glfwGetTime());
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
-
+			m_renderer_->submit(m_entities);
 			// input
 			// -----
 			//processInput(window);
@@ -116,7 +122,8 @@ namespace cheap {
 		// Set the active entities to be processed in this frame
 		//m_event_system_->SetEntities(mEntityManager->GetEntities());
 		// Render all graphics visible in this frame
-		//mRenderer->Submit(mEntityManager->GetEntities());
+		//m_renderer_->submit(mEntityManager->GetEntities());
+		//m_renderer_->submit();
 		// Update the graphics in the window
 		m_window_->update();
 	}

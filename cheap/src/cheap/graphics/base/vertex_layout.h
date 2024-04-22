@@ -5,28 +5,15 @@ namespace cheap {
 	class vertex_layout final : public base
 	{
 	public:
-		vertex_layout() : m_stride_(0)
-		{
-
-		}
-		~vertex_layout() override = default;
+		vertex_layout();
+		~vertex_layout() override;
 
 		// Add a new attribute to the vertex buffer layout
-		void add_floats(unsigned int count)
-		{
-			m_attributes_.emplace_back(count, GL_FLOAT, GL_FALSE, m_stride_);
-			m_stride_ += count * sizeof(float);
-		}
+		void add_floats(unsigned int count);
 
-		[[nodiscard]] const std::vector<vertex_attribute>& get_attributes() const
-		{
-			return m_attributes_;
-		}
+		[[nodiscard]] const std::vector<vertex_attribute>& get_attributes() const;
 		// Get the size (in bytes) of the entire vertex
-		[[nodiscard]] unsigned int get_stride() const
-		{
-			return m_stride_;
-		}
+		[[nodiscard]] unsigned int get_stride() const;
 
 	private:
 		std::vector<vertex_attribute> m_attributes_;

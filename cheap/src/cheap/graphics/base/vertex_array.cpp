@@ -2,18 +2,18 @@
 #include "vertex_array.h"
 
 namespace cheap {
-	vertex_array()
+	vertex_array::vertex_array()
 	{
 		// Create a vertex array and assign it an id
 		glGenVertexArrays(1, &m_id_);
 		glBindVertexArray(m_id_);
 	}
-	~vertex_array() override
+	vertex_array::~vertex_array()
 	{
 		glDeleteVertexArrays(1, &m_id_);
 	}
 	// should be called after binding a vertex buffer
-	static void add_layout(vertex_layout* layout)
+	void vertex_array::add_layout(const vertex_layout* layout)
 	{
 
 		// Get all the different attributes included in a single vertex buffer
@@ -33,15 +33,14 @@ namespace cheap {
 		}
 	}
 
-	void bind() const
+	void vertex_array::bind() const
 	{
 		glBindVertexArray(m_id_);
 	}
 
-	static void unbind()
+	void vertex_array::unbind()
 	{
 		glBindVertexArray(0);
 	}
 
-	std::unique_ptr<vertex_layout> m_layout_;
 }

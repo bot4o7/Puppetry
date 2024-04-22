@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cheap", "cheap\cheap.vcxproj", "{6A42B788-E0D6-4E3B-9330-02236504610F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wand", "..\wand-master\Wand\Wand.vcxproj", "{42289FAA-EE71-4120-9A28-5E72760FCF1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{6A42B788-E0D6-4E3B-9330-02236504610F}.Release|x64.Build.0 = Release|x64
 		{6A42B788-E0D6-4E3B-9330-02236504610F}.Release|x86.ActiveCfg = Release|Win32
 		{6A42B788-E0D6-4E3B-9330-02236504610F}.Release|x86.Build.0 = Release|Win32
+		{42289FAA-EE71-4120-9A28-5E72760FCF1B}.Debug|x64.ActiveCfg = Debug|x64
+		{42289FAA-EE71-4120-9A28-5E72760FCF1B}.Debug|x64.Build.0 = Debug|x64
+		{42289FAA-EE71-4120-9A28-5E72760FCF1B}.Debug|x86.ActiveCfg = Debug|x64
+		{42289FAA-EE71-4120-9A28-5E72760FCF1B}.Debug|x86.Build.0 = Debug|x64
+		{42289FAA-EE71-4120-9A28-5E72760FCF1B}.Release|x64.ActiveCfg = Release|x64
+		{42289FAA-EE71-4120-9A28-5E72760FCF1B}.Release|x64.Build.0 = Release|x64
+		{42289FAA-EE71-4120-9A28-5E72760FCF1B}.Release|x86.ActiveCfg = Release|x64
+		{42289FAA-EE71-4120-9A28-5E72760FCF1B}.Release|x86.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

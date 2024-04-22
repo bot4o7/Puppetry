@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "window.h"
 #include "../events/event_system.h"
+#include "../graphics/renderer.h"
 
 #ifdef CP_OPENGL_API
 namespace cheap {
@@ -9,8 +10,8 @@ namespace cheap {
 	class app
 	{
 	public:
-		app(std::string& title, unsigned int width = 1184, unsigned int height = 666);
-		app(unsigned int width = 1184, unsigned int height = 666);
+		explicit app(std::string& title, unsigned int width = 1184, unsigned int height = 666);
+		explicit app(unsigned int width = 1184, unsigned int height = 666);
 		~app();
 
 
@@ -38,7 +39,7 @@ namespace cheap {
 		std::shared_ptr<window> m_window_;
 		// cursor_system* get();
 		// input*
-		// renderer*
+		std::shared_ptr<renderer> m_renderer_;
 		// entity_system* get();
 		// input_system*
 		std::shared_ptr<event_system> m_event_system_;
