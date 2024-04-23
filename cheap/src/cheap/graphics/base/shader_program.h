@@ -5,7 +5,7 @@
 
 namespace cheap {
 	// OpenGL texture slots has 16 at least.
-	class shader_program final : public base
+	class shader_program2 final : public base
 	{
 	public:
 		shader_program();

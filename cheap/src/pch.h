@@ -9,7 +9,7 @@
 #include <format>
 #include <memory>
 #include <fstream>
-
+#include <sstream>
 
 #include <array>
 #include <vector>

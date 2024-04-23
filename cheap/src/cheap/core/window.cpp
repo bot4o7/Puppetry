@@ -10,180 +10,174 @@
 #ifdef CP_OPENGL_API
 namespace cheap {
 
-	#define CP_GLFW_WINDOW_POINTER static_cast<GLFWwindow*>(m_raw_window_)
-	#define CP_STB_IMAGE_ICON_POINTER static_cast<GLFWimage*>(m_icons_)
+	window::window_data::window_data(const unsigned                     aWindow_width, const unsigned aWindow_height,
+		const std::function<void(event*)>& aEvent_callback_function)
+		: mWidth(aWindow_width), mHeight(aWindow_height), mEvent_callback(aEvent_callback_function)
+	{
+	}
+
+	window::window_data::~window_data()
+		= default;
 
 	window::window(
-		const std::string& title,
-		const int                          window_width,
-		const int                          window_height,
-		const std::function<void(event*)>& event_callback_function,
-		const std::function<void()>& update_callback,
-		const int                          x,
-		const int                          y,
-		const bool                         is_fullscreen)
-		:
-		m_raw_window_(nullptr),
-		m_title_(title),
+		const std::string& aTitle,
+		const int                          aWindow_width,
+		const int                          aWindow_height,
+		const std::function<void(event*)>& aEvent_callback_function,
+		const std::function<void()>& aUpdate_callback,
+		const int                          aX,
+		const int                          aY,
+		const bool                         aIs_fullscreen)
+		: mRaw_window_(nullptr),
+		mTitle(aTitle),
 		/*m_background_color_rgba()*/
-		m_start_width_(window_width),
-		m_start_height_(window_height),
-		m_aspect_ration_(16.0f / 9.0f),
-		m_x_(x),
-		m_y_(y),
-		m_window_data_(window_width, window_height, event_callback_function),
-		m_is_fullscreen_(is_fullscreen),
-		m_icons_(/*new GLFWimage(0, 0, nullptr)*/),
-		m_update_callback_(update_callback)
+		mStart_width(aWindow_width),
+		mStart_height(aWindow_height),
+		mAspect_ration(16.0f / 9.0f),
+		mX(aX),
+		mY(aY),
+		mWindow_data(aWindow_width, aWindow_height, aEvent_callback_function),
+		mIs_fullscreen(aIs_fullscreen),
+		mIcons(/*new GLFWimage(0, 0, nullptr)*/),
+		mUpdate_callback_(aUpdate_callback)
 	{
 		LOG();
-		if (m_init()) {
+		if (init())
 			PRINTLN("window init successed.");
-		} else {
+		else
 			PRINTLN("window init failed.");
-		}
 	}
+
 	window::~window()
 	{
 		LOG();
-		if (is_window_ptr_null()) {
+		if (is_window_ptr_null())
 			PRINTLN("m_raw_window_pointer is nullptr.");
-		} else {
-			glfwDestroyWindow(CP_GLFW_WINDOW_POINTER);
+		else {
+			glfwDestroyWindow(mRaw_window_);
 			glfwTerminate();
 		}
-		if (CP_STB_IMAGE_ICON_POINTER != nullptr && CP_STB_IMAGE_ICON_POINTER->pixels)
-			stbi_image_free(CP_STB_IMAGE_ICON_POINTER->pixels);
+		if (mIcons != nullptr && mIcons->pixels)
+			stbi_image_free(mIcons->pixels);
 	}
 
-
-	void window::set_layout(int x, int y) const
+	void window::set_layout(int aX, int aY) const
 	{
 		LOG();
 		PRINTLN("set_layout() is not implemented yet.");
 		if (is_window_ptr_null()) return;
-
-
 	}
 
-	int window::get_layout_x() const { return m_x_; }
+	int window::get_layout_x() const { return mX; }
 
-	int window::get_layout_y() const { return m_y_; }
+	int window::get_layout_y() const { return mY; }
 
-	bool window::is_window_ptr_null() const { return m_raw_window_ == nullptr; }
+	bool window::is_window_ptr_null() const { return mRaw_window_ == nullptr; }
 
+	float window::get_aspect_ration() const { return mAspect_ration; }
 
+	unsigned int window::get_start_width() const { return mStart_width; }
 
-	float window::get_aspect_ration()const
-	{
-		return m_aspect_ration_;
-	}
+	unsigned int window::get_start_height() const { return mStart_height; }
 
-	int    window::get_start_width()const
-	{
-		return m_start_width_;
-	}
+	unsigned int window::get_width() const { return mWindow_data.mWidth; }
 
-	int     window::get_start_height()const
-	{
-		return m_start_height_;
-	}
+	unsigned int window::get_height() const { return mWindow_data.mHeight; }
 
-	int window::get_width() const { return m_window_data_.width; }
+	std::string window::get_title() const { return mTitle; }
 
-	int window::get_height() const { return m_window_data_.height; }
+	bool window::is_fullscreen() const { return mIs_fullscreen; }
 
-	std::string window::get_title() const { return m_title_; }
-
-	bool window::is_fullscreen() const { return m_is_fullscreen_; }
-
-	void window::set_aspect_ration(unsigned int numerator, unsigned int denominator)
+	void window::set_aspect_ration(unsigned int aNumerator, unsigned int aDenominator)
 	{
 		LOG();
 		PRINTLN("set_aspect_ration() is not implemented yet.");
 	}
 
-	void window::resize(const int width, const int height)
+	void window::resize(const unsigned int aWidth, const unsigned int aHeight)
 	{
 		LOG();
 		if (is_window_ptr_null()) return;
 
-		if (width > -1)
-			m_window_data_.width = width;
+		if (aWidth > -1)
+			mWindow_data.mWidth = aWidth;
 
-		if (height > -1)
-			m_window_data_.height = height;
+		if (aHeight > -1)
+			mWindow_data.mHeight = aHeight;
 	}
 
-	void window::set_title(const std::string& title)
+	void window::set_title(const std::string& aTitle)
 	{
 		LOG();
 		if (is_window_ptr_null()) return;
 
-		m_title_ = title;
-		glfwSetWindowTitle(CP_GLFW_WINDOW_POINTER, m_title_.c_str());
+		mTitle = aTitle;
+		glfwSetWindowTitle(mRaw_window_, mTitle.c_str());
 	}
 
-	void window::set_fullscreen(const bool is_fullscreen)
+	void window::set_fullscreen(const bool aIs_fullscreen)
 	{
 		LOG();
 		if (is_window_ptr_null()) return;
 
-		if (is_fullscreen) {
-			if (m_is_fullscreen_) return;
+		if (aIs_fullscreen) {
+			if (mIs_fullscreen) return;
 
 			// Save current position of the window
-			glfwGetWindowPos(CP_GLFW_WINDOW_POINTER, &m_x_, &m_y_);
+			glfwGetWindowPos(mRaw_window_, &mX, &mY);
 			GLFWmonitor* primary_monitor = glfwGetPrimaryMonitor();
 			const GLFWvidmode* video_mode = glfwGetVideoMode(primary_monitor);
-			glfwSetWindowMonitor(CP_GLFW_WINDOW_POINTER, primary_monitor, 0, 0, video_mode->width, video_mode->height, video_mode->refreshRate);
+			glfwSetWindowMonitor(mRaw_window_, primary_monitor, 0, 0, video_mode->width, video_mode->height,
+				video_mode->refreshRate);
 		} else {
-			if (!m_is_fullscreen_) return;
-			glfwSetWindowMonitor(CP_GLFW_WINDOW_POINTER, nullptr, m_x_, m_y_, m_start_width_, m_start_height_, GLFW_DONT_CARE);
+			if (!mIs_fullscreen) return;
+			glfwSetWindowMonitor(mRaw_window_, nullptr, mX, mY, mStart_width, mStart_height,
+				GLFW_DONT_CARE);
 		}
 
-		m_is_fullscreen_ = is_fullscreen;
+		mIs_fullscreen = aIs_fullscreen;
 	}
 
-	void window::set_icon(const std::string& image_path) const
+	void window::set_icon(const std::string& aImage_path) const
 	{
 		LOG();
 		// Free previously loaded icons
 		//if (static_cast<GLFWimage*>(m_icons_[0])->pixels)
 		//	stbi_image_free(static_cast<GLFWimage*>(m_icons_[0])->pixels);
-		if (CP_STB_IMAGE_ICON_POINTER->pixels)
-			stbi_image_free(CP_STB_IMAGE_ICON_POINTER->pixels);
+		if (mIcons->pixels)
+			stbi_image_free(mIcons->pixels);
 
 		// Flip the image vertically before loading
 		stbi_set_flip_vertically_on_load(0);
 		//static_cast<GLFWimage*>(m_icons_[0])->pixels = stbi_load(image_path.c_str(), &static_cast<GLFWimage*>(m_icons_[0])->width, &static_cast<GLFWimage*>(m_icons_[0])->height, 0, 4);
-		//glfwSetWindowIcon(CP_GLFW_WINDOW_POINTER, 1, static_cast<GLFWimage*>(m_icons_[0]));
-		CP_STB_IMAGE_ICON_POINTER->pixels = stbi_load(image_path.c_str(), &CP_STB_IMAGE_ICON_POINTER->width, &CP_STB_IMAGE_ICON_POINTER->height, 0, 4);
-		glfwSetWindowIcon(CP_GLFW_WINDOW_POINTER, 1, CP_STB_IMAGE_ICON_POINTER);
+		//glfwSetWindowIcon(m_raw_window_, 1, static_cast<GLFWimage*>(m_icons_[0]));
+		mIcons->pixels = stbi_load(aImage_path.c_str(), &mIcons->width,
+			&mIcons->height, nullptr, 4);
+		glfwSetWindowIcon(mRaw_window_, 1, mIcons);
 	}
 
 	void* window::get_raw_window() const
 	{
 		//LOG();
-		return m_raw_window_;
+		return mRaw_window_;
 	}
 
 	bool window::is_closed() const
 	{
 		//LOG();
-		return glfwWindowShouldClose(CP_GLFW_WINDOW_POINTER) == GL_TRUE;
+		return glfwWindowShouldClose(mRaw_window_) == GL_TRUE;
 	}
 
-	void window::on_close(std::function<void()> close_function)
+	void window::on_close(std::function<void()> aClose_function)
 	{
 		LOG();
-		m_close_functions_.emplace_back(close_function);
+		mClose_functions_.emplace_back(aClose_function);
 	}
 
 	void window::run_close_functions() const
 	{
 		LOG();
-		for (auto& close_function : m_close_functions_)
+		for (auto& close_function : mClose_functions_)
 			close_function();
 	}
 
@@ -200,37 +194,36 @@ namespace cheap {
 	{
 		LOG();
 		// Swap front and back window buffers
-		glfwSwapBuffers(CP_GLFW_WINDOW_POINTER);
+		glfwSwapBuffers(mRaw_window_);
 	}
 
 	void window::close() const
 	{
 		LOG();
-		glfwSetWindowShouldClose(CP_GLFW_WINDOW_POINTER, GL_TRUE);
+		glfwSetWindowShouldClose(mRaw_window_, GL_TRUE);
 	}
 
-
-
 	// success if return true
-	bool window::m_init(const bool turn_on_vsync)
+	bool window::init(const bool aIs_turn_on_vsync)
 	{
 		LOG();
-		if (!m_init_GLFW())
+		if (!init_glfw())
 			return false;
 
-		if (!m_init_window())
+		if (!init_window())
 			return false;
 
-		if (!m_init_GLAD())
+		if (!init_glad())
 			return false;
 
-		set_up_window(turn_on_vsync);
+		set_up_window(aIs_turn_on_vsync);
 
 		set_up_callbacks();
 
 		return true;
 	}
-	bool window::m_init_GLFW()
+
+	bool window::init_glfw()
 	{
 		LOG();
 		if (glfwInit())
@@ -239,25 +232,27 @@ namespace cheap {
 		PRINTLN("glfwInit() failed.");
 		return false;
 	}
-	bool window::m_init_window()
+
+	bool window::init_window()
 	{
 		LOG();
-		m_raw_window_ = glfwCreateWindow(
-			m_window_data_.width, m_window_data_.height,
-			m_title_.c_str(),
-			m_is_fullscreen_ ? glfwGetPrimaryMonitor() : nullptr,
+		mRaw_window_ = glfwCreateWindow(
+			mWindow_data.mWidth, mWindow_data.mHeight,
+			mTitle.c_str(),
+			mIs_fullscreen ? glfwGetPrimaryMonitor() : nullptr,
 			nullptr);
 
-		if (m_raw_window_ == nullptr) {
+		if (mRaw_window_ == nullptr) {
 			PRINTLN("m_init_window() failed.");
 			glfwTerminate();
 			return false;
 		}
 
-		glfwMakeContextCurrent(CP_GLFW_WINDOW_POINTER);
+		glfwMakeContextCurrent(mRaw_window_);
 		return true;
 	}
-	bool window::m_init_GLAD()
+
+	bool window::init_glad()
 	{
 		LOG();
 		if (gladLoadGL())
@@ -269,51 +264,57 @@ namespace cheap {
 		return false;
 	}
 
-	void window::set_vsync(const bool turn_on)
+	void window::set_vsync(const bool aTurn_on)
 	{
 		LOG();
-		glfwSwapInterval(turn_on ? 1 : 0);
+		glfwSwapInterval(aTurn_on ? 1 : 0);
 	}
 
-	void window::set_up_window(const bool turn_on_vsync)
+	void window::set_up_window(const bool aIs_turn_on_vsync)
 	{
 		LOG();
 		// Set 1 to limit the window's frame rate
-		set_vsync(turn_on_vsync);
+		set_vsync(aIs_turn_on_vsync);
 		// Set the background color
 		glClearColor(0.2f, 0.7f, 0.3f, 0.5f);
 		// Enable blending and properly rendering transparent pixels
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		// Associate the window data with the GLFW window
-		glfwSetWindowUserPointer(CP_GLFW_WINDOW_POINTER, (void*)&m_window_data_);
+		glfwSetWindowUserPointer(mRaw_window_, &mWindow_data);
 		// Save the current position of the window
-		glfwGetWindowPos(CP_GLFW_WINDOW_POINTER, &m_x_, &m_y_);
+		glfwGetWindowPos(mRaw_window_, &mX, &mY);
 	}
 
 	void window::set_up_callbacks() const
 	{
 		LOG();
 		glfwSetFramebufferSizeCallback(
-			CP_GLFW_WINDOW_POINTER, [](GLFWwindow* window, const int width, const int height) {
+			mRaw_window_,
+			[](GLFWwindow* aWindow, const int aWidth, const int aHeight) {
 				LOG();
 
-				const auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
+				const auto data = static_cast<window_data*>(
+					glfwGetWindowUserPointer(aWindow));
 
-				const auto event = new app_window_resize_event(static_cast<unsigned int>(width), static_cast<unsigned int>(height));
-
-				data->event_callback(event);
+				const auto event = new
+					app_window_resize_event(static_cast<unsigned int>(aWidth),
+						static_cast<unsigned int>(aHeight));
+				// make sure the viewport matches the new window dimensions; note that width and 
+				// height will be significantly larger than specified on retina displays.
+				glViewport(0, 0, aWidth, aHeight);
+				data->mEvent_callback(event);
 			});
 
 		glfwSetWindowCloseCallback(
-			CP_GLFW_WINDOW_POINTER, [](GLFWwindow* window) {
+			mRaw_window_, [](GLFWwindow* aWindow) {
 				LOG();
 
-				const auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
+				const auto data = static_cast<window_data*>(glfwGetWindowUserPointer(aWindow));
 
 				const auto event = new app_window_close_event();
 
-				data->event_callback(event);
+				data->mEvent_callback(event);
 			});
 	}
 };
