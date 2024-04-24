@@ -50,43 +50,44 @@ namespace cheap {
 		LOG();
 		shader_program shader("src/cheap/core/shaders/vertex", "src/cheap/core/shaders/fragment");
 
-		//float* vertices = new float[20];
-		//unsigned* indices = new unsigned[6];
-		//vertices[0] = 0.5f; // x pos
-		//vertices[1] = 0.5f; // y pos
-		//vertices[2] = POS_Z; // z pos
-		//vertices[3] = TEX_S_END; // S/U texCoords
-		//vertices[4] = TEX_T_END; // T/V texCoords
+		float* vertices = new float[20];
+		unsigned* indices = new unsigned[6];
+		vertices[0] = 0.5f; // x pos
+		vertices[1] = 0.5f; // y pos
+		vertices[2] = POS_Z; // z pos
+		vertices[3] = TEX_S_END; // S/U texCoords
+		vertices[4] = TEX_T_END; // T/V texCoords
 
-		//// bottom right
-		//vertices[5] = 0.5f; // x pos
-		//vertices[6] = -0.5f; // y pos
-		//vertices[7] = POS_Z; // z pos
-		//vertices[8] = TEX_S_END; // S/U texCoords
-		//vertices[9] = TEX_T_BEGIN; // T/V texCoords
+		// bottom right
+		vertices[5] = 0.5f; // x pos
+		vertices[6] = -0.5f; // y pos
+		vertices[7] = POS_Z; // z pos
+		vertices[8] = TEX_S_END; // S/U texCoords
+		vertices[9] = TEX_T_BEGIN; // T/V texCoords
 
-		//// bottom left
-		//vertices[10] = -0.5f; // x pos
-		//vertices[11] = -0.5f; // y pos
-		//vertices[12] = POS_Z; // z pos
-		//vertices[13] = TEX_S_BEGIN; // S/U texCoords
-		//vertices[14] = TEX_T_BEGIN; // T/V texCoords
+		// bottom left
+		vertices[10] = -0.5f; // x pos
+		vertices[11] = -0.5f; // y pos
+		vertices[12] = POS_Z; // z pos
+		vertices[13] = TEX_S_BEGIN; // S/U texCoords
+		vertices[14] = TEX_T_BEGIN; // T/V texCoords
 
-		//// top left
-		//vertices[15] = -0.5f; // x pos
-		//vertices[16] = 0.5f; // y pos
-		//vertices[17] = POS_Z; // z pos
-		//vertices[18] = TEX_S_BEGIN; // S/U texCoords
-		//vertices[19] = TEX_T_END; // T/V texCoords
+		// top left
+		vertices[15] = -0.5f; // x pos
+		vertices[16] = 0.5f; // y pos
+		vertices[17] = POS_Z; // z pos
+		vertices[18] = TEX_S_BEGIN; // S/U texCoords
+		vertices[19] = TEX_T_END; // T/V texCoords
 
-		//// first triangle
-		//indices[0] = 0;
-		//indices[1] = 1;
-		//indices[2] = 3;
-		//// second triangle
-		//indices[3] = 1;
-		//indices[4] = 2;
-		//indices[5] = 3;
+		// first triangle
+		indices[0] = 0;
+		indices[1] = 1;
+		indices[2] = 3;
+		// second triangle
+		indices[3] = 1;
+		indices[4] = 2;
+		indices[5] = 3;
+
 		//float vertices[] = {
 		//	// positions          // texture coords
 		//	 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
@@ -100,23 +101,23 @@ namespace cheap {
 		//};
 		//vertex_array vao(vertices, indices);
 		//vao.bind();
-		vertex_array vao(true);
-		vao.bind();
-		/*unsigned int VBO, VAO, EBO;
+		//vertex_array vao(true);
+		//vao.bind();
+		unsigned int VBO, VAO, EBO;
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
-		glGenBuffers(1, &EBO);*/
+		glGenBuffers(1, &EBO);
 
 
 
 		// 6.先绑定顶点数组对象、再绑定顶点缓冲、最后设置顶点的属性
-		/*glBindVertexArray(VAO);
+		glBindVertexArray(VAO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(*vertices), vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, 20 * sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(*indices), indices, GL_STATIC_DRAW);*/
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(indices), indices, GL_STATIC_DRAW);
 
 
 		// position attribute
@@ -143,7 +144,7 @@ namespace cheap {
 
 			shader.use(trans, GL_TEXTURE0);
 
-			vao.bind_VAO();
+			//vao.bind_VAO();
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
@@ -151,9 +152,9 @@ namespace cheap {
 			glfwPollEvents();
 		}
 
-		/*glDeleteVertexArrays(1, &VAO);
+		glDeleteVertexArrays(1, &VAO);
 		glDeleteBuffers(1, &VBO);
-		glDeleteBuffers(1, &EBO);*/
+		glDeleteBuffers(1, &EBO);
 	}
 
 	void app::clear()
