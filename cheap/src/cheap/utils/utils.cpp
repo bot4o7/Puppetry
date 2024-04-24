@@ -2,12 +2,13 @@
 #include "utils.h"
 
 namespace cheap::utils {
-	std::string read_file(const std::string& path)
+	std::string read_file(const char* aPath)
 	{
+		LOG();
 		// Open a file at a specific path
-		std::ifstream file(path);
+		std::ifstream file(aPath);
 		if (!file)
-			LOG_INFO("Utils:ReadFile", "Unable to open file at path: " + path);
+			LOG_INFO("cheap::utils\nUtils unable to open file at path: " << aPath);
 
 		std::string line;
 		std::ostringstream stream;
@@ -18,24 +19,24 @@ namespace cheap::utils {
 		return stream.str();
 	}
 
-	std::string to_upper(const std::string& str)
+	std::string to_upper(const std::string& aStr)
 	{
-		std::string new_str = str;
+		std::string new_str = aStr;
 		std::ranges::transform(new_str, new_str.begin(), ::toupper);
 		return new_str;
 	}
 
-	std::string to_lower(const std::string& str)
+	std::string to_lower(const std::string& aStr)
 	{
-		std::string new_str = str;
+		std::string new_str = aStr;
 		std::ranges::transform(new_str, new_str.begin(), ::tolower);
 		return new_str;
 	}
 
-	int find_in_array(const int num, const int* arr, const unsigned int count)
+	int find_in_array(const int aNum, const int* aRr, const unsigned int aCount)
 	{
-		for (int i = 0; i < count; ++i) {
-			if (arr[i] == num)
+		for (int i = 0; i < aCount; ++i) {
+			if (aRr[i] == aNum)
 				return i;
 		}
 		return -1;

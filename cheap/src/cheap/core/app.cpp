@@ -1,10 +1,12 @@
 ﻿#include "pch.h"
 #include "app.h"
 
-#include "render_test.h"
-#include "../events/app_event.h"
 
-#include "shader_test.h"
+#include "../events/app_event.h"
+#include "renderer.h"
+#include "shader_program.h"
+#include "texture.h"
+#include "vertex_array.h"
 
 #ifdef CP_OPENGL_API
 namespace cheap {
@@ -46,46 +48,76 @@ namespace cheap {
 	void app::run()
 	{
 		LOG();
-		// timing
-		float deltaTime = 0.0f;	// time between current frame and last frame
-		float lastFrame = 0.0f;
-		//render_test vMy_render;
-		//vMy_render.init(static_cast<GLFWwindow*>(get_window()->get_raw_window()));
+		shader_program shader("src/cheap/core/shaders/vertex", "src/cheap/core/shaders/fragment");
 
+		//float* vertices = new float[20];
+		//unsigned* indices = new unsigned[6];
+		//vertices[0] = 0.5f; // x pos
+		//vertices[1] = 0.5f; // y pos
+		//vertices[2] = POS_Z; // z pos
+		//vertices[3] = TEX_S_END; // S/U texCoords
+		//vertices[4] = TEX_T_END; // T/V texCoords
 
-		const std::string SHADER_PATH = "src/cheap/core/shaders/";
-		const std::string PIC_PATH = "src/cheap/core/pic/";
-		const std::string VERTEX_SHADER_SOURCE = SHADER_PATH + "vertex";
-		const std::string FRAGMENT_SHADER_SOURCE = SHADER_PATH + "fragment";
+		//// bottom right
+		//vertices[5] = 0.5f; // x pos
+		//vertices[6] = -0.5f; // y pos
+		//vertices[7] = POS_Z; // z pos
+		//vertices[8] = TEX_S_END; // S/U texCoords
+		//vertices[9] = TEX_T_BEGIN; // T/V texCoords
 
-		shader_test vShader_test = shader_test(VERTEX_SHADER_SOURCE.c_str(), FRAGMENT_SHADER_SOURCE.c_str());
+		//// bottom left
+		//vertices[10] = -0.5f; // x pos
+		//vertices[11] = -0.5f; // y pos
+		//vertices[12] = POS_Z; // z pos
+		//vertices[13] = TEX_S_BEGIN; // S/U texCoords
+		//vertices[14] = TEX_T_BEGIN; // T/V texCoords
 
-		GLFWwindow* window = static_cast<GLFWwindow*>(get_window()->get_raw_window());
-		// set up vertex data (and buffer(s)) and configure vertex attributes
-		// ------------------------------------------------------------------
-		float vertices[] = {
-			// positions          // texture coords
-			 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
-			 0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
-			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
-			-0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
-		};
-		unsigned int indices[] = {
-			0, 1, 3, // first triangle
-			1, 2, 3  // second triangle
-		};
-		unsigned int VBO, VAO, EBO;
+		//// top left
+		//vertices[15] = -0.5f; // x pos
+		//vertices[16] = 0.5f; // y pos
+		//vertices[17] = POS_Z; // z pos
+		//vertices[18] = TEX_S_BEGIN; // S/U texCoords
+		//vertices[19] = TEX_T_END; // T/V texCoords
+
+		//// first triangle
+		//indices[0] = 0;
+		//indices[1] = 1;
+		//indices[2] = 3;
+		//// second triangle
+		//indices[3] = 1;
+		//indices[4] = 2;
+		//indices[5] = 3;
+		//float vertices[] = {
+		//	// positions          // texture coords
+		//	 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
+		//	 0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
+		//	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
+		//	-0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
+		//};
+		//unsigned int indices[] = {
+		//	0, 1, 3, // first triangle
+		//	1, 2, 3  // second triangle
+		//};
+		//vertex_array vao(vertices, indices);
+		//vao.bind();
+		vertex_array vao(true);
+		vao.bind();
+		/*unsigned int VBO, VAO, EBO;
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
-		glGenBuffers(1, &EBO);
-		// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-		glBindVertexArray(VAO);
+		glGenBuffers(1, &EBO);*/
+
+
+
+		// 6.先绑定顶点数组对象、再绑定顶点缓冲、最后设置顶点的属性
+		/*glBindVertexArray(VAO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(*vertices), vertices, GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(*indices), indices, GL_STATIC_DRAW);*/
+
 
 		// position attribute
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -94,137 +126,34 @@ namespace cheap {
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
 
-		// load and create a texture 
-	// -------------------------
-		unsigned int texture1, texture2;
-		// texture 1
-		// ---------
-		glGenTextures(1, &texture1);
-		glBindTexture(GL_TEXTURE_2D, texture1);
-		// set the texture wrapping parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		// set texture filtering parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// load image, create texture and generate mipmaps
-		int width, height, nrChannels;
-		stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-		unsigned char* data = stbi_load((PIC_PATH + "fumo.jpg").c_str(), &width, &height, &nrChannels, 0);
-		if (data) {
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			glGenerateMipmap(GL_TEXTURE_2D);
-		} else {
-			std::cout << "Failed to load texture" << std::endl;
-		}
-		stbi_image_free(data);
-		// texture 2
-		// ---------
-		glGenTextures(1, &texture2);
-		glBindTexture(GL_TEXTURE_2D, texture2);
-		// set the texture wrapping parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		// set texture filtering parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// load image, create texture and generate mipmaps
-		data = stbi_load((PIC_PATH + "ys.png").c_str(), &width, &height, &nrChannels, 0);
-		if (data) {
-			// note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-			glGenerateMipmap(GL_TEXTURE_2D);
-		} else {
-			std::cout << "Failed to load texture" << std::endl;
-		}
-		stbi_image_free(data);
 
-		// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
-		// -------------------------------------------------------------------------------------------
-		vShader_test.use();
-		vShader_test.set_int("texture1", 0);
-		vShader_test.set_int("texture2", 1);
+		glm::mat4 trans(1.0f);
+
+		texture tex("src/cheap/core/pic/friends.png", true);
 
 
-
-		// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-		// TODO 为什么在 shader 章节的时候，这个留下了，在 texture 章节，这个却被删去了？
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		// remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
-		//
-
-		// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-		// VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-		// TODO 为什么在 shader 章节的时候，这个留下了，在 texture 章节，这个却被删去了？
-		glBindVertexArray(0);
-
-		// remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
-		//
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		// uncomment this call to draw in wireframe polygons.
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-		// render loop
-		// -----------
-		//while (app::is_running()) {
-			// per-frame time logic
-	// --------------------
-			//float currentFrame = static_cast<float>(glfwGetTime());
-			//deltaTime = currentFrame - lastFrame;
-			//lastFrame = currentFrame;
-			//vMy_render.render();
-		//}
-		while (!glfwWindowShouldClose(window)) {
-			// input
-			// -----
-			//processInput(window);
-
-			// render
-			// ------
+		while (app::is_running()) {
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			// bind textures on corresponding texture units
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texture1);
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, texture2);
+			//shader.set_transform(trans);
+			//shader.set_tex(GL_TEXTURE0);
 
-			// create transformations
-			glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-			transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-			transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+			tex.bind(GL_TEXTURE0);
 
-			// get matrix's uniform location and set matrix
-			vShader_test.use();
-			const unsigned int transform_loc = glGetUniformLocation(vShader_test.id_, "transform");
-			glUniformMatrix4fv(transform_loc, 1, GL_FALSE, glm::value_ptr(transform));
+			shader.use(trans, GL_TEXTURE0);
 
-			// render container
-			vShader_test.use();
-			glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-			//glDrawArrays(GL_TRIANGLES, 0, 6);
+			vao.bind_VAO();
+
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			// glBindVertexArray(0); // no need to unbind it every time 
 
-			// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-			// -------------------------------------------------------------------------------
-			glfwSwapBuffers(window);
+			glfwSwapBuffers(get_window()->get_raw_window());
 			glfwPollEvents();
 		}
 
-		// optional: de-allocate all resources once they've outlived their purpose:
-		// ------------------------------------------------------------------------
-		glDeleteVertexArrays(1, &VAO);
+		/*glDeleteVertexArrays(1, &VAO);
 		glDeleteBuffers(1, &VBO);
-		glDeleteBuffers(1, &EBO);
-
-		// glfw: terminate, clearing all previously allocated GLFW resources.
-		// ------------------------------------------------------------------
-		glfwTerminate();
-
+		glDeleteBuffers(1, &EBO);*/
 	}
 
 	void app::clear()

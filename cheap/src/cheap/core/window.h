@@ -58,7 +58,7 @@ namespace cheap {
 		void set_fullscreen(bool aIs_fullscreen);
 		void set_icon(const std::string& aImage_path) const;
 
-		[[nodiscard]] void* get_raw_window() const;
+		[[nodiscard]] GLFWwindow* get_raw_window() const;
 		[[nodiscard]] bool  is_closed() const;
 		// save a function that will run before the app exits
 		void on_close(std::function<void()> aClose_function);

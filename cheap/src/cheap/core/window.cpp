@@ -156,7 +156,7 @@ namespace cheap {
 		glfwSetWindowIcon(mRaw_window_, 1, mIcons);
 	}
 
-	void* window::get_raw_window() const
+	GLFWwindow* window::get_raw_window() const
 	{
 		//LOG();
 		return mRaw_window_;

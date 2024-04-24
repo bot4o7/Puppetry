@@ -22,8 +22,7 @@ namespace cheap {
 		*
 		*unsigned int indices[] = {
 			0, 1, 3, // first triangle
-			1, 2, 3  // second triangle
-		};
+			1, 2, 3  // second triangle };
 		* 位置坐标 pos 有 3 个 float
 		* 4 个位置坐标， 4 * 3 = 12 个 float
 		*
@@ -74,111 +73,69 @@ namespace cheap {
 	#define BUFFER_USAGE GL_DYNAMIC_DRAW
 	// ----- VAO, VBO, IBO/EBO   Macros definitions------------
 
+	// ----- vertices position --------------------------------
+	// y axis position screen top border
+	#define POS_TOP 1.0f
+	// y axis position screen bottom border
+	#define POS_BOTTOM (-1.0f)
 
+	// x axis position screen right border
+	#define POS_RIGHT 1.0f
+	// x axis position screen left border
+	#define POS_LEFT (-1.0f)
 
+	// z axis position screen
+	#define POS_Z 0.0f
+	// ----- vertices position --------------------------------
 
 	class vertex_array
 	{
 	public:
 
 		// you need call bind() later
-		vertex_array(
+		/*vertex_array(
 			float* aVertices,
-			unsigned int* aIndices, const bool aIs_these_array_need_to_be_delete_in_dtor = true)
-			:
-			mVertices(aVertices),
-			mIndices(aIndices),
-			mIs_these_array_need_to_be_delete_in_dtor(aIs_these_array_need_to_be_delete_in_dtor)
-		{
-			glGenVertexArrays(1, &mVertex_array_object_id);
-			glGenBuffers(1, &mVertex_buffer_object_id);
-			glGenBuffers(1, &mIndex_buffer_object_id);
-		}
+			unsigned int* aIndices, const bool aIs_these_array_need_to_be_delete_in_dtor = true);*/
+		vertex_array(
+			const bool aIs_these_array_need_to_be_delete_in_dtor = true);
 
 		// TODO 万一这两个数组的生命周期不属于 vertex_array，我届时需更改这里
 		// delete[] mVertices;
 		// delete[] mIndices;
-		~vertex_array()
-		{
-			if (mIs_these_array_need_to_be_delete_in_dtor) {
+		~vertex_array();
 
-				delete[] mVertices;
-				delete[] mIndices;
-			}
-		}
-
-		// also called on every frame rendering? after setting Shader's Uniform, and before glDrawElements()?
-		// "seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized"
 		// TODO 解绑以后， glDraw 之前不绑定VAO，程序直接死给你看 ^_^
-		void bind_VAO() const
-		{
-			// bind VAO
-			glBindVertexArray(mVertex_array_object_id);
-		}
-
+		void bind_VAO() const;
 
 		// 单纯地绘制时，只需要绑定一个 VAO 就行，VBO,IBO/EBO会跟它联系在一起
 		// 但是要更新顶点数据时，除了bind_VAO，其他也要绑定
-		void bind() const
-		{
-
-			bind_VAO();
-
-			// bind VBO
-			glBindBuffer(VBO_TARGET, mVertex_buffer_object_id);
-			glBufferData(VBO_TARGET, sizeof(mVertices), mVertices, BUFFER_USAGE);
-
-			// bind IBO/EBO
-			glBindBuffer(IBO_TARGET, mIndex_buffer_object_id);
-			glBufferData(IBO_TARGET, sizeof(mIndices), mIndices, BUFFER_USAGE);
-
-			// position attribute
-			glVertexAttribPointer(
-				TEXCOORD_INDEX,
-				TEXCOORD_SIZE,
-				TEXCOORD_TYPE,
-				TEXCOORD_NORMALIZED,
-				STRIDE,
-				TEXCOORD_POINTER);
-			glEnableVertexAttribArray(TEXCOORD_INDEX);
-
-			// texture coords attribute
-			glVertexAttribPointer(
-				TEXCOORD_INDEX,
-				TEXCOORD_SIZE,
-				TEXCOORD_TYPE,
-				TEXCOORD_NORMALIZED,
-				STRIDE,
-				TEXCOORD_POINTER);
-			glEnableVertexAttribArray(TEXCOORD_INDEX);
-
-
-			// unbind
-			unbind();
-		}
+		void bind() const;
 
 		/**
-		*
 		1. unbind VBO
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		2. unbind VAO
-			glBindVertexArray(0);
 		3. unbind IBO/EBO
-			 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		 */
-		static void unbind()
+		static void unbind();
+
+		// TODO 还没实现 not implemented yet
+		void update()
 		{
-			// 1. unbind VBO
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			// 2. unbind VAO
-			glBindVertexArray(0);
-			// 3. unbind IBO/EBO
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 		}
 	private:
 		bool mIs_these_array_need_to_be_delete_in_dtor;
-		float* mVertices;
-		unsigned int* mIndices;
+		float mVertices[20] = {
+
+		 0.5f,  0.5f, 0.0f,   1.0f, 1.0f,
+		 0.5f, -0.5f, 0.0f,   1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f,   0.0f, 1.0f
+		};
+		unsigned int mIndices[6] = {
+		0, 1, 3, // first triangle
+		1, 2, 3  // second triangle
+		};
 
 		unsigned int mVertex_array_object_id;
 		unsigned int mVertex_buffer_object_id;
