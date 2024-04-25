@@ -39,7 +39,7 @@ namespace cheap {
 
 	void texture::bind(const int aTexture_slot) const
 	{
-		LOG();
+		//LOG();
 		if (aTexture_slot < GL_TEXTURE0
 			|| GL_TEXTURE15 < aTexture_slot) {
 			LOG_INFO("only 16 texture slots availiable now\n现在只支持 0-15 共 16 个 纹理 slot");

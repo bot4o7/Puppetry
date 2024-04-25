@@ -5,8 +5,6 @@
 #include "../events/app_event.h"
 #include "renderer.h"
 #include "shader_program.h"
-#include "texture.h"
-#include "vertex_array.h"
 
 #ifdef CP_OPENGL_API
 namespace cheap {
@@ -48,113 +46,46 @@ namespace cheap {
 	void app::run()
 	{
 		LOG();
-		shader_program shader("src/cheap/core/shaders/vertex", "src/cheap/core/shaders/fragment");
 
-		float* vertices = new float[20];
-		unsigned* indices = new unsigned[6];
-		vertices[0] = 0.5f; // x pos
-		vertices[1] = 0.5f; // y pos
-		vertices[2] = POS_Z; // z pos
-		vertices[3] = TEX_S_END; // S/U texCoords
-		vertices[4] = TEX_T_END; // T/V texCoords
+		renderer my_renderer(get_window());
+		float pace = 0.1f;
+		float delta_frame = 0.0f;
+		float begin_frame = static_cast<float>(glfwGetTime());
+		std::vector<graphics_entity*> list;
 
-		// bottom right
-		vertices[5] = 0.5f; // x pos
-		vertices[6] = -0.5f; // y pos
-		vertices[7] = POS_Z; // z pos
-		vertices[8] = TEX_S_END; // S/U texCoords
-		vertices[9] = TEX_T_BEGIN; // T/V texCoords
-
-		// bottom left
-		vertices[10] = -0.5f; // x pos
-		vertices[11] = -0.5f; // y pos
-		vertices[12] = POS_Z; // z pos
-		vertices[13] = TEX_S_BEGIN; // S/U texCoords
-		vertices[14] = TEX_T_BEGIN; // T/V texCoords
-
-		// top left
-		vertices[15] = -0.5f; // x pos
-		vertices[16] = 0.5f; // y pos
-		vertices[17] = POS_Z; // z pos
-		vertices[18] = TEX_S_BEGIN; // S/U texCoords
-		vertices[19] = TEX_T_END; // T/V texCoords
-
-		// first triangle
-		indices[0] = 0;
-		indices[1] = 1;
-		indices[2] = 3;
-		// second triangle
-		indices[3] = 1;
-		indices[4] = 2;
-		indices[5] = 3;
-
-		//float vertices[] = {
-		//	// positions          // texture coords
-		//	 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
-		//	 0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
-		//	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
-		//	-0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
-		//};
-		//unsigned int indices[] = {
-		//	0, 1, 3, // first triangle
-		//	1, 2, 3  // second triangle
-		//};
-		//vertex_array vao(vertices, indices);
-		//vao.bind();
-		//vertex_array vao(true);
-		//vao.bind();
-		unsigned int VBO, VAO, EBO;
-		glGenVertexArrays(1, &VAO);
-		glGenBuffers(1, &VBO);
-		glGenBuffers(1, &EBO);
-
-
-
-		// 6.先绑定顶点数组对象、再绑定顶点缓冲、最后设置顶点的属性
-		glBindVertexArray(VAO);
-
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, 20 * sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(indices), indices, GL_STATIC_DRAW);
-
-
-		// position attribute
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-		// texture coord attribute
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-		glEnableVertexAttribArray(1);
-
-
-		glm::mat4 trans(1.0f);
-
-		texture tex("src/cheap/core/pic/friends.png", true);
-
-
+		transform trans;
+		shader_program mShader_program("src/cheap/core/shaders/vertex", "src/cheap/core/shaders/fragment");
+		float last_frame = begin_frame;
 		while (app::is_running()) {
-			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
 
-			//shader.set_transform(trans);
-			//shader.set_tex(GL_TEXTURE0);
+			float current_frame = static_cast<float>(glfwGetTime());
+			//delta_frame = current_frame - last_frame;
+			//last_frame = current_frame;
 
-			tex.bind(GL_TEXTURE0);
+			if (current_frame - last_frame > 2.0f) {
+				delta_frame = current_frame - begin_frame;
+				my_renderer.add_draw_task(
+					"friends.png",
+					0.0f + pace * delta_frame, 0.0f + pace * delta_frame,
+					0.2f, 0.29228f,
+					true
+				);
 
-			shader.use(trans, GL_TEXTURE0);
+				/*list.emplace_back(new graphics_entity(
+					1, 0.0f + pace * delta_frame, 0.0f + pace * delta_frame, 4 * 0.2f, 4 * 0.29228f, "src/cheap/core/pic/friends.png", true));
+				last_frame = current_frame;*/
+			}
+			cheap::renderer::clear();
+			my_renderer.draw();
 
-			//vao.bind_VAO();
+			/*for (auto task : list) {
+				mShader_program.use(trans.get(), GL_TEXTURE0);
+				task->before_draw(GL_TEXTURE0);
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			}*/
 
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-			glfwSwapBuffers(get_window()->get_raw_window());
-			glfwPollEvents();
+			my_renderer.update();
 		}
-
-		glDeleteVertexArrays(1, &VAO);
-		glDeleteBuffers(1, &VBO);
-		glDeleteBuffers(1, &EBO);
 	}
 
 	void app::clear()
@@ -225,7 +156,7 @@ namespace cheap {
 	// input* get_input() const;
 	window* app::get_window()
 	{
-		LOG();
+		//LOG();
 		return m_window_.get();
 	}
 	// cursor_system* get();

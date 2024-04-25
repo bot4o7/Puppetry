@@ -7,7 +7,7 @@ namespace cheap {
 	{
 	public:
 
-		/*graphics_entity(const float aTo_top, const float aTo_bottom, const float aTo_left, const float aTo_right, const char* aPic_file_path, const bool aIs_RGBA = false)
+		graphics_entity(const float aTo_top, const float aTo_bottom, const float aTo_left, const float aTo_right, const char* aPic_file_path, const bool aIs_RGBA = false)
 			:
 			mVertex_array(set_vertex_array(
 				POS_TOP - aTo_top / 2.0f,
@@ -17,10 +17,11 @@ namespace cheap {
 			mTexture(new texture(aPic_file_path, aIs_RGBA))
 		{
 			LOG();
-			cheap::vertex_array::unbind();
-		}*/
+			mVertex_array->bind();
+			//cheap::vertex_array::unbind();
+		}
 
-		/*graphics_entity(int aUse_pos_and_size, const float aX, const float aY, const float aWidth, const float aHeight, const char* aPic_file_path, const bool aIs_RGBA = false)
+		graphics_entity(int aUse_pos_and_size, const float aX, const float aY, const float aWidth, const float aHeight, const char* aPic_file_path, const bool aIs_RGBA = false)
 			:
 			mVertex_array(set_vertex_array(
 				POS_BOTTOM + (aY + aHeight) / 2.0f,
@@ -30,8 +31,9 @@ namespace cheap {
 			mTexture(new texture(aPic_file_path, aIs_RGBA))
 		{
 			LOG();
-			cheap::vertex_array::unbind();
-		}*/
+			mVertex_array->bind();
+			//cheap::vertex_array::unbind();
+		}
 
 		~graphics_entity()
 		{
@@ -54,7 +56,7 @@ namespace cheap {
 		// 目前，VAO 和 texture 似乎不必手动 unbind, texture 似乎不必unbind，只需你不用的时候释放掉内存就行 glDeleteTextures
 		void before_draw(const int aTexture_slot) const
 		{
-			LOG();
+			//LOG();
 			mTexture->bind(aTexture_slot);
 			mVertex_array->bind_VAO();
 		}
@@ -77,49 +79,49 @@ namespace cheap {
 				1, 2, 3  // second triangle
 			};
 			 */
-			 //static vertex_array* set_vertex_array(const float aTop, const float aBottom, const float aLeft, const float aRight)
-			 //{
-			 //	LOG();
-			 //	const auto vertices = new float[VERTICES_LENGTH];
-			 //	const auto indices = new unsigned int[INDICES_LENGTH];
-			 //	// top right
-			 //	vertices[0] = aRight; // x pos
-			 //	vertices[1] = aTop; // y pos
-			 //	vertices[2] = POS_Z; // z pos
-			 //	vertices[3] = TEX_S_END; // S/U texCoords
-			 //	vertices[4] = TEX_T_END; // T/V texCoords
+		static vertex_array* set_vertex_array(const float aTop, const float aBottom, const float aLeft, const float aRight)
+		{
+			LOG();
+			float* vertices = new float[VERTICES_LENGTH];
+			unsigned int* indices = new unsigned int[INDICES_LENGTH];
+			// top right
+			vertices[0] = aRight; // x pos
+			vertices[1] = aTop; // y pos
+			vertices[2] = POS_Z; // z pos
+			vertices[3] = TEX_S_END; // S/U texCoords
+			vertices[4] = TEX_T_END; // T/V texCoords
 
-			 //	// bottom right
-			 //	vertices[5] = aRight; // x pos
-			 //	vertices[6] = aBottom; // y pos
-			 //	vertices[7] = POS_Z; // z pos
-			 //	vertices[8] = TEX_S_END; // S/U texCoords
-			 //	vertices[9] = TEX_T_BEGIN; // T/V texCoords
+			// bottom right
+			vertices[5] = aRight; // x pos
+			vertices[6] = aBottom; // y pos
+			vertices[7] = POS_Z; // z pos
+			vertices[8] = TEX_S_END; // S/U texCoords
+			vertices[9] = TEX_T_BEGIN; // T/V texCoords
 
-			 //	// bottom left
-			 //	vertices[10] = aLeft; // x pos
-			 //	vertices[11] = aBottom; // y pos
-			 //	vertices[12] = POS_Z; // z pos
-			 //	vertices[13] = TEX_S_BEGIN; // S/U texCoords
-			 //	vertices[14] = TEX_T_BEGIN; // T/V texCoords
+			// bottom left
+			vertices[10] = aLeft; // x pos
+			vertices[11] = aBottom; // y pos
+			vertices[12] = POS_Z; // z pos
+			vertices[13] = TEX_S_BEGIN; // S/U texCoords
+			vertices[14] = TEX_T_BEGIN; // T/V texCoords
 
-			 //	// top left
-			 //	vertices[15] = aLeft; // x pos
-			 //	vertices[16] = aTop; // y pos
-			 //	vertices[17] = POS_Z; // z pos
-			 //	vertices[18] = TEX_S_BEGIN; // S/U texCoords
-			 //	vertices[19] = TEX_T_END; // T/V texCoords
+			// top left
+			vertices[15] = aLeft; // x pos
+			vertices[16] = aTop; // y pos
+			vertices[17] = POS_Z; // z pos
+			vertices[18] = TEX_S_BEGIN; // S/U texCoords
+			vertices[19] = TEX_T_END; // T/V texCoords
 
-			 //	// first triangle
-			 //	indices[0] = 0;
-			 //	indices[1] = 1;
-			 //	indices[2] = 3;
-			 //	// second triangle
-			 //	indices[3] = 1;
-			 //	indices[4] = 2;
-			 //	indices[5] = 3;
+			// first triangle
+			indices[0] = 0;
+			indices[1] = 1;
+			indices[2] = 3;
+			// second triangle
+			indices[3] = 1;
+			indices[4] = 2;
+			indices[5] = 3;
 
-			 //	return new vertex_array(vertices, indices);
-			 //}
+			return new vertex_array(vertices, indices);
+		}
 	};
 }
