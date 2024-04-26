@@ -7,95 +7,41 @@ namespace cheap {
 
 	class graphics_entity
 	{
-		//enum class layout_mode
-		//{
-		//	//rectangle's edges to screen top/bottom/left/right borders (value is proportion of edge to border
-		//	//edge_to_screen_border_proportion,
-		//	TOP_BOTTOM_LEFT_RIGHT_PROPORTION,
-		//	// rectangle's bottom left pos to screen bottom left, width and height are also proportion of rectangle to screen
-		//	LEFT_BOTTOM_WIDTH_HEIGHT_PROPORTION,
-		//	// rectangle's bottom left pos to screen bottom left, width is also proportion of rectangle to screen
-		//	// aspect_ratio == width / height
-		//	LEFT_BOTTOM_WIDTH_ASPECT_RATIO_PROPORTION,
-		//	// rectangle's bottom left pos to screen bottom left, height is also proportion of rectangle to screen
-		//	// aspect_ratio == width / height
-		//	LEFT_BOTTOM_HEIGHT_ASPECT_RATIO_PROPORTION
-		//};
 	public:
+		// 传 Top Bottom Left Right 的坐标 TBLR
+		//TBLR,
+			// 传 与 Top Bottom Left Right 之间的间隔距离 To TBLR
+			//TO_TBLR,
+			// 传 Bottom Left 的坐标 BL， 以及 宽度Width、高度Height， BLWH
+			//BLWH,
+			// 传 Bottom Left 的坐标 BL， 以及 高度 Height, （以及图片本身的宽高比，图片宽高比可以从这个类自己的成员mTexture中取得）
+			//BLH,
+			// 传 Bottom Left 的坐标 BL， 以及 高度 Width, （以及图片本身的宽高比，图片宽高比可以从这个类自己的成员mTexture中取得）
+			//BLW
+
+			// lbrt  path, true
+		enum class LBRT { vertex_layout_placeholder };
+		enum class TO_LBRT { vertex_layout_placeholder };
+		enum class LBWH { vertex_layout_placeholder };
+		enum class LBH_aspect_ratio { vertex_layout_placeholder };
+		enum class LBW_aspect_ratio { vertex_layout_placeholder };
+
+		// pass  left, bottom right,top
+		graphics_entity(LBRT, const float aLeft, const float aBottom, const float aRight, const float aTop, const char* aPic_file_path, const bool aIs_RGBA = false);
 		// pass to_top, to_bottom to_left to_right
-		graphics_entity(const float aTo_top, const float aTo_bottom, const float aTo_left, const float aTo_right, const char* aPic_file_path, const bool aIs_RGBA = false)
-			:
-			mTexture(new texture(aPic_file_path, aIs_RGBA)),
-			mVertex_array(get_vertex_array_by_proportion_of_edge_to_border(
-				POS_TOP - aTo_top * 2.0f,
-				POS_BOTTOM + aTo_bottom * 2.0f,
-				POS_LEFT + aTo_left * 2.0f,
-				POS_RIGHT - aTo_right * 2.0f))
-		{
-			LOG();
-		}
-
-		// use picture's origin aspect ratio to calculate width
-		graphics_entity(const float aX, const float aY, const float aHeight, const char* aPic_file_path, const bool aIs_RGBA = false)
-			:
-			mTexture(new texture(aPic_file_path, aIs_RGBA)),
-			mVertex_array(get_vertex_array_by_proportion_of_edge_to_border(
-				POS_BOTTOM + (aY + aHeight) * 2.0f,
-				POS_BOTTOM + aY * 2.0f,
-				POS_LEFT + aX * 2.0f,
-				POS_LEFT + (aX + aHeight * mTexture->get_aspect_ration()) * 2.0f))
-			/*(get_vertex_array_by_proportion_of_edge_to_border(
-				1.0f,
-				-1.0f,
-				-1.0f,
-				1.0f))*/
-		{
-			LOG();
-		}
-		// use picture's origin aspect ratio to calculate height
-		graphics_entity(const bool aUse_wdith, const float aX, const float aY, const float aWidth, const char* aPic_file_path, const bool aIs_RGBA = false)
-			:
-			mTexture(new texture(aPic_file_path, aIs_RGBA)),
-			mVertex_array(get_vertex_array_by_proportion_of_edge_to_border(
-				POS_BOTTOM + (aY + aWidth / mTexture->get_aspect_ration()) * 2.0f,
-				POS_BOTTOM + aY * 2.0f,
-				POS_LEFT + aX * 2.0f,
-				POS_LEFT + (aX + aWidth) * 2.0f))
-		{
-			LOG();
-		}
+		graphics_entity(TO_LBRT, const float aLeft, const float aBottom, const float aTo_right, const float aTo_top, const char* aPic_file_path, const bool aIs_RGBA = false);
 		// pass left_bottom_position, width, height
-		graphics_entity(bool aLeft_bottom_width_height, const float aX, const float aY, const float aWidth, const float aHeight, const char* aPic_file_path, const bool aIs_RGBA = false)
-			:
-			mTexture(new texture(aPic_file_path, aIs_RGBA)),
-			mVertex_array(get_vertex_array_by_proportion_of_edge_to_border(
-				POS_BOTTOM + (aY + aHeight) * 2.0f,
-				POS_BOTTOM + aY * 2.0f,
-				POS_LEFT + aX * 2.0f,
-				POS_LEFT + (aX + aWidth) * 2.0f))
-		{
-			LOG();
-		}
-		// pass left_bottom_position height, aspect_ration
-		graphics_entity(int aLeft_bottom_height_aspect_ration, const float aX, const float aY, const float aHeight, const float aAspect_ratio, const char* aPic_file_path, const bool aIs_RGBA = false)
-			:
-			mTexture(new texture(aPic_file_path, aIs_RGBA)),
-			mVertex_array(get_vertex_array_by_proportion_of_edge_to_border(
-				POS_BOTTOM + (aY + aHeight) * 2.0f,
-				POS_BOTTOM + aY * 2.0f,
-				POS_LEFT + aX * 2.0f,
-				POS_LEFT + (aX + aHeight * aAspect_ratio) * 2.0f))
-		{
-			LOG();
-		}
+		graphics_entity(LBWH, const float aLeft, const float aBottom, const float aWidth, const float aHeight, const char* aPic_file_path, const bool aIs_RGBA = false);
+
+		// pass L B and height, and aspect_ratio
+		// use picture's origin aspect ratio to calculate width
+		graphics_entity(LBH_aspect_ratio, const float aLeft, const float aBottom, const float aHeight, const float aWindow_aspect_ratio, const char* aPic_file_path, const bool aIs_RGBA = false);
+		// pass L B and width, and aspect_ratio
+		// use picture's origin aspect ratio to calculate height
+		graphics_entity(LBW_aspect_ratio, const float aLeft, const float aBottom, const float aWidth, const float aWindow_aspect_ratio, const char* aPic_file_path, const bool aIs_RGBA = false);
 
 
-		~graphics_entity()
-		{
-			LOG();
-			delete mVertex_array;
-			delete mTexture;
-		}
+		~graphics_entity();
 
 
 		// before draw
@@ -109,122 +55,12 @@ namespace cheap {
 		// shader_program.use() 的顺序跟VAO,texture的绑定没关系，draw之前调用即可
 		//
 		// 目前，VAO 和 texture 似乎不必手动 unbind, texture 似乎不必unbind，只需你不用的时候释放掉内存就行 glDeleteTextures
-		void before_draw(const int aTexture_slot) const
-		{
-			//LOG();
-			mTexture->bind(aTexture_slot);
-			mVertex_array->bind_VAO();
-		}
-
+		void before_draw(const int aTexture_slot) const;
 
 	private:
 		texture* mTexture;
 		vertex_array* mVertex_array;
-		// TODO 下面这些代码，后面那些也不对，a b c d 的，妈的，很难看懂，不如直接多写几个构造函数
-		//static vertex_array* get_vertex_array(const layout_mode aMode, const float a, const float b, const float c, const float d)
-		//{
-		//	switch (aMode) {
-		//		case layout_mode::TOP_BOTTOM_LEFT_RIGHT_PROPORTION:
-		//			// a = to_top
-		//			// b = to_bottom
-		//			// c = to_left
-		//			// d = to_right
-		//			return get_vertex_array_by_proportion_of_edge_to_border(
-		//				POS_TOP - a * 2.0f,
-		//				POS_BOTTOM + b * 2.0f,
-		//				POS_LEFT + c * 2.0f,
-		//				POS_RIGHT - d * 2.0f);
-		//		case layout_mode::LEFT_BOTTOM_WIDTH_HEIGHT_PROPORTION:
-		//			// a = to_left
-		//			// b = to_bottom
-		//			// c = width
-		//			// d = height
-		//			return get_vertex_array_by_proportion_of_edge_to_border(
-		//				POS_BOTTOM + (b + d) * 2.0f,
-		//				POS_BOTTOM + b * 2.0f,
-		//				POS_LEFT + a * 2.0f,
-		//				POS_LEFT + (a + c) * 2.0f);
-		//		case layout_mode::LEFT_BOTTOM_WIDTH_ASPECT_RATIO_PROPORTION:
-		//			// a = to_left
-		//			// b = to_bottom
-		//			// c = width
-		//			// d = aspect_ratio
-		//			return get_vertex_array_by_proportion_of_edge_to_border(
-		//				POS_BOTTOM + c / d * 2.0f,
-		//				POS_BOTTOM + b * 2.0f,
-		//				POS_LEFT + a * 2.0f,
-		//				POS_LEFT + c * 2.0f);
-		//		case layout_mode::LEFT_BOTTOM_HEIGHT_ASPECT_RATIO_PROPORTION:
-		//			// a = to_left
-		//			// b = to_bottom
-		//			// c = height
-		//			// d = aspect_ration
-		//			return get_vertex_array_by_proportion_of_edge_to_border(
-		//				POS_BOTTOM + c * 2.0f,
-		//				POS_BOTTOM + b * 2.0f,
-		//				POS_LEFT + a * 2.0f,
-		//				POS_LEFT + c * d * 2.0f);
-		//	}
 
-		//	LOG_INFO("no such layout_mode, return a null vertex_array");
-		//	return nullptr;
-		//}
-		/**
-			 *float vertices[] = {
-				// positions          // texture coords
-				 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
-				 0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
-				-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
-				-0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left
-			};
-			unsigned int indices[] = {
-				0, 1, 3, // first triangle
-				1, 2, 3  // second triangle
-			};
-			 */
-		static vertex_array* get_vertex_array_by_proportion_of_edge_to_border(const float aTop, const float aBottom, const float aLeft, const float aRight)
-		{
-			LOG();
-			const auto vertices = new float[VERTICES_LENGTH];
-			const auto indices = new unsigned int[INDICES_LENGTH];
-			// top right
-			vertices[0] = aRight; // x pos
-			vertices[1] = aTop; // y pos
-			vertices[2] = POS_Z; // z pos
-			vertices[3] = TEX_S_END; // S/U texCoords
-			vertices[4] = TEX_T_END; // T/V texCoords
-
-			// bottom right
-			vertices[5] = aRight; // x pos
-			vertices[6] = aBottom; // y pos
-			vertices[7] = POS_Z; // z pos
-			vertices[8] = TEX_S_END; // S/U texCoords
-			vertices[9] = TEX_T_BEGIN; // T/V texCoords
-
-			// bottom left
-			vertices[10] = aLeft; // x pos
-			vertices[11] = aBottom; // y pos
-			vertices[12] = POS_Z; // z pos
-			vertices[13] = TEX_S_BEGIN; // S/U texCoords
-			vertices[14] = TEX_T_BEGIN; // T/V texCoords
-
-			// top left
-			vertices[15] = aLeft; // x pos
-			vertices[16] = aTop; // y pos
-			vertices[17] = POS_Z; // z pos
-			vertices[18] = TEX_S_BEGIN; // S/U texCoords
-			vertices[19] = TEX_T_END; // T/V texCoords
-
-			// first triangle
-			indices[0] = 0;
-			indices[1] = 1;
-			indices[2] = 3;
-			// second triangle
-			indices[3] = 1;
-			indices[4] = 2;
-			indices[5] = 3;
-
-			return new vertex_array(vertices, indices);
-		}
+		static vertex_array* get_vertex_array_by_proportion_of_edge_to_border(const float aTop, const float aBottom, const float aLeft, const float aRight);
 	};
 }

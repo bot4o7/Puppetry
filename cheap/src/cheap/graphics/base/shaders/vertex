@@ -5,11 +5,11 @@ layout (location = 1) in vec2 aTexCoord;
 out vec2 TexCoord;
 
 uniform mat4 uTransform;
-uniform mat4 uScale;
+//uniform mat4 uScale;
 
 void main()
 {
-	gl_Position =  uTransform * uScale * vec4(aPos, 1.0);
-	//gl_Position =  uTransform * vec4(aPos, 1.0);
+	//gl_Position =  uTransform * uScale * vec4(aPos, 1.0);
+	gl_Position =  uTransform * vec4(aPos, 1.0);
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
 }

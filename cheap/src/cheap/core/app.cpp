@@ -57,11 +57,11 @@ namespace cheap {
 			-0.5f, 0.0f,
 			1.0f,
 			true);*/
-		my_renderer.add_draw_task(
-			"test.png",
+		my_renderer.add_draw_task_LBH(
+			"ys.png",
 			0.0f, 0.0f,
 			1.0f,
-			false);
+			true);
 
 		while (app::is_running()) {
 			if (const float current_frame = static_cast<float>(glfwGetTime()); current_frame - last_frame > 2.0f) {

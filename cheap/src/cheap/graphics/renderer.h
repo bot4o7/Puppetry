@@ -37,36 +37,9 @@ namespace cheap {
 	class renderer
 	{
 	public:
-		explicit renderer(window* aWindow)
-			:
-			mShader_path(SHADER_PATH),
-			mPic_path(PIC_PATH),
-			mVertex_shader_filename(VERTEX_SHADER_FILENAME),
-			mFragment_shader_filename(FRAGMENT_SHADER_FILENAME),
-			mWindow(aWindow),
-			mShader_program(
-				shader_program(
-					(mShader_path + mVertex_shader_filename).c_str(),
-					(mShader_path + mFragment_shader_filename).c_str())
-			),
-			mDraw_tasks(std::vector<graphics_entity*>()),
-			mTransform(transform())
-		{
-			LOG();
-			if (mWindow == nullptr)
-				LOG_INFO("aWindow ptr is nullptr");
+		explicit renderer(window* aWindow);
 
-			mShader_program.bind();
-			reset_projection_matrix(aWindow->get_aspect_ration());
-		}
-
-		~renderer()
-		{
-			LOG();
-			for (const auto task : mDraw_tasks)
-				delete task;
-		}
-
+		~renderer();
 
 		//void ResetProjectionMatrix(float xMin=0.0f, float yMin=0.0f, float xMax=window.width, float yMax=window.height)
 
@@ -74,61 +47,29 @@ namespace cheap {
 		// TODO 解决方法：1.在 shader 中设置一个 scale 缩放矩阵，修正屏幕宽高比的影响
 		// TODO 2. 在设置 图片/物体的 顶点数据时，就进行修正
 		// TODO 但是在方法1，目前，我使用uniform在shader中修正宽高比后，图片/物体会被拉到屏幕中央，我不知道原因。
-		void reset_projection_matrix(const float aWindow_aspect_ration)
-		{
-			// Set the projection matrix in the shader according to the window size
-			mShader_program.set_scale(glm::ortho(-aWindow_aspect_ration, aWindow_aspect_ration, -1.0f, 1.0f, -1000.0f, 1000.0f));
-			//mShader_program.set_scale(glm::ortho(xMin, xMax, yMin, yMax, -1000.0f, 1000.0f));
-		}
-		// pass x, y, height, width's proportion
-		void add_draw_task(const std::string& aPic_file_name, const float aX, const float aY, const float aWidth, const float aHeight, const bool aIs_RGBA)
-		{
-			LOG();
-			mDraw_tasks.emplace_back(new graphics_entity(
-				true, aX, aY, aWidth, aHeight, (PIC_PATH + aPic_file_name).c_str(), aIs_RGBA)
-			);
-		}
+		//void reset_projection_matrix(const float aWindow_aspect_ration)
+		//{
+		//	// Set the projection matrix in the shader according to the window size
+		//	//mShader_program.set_scale(glm::ortho(-aWindow_aspect_ration, aWindow_aspect_ration, -1.0f, 1.0f, -1000.0f, 1000.0f));
+		//	//mShader_program.set_scale(glm::ortho(xMin, xMax, yMin, yMax, -1000.0f, 1000.0f));
+		//}
+
+		// pass left, bottom, right, top's proportion
+		void add_draw_task_LBRT(const std::string& aPic_file_name, const float aLeft, const float aBottom, const float aWidth, const float aHeight, const bool aIs_RGBA);
+		// pass TO left, bottom, right, top's proportion
+		void add_draw_task_TO_LBRT(const std::string& aPic_file_name, const float aLeft, const float aBottom, const float aWidth, const float aHeight, const bool aIs_RGBA);
+		// pass left, bottom, height, width's proportion
+		void add_draw_task_LBHW(const std::string& aPic_file_name, const float aLeft, const float aBottom, const float aWidth, const float aHeight, const bool aIs_RGBA);
 		// use picture's origin aspect ratio to calculate width
-		void add_draw_task(const std::string& aPic_file_name, const float aX, const float aY, const float aHeight, const bool aIs_RGBA)
-		{
-			LOG();
-			mDraw_tasks.emplace_back(new graphics_entity(
-				aX, aY, aHeight, (PIC_PATH + aPic_file_name).c_str(), aIs_RGBA)
-			);
-		}
+		void add_draw_task_LBH(const std::string& aPic_file_name, const float aLeft, const float aBottom, const float aHeight, const bool aIs_RGBA);
 		// use picture's origin aspect ratio to calculate height
-		void add_draw_task(bool aUse_width, const std::string& aPic_file_name, const float aX, const float aY, const float aWidth, const bool aIs_RGBA)
-		{
-			LOG();
-			mDraw_tasks.emplace_back(new graphics_entity(
-				true, aX, aY, aWidth, (PIC_PATH + aPic_file_name).c_str(), aIs_RGBA)
-			);
-		}
+		void add_draw_task_LBW(bool aUse_width, const std::string& aPic_file_name, const float aLeft, const float aBottom, const float aWidth, const bool aIs_RGBA);
 
+		static void clear();
 
-		static void clear()
-		{
-			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-		}
+		void draw(const int aTexture_slot = GL_TEXTURE0);
 
-		void draw(const int aTexture_slot)
-		{
-			for (const auto task : mDraw_tasks) {
-				mShader_program.use(mTransform.get(), GL_TEXTURE0);
-
-				//LOG();
-				task->before_draw(aTexture_slot);
-
-				glDrawElements(ELEMENT_MODE, ELEMENT_COUNT, ELEMENT_TYPE, ELEMENT_INDICES);
-			}
-		}
-
-		void update() const
-		{
-			glfwSwapBuffers(mWindow->get_raw_window());
-			glfwPollEvents();
-		}
+		void update() const;
 
 	private:
 		std::string mShader_path;
