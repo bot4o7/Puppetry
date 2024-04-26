@@ -6,20 +6,20 @@ namespace cheap {
 	public:
 		enum class category
 		{
-			app,
-			input,
-			game
+			APP,
+			INPUT,
+			GAME
 		};
-		bool is_handled;
+		bool mIs_handled;
 
 		[[nodiscard]] virtual category get_category() const = 0;
-		[[nodiscard]] virtual bool       is_category(const category category_input) const = 0;
+		[[nodiscard]] virtual bool       is_category(const category aCategory_input) const = 0;
 		[[nodiscard]] virtual int        get_type() const = 0;
-		[[nodiscard]] virtual bool       is_type(const int sub_type) const = 0;
+		[[nodiscard]] virtual bool       is_type(const int aSub_type) const = 0;
 
 		virtual ~event() = default;
 	protected:
-		event() : is_handled(false) { }
+		event() : mIs_handled(false) { }
 	};
 
 	#define GET_CATEGORY(my_category) [[nodiscard]] category get_category() const override\

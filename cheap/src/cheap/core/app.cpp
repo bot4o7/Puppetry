@@ -3,8 +3,8 @@
 
 
 #include "../events/app_event.h"
-#include "renderer.h"
-#include "shader_program.h"
+#include "../graphics/renderer.h"
+#include "../graphics/base/shader_program.h"
 
 #ifdef CP_OPENGL_API
 namespace cheap {
@@ -47,42 +47,49 @@ namespace cheap {
 	{
 		LOG();
 
-		renderer my_renderer(get_window());
-		float pace = 0.1f;
-		float delta_frame = 0.0f;
-		float begin_frame = static_cast<float>(glfwGetTime());
-		std::vector<graphics_entity*> list;
+		renderer                      my_renderer(get_window());
+		const float                   begin_frame = static_cast<float>(glfwGetTime());
+		//bool switch_pic = false;
+		float     last_frame = begin_frame;
 
-		transform trans;
-		shader_program mShader_program("src/cheap/core/shaders/vertex", "src/cheap/core/shaders/fragment");
-		float last_frame = begin_frame;
+		/*my_renderer.add_draw_task(
+			"ys.png",
+			-0.5f, 0.0f,
+			1.0f,
+			true);*/
+		my_renderer.add_draw_task(
+			"test.png",
+			0.0f, 0.0f,
+			1.0f,
+			false);
+
 		while (app::is_running()) {
+			if (const float current_frame = static_cast<float>(glfwGetTime()); current_frame - last_frame > 2.0f) {
+				constexpr float       pace = 0.1f;
+				const float delta_frame = current_frame - begin_frame;
 
-			float current_frame = static_cast<float>(glfwGetTime());
-			//delta_frame = current_frame - last_frame;
-			//last_frame = current_frame;
+				/*if (switch_pic) {
+					my_renderer.add_draw_task(
+						"friends.png",
+						0.0f + pace * delta_frame, 0.0f + pace * delta_frame,
+						0.2f,
+						0.29228f,
+						true);
+				} else {
+					my_renderer.add_draw_task(
+						"ys.png",
+						0.0f + pace * delta_frame, 0.0f + pace * delta_frame,
+						0.248f,
+						0.248f,
+						true);
+				}*/
 
-			if (current_frame - last_frame > 2.0f) {
-				delta_frame = current_frame - begin_frame;
-				my_renderer.add_draw_task(
-					"friends.png",
-					0.0f + pace * delta_frame, 0.0f + pace * delta_frame,
-					0.2f, 0.29228f,
-					true
-				);
 
-				/*list.emplace_back(new graphics_entity(
-					1, 0.0f + pace * delta_frame, 0.0f + pace * delta_frame, 4 * 0.2f, 4 * 0.29228f, "src/cheap/core/pic/friends.png", true));
-				last_frame = current_frame;*/
+				//switch_pic = !switch_pic;
+				last_frame = current_frame;
 			}
 			cheap::renderer::clear();
-			my_renderer.draw();
-
-			/*for (auto task : list) {
-				mShader_program.use(trans.get(), GL_TEXTURE0);
-				task->before_draw(GL_TEXTURE0);
-				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			}*/
+			my_renderer.draw(GL_TEXTURE0);
 
 			my_renderer.update();
 		}
@@ -123,30 +130,30 @@ namespace cheap {
 		LOG();
 		//m_event_system_->handle_event(input_event);
 		switch (new_event->get_category()) {
-			case event::category::app:
+			case event::category::APP:
 				switch (static_cast<app_event::type>(new_event->get_type())) {
-					case app_event::type::render:
+					case app_event::type::RENDER:
 						PRINTLN("app_event::render");
 						break;
-					case app_event::type::update:
+					case app_event::type::UPDATE:
 						PRINTLN("app_event::update");
 						break;
-					case app_event::type::window_resize:
+					case app_event::type::WINDOW_RESIZE:
 						PRINTLN("app_event::window_resize");
 						break;
-					case app_event::type::window_fullscreen_mode_update:
+					case app_event::type::WINDOW_FULLSCREEN_MODE_UPDATE:
 						PRINTLN("app_event::window_fullscreen_mode_update");
 						break;
-					case app_event::type::window_close:
+					case app_event::type::WINDOW_CLOSE:
 						PRINTLN("app_event::window_close");
 						break;
 					default:
 						PRINTLN("ERROR::No such app_event::type : " + new_event->get_type());
 				}
 				break;
-			case event::category::input:
+			case event::category::INPUT:
 				break;
-			case event::category::game:
+			case event::category::GAME:
 				break;
 			default:
 				PRINTLN("no such category");

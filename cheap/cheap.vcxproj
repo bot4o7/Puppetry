@@ -149,16 +149,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\cheap\core\base.h" />
-    <ClInclude Include="src\cheap\core\graphics_entity.h" />
-    <ClInclude Include="src\cheap\core\renderer.h" />
-    <ClInclude Include="src\cheap\core\shader_program.h" />
+    <ClInclude Include="src\cheap\graphics\base\base.h" />
+    <ClInclude Include="src\cheap\graphics\graphics_entity.h" />
+    <ClInclude Include="src\cheap\graphics\graphics_lib.h" />
+    <ClInclude Include="src\cheap\graphics\renderer.h" />
+    <ClInclude Include="src\cheap\graphics\base\shader_program.h" />
     <ClInclude Include="src\cheap\core\Camera.h" />
-    <ClInclude Include="src\cheap\core\shader_test.h" />
-    <ClInclude Include="src\cheap\core\render_test.h" />
-    <ClInclude Include="src\cheap\core\texture.h" />
-    <ClInclude Include="src\cheap\core\transform.h" />
-    <ClInclude Include="src\cheap\core\vertex_array.h" />
+    <ClInclude Include="src\cheap\graphics\base\texture.h" />
+    <ClInclude Include="src\cheap\graphics\base\transform.h" />
+    <ClInclude Include="src\cheap\graphics\base\vertex_array.h" />
     <ClInclude Include="src\cheap\core\window.h" />
     <ClInclude Include="src\cheap\entity\entity.h" />
     <ClInclude Include="src\cheap\events\app_event.h" />
@@ -176,17 +175,16 @@
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\cheap\core\graphics_entity.cpp" />
-    <ClCompile Include="src\cheap\core\renderer.cpp" />
-    <ClCompile Include="src\cheap\core\shader_program.cpp" />
-    <ClCompile Include="src\cheap\core\shader_test.cpp" />
+    <ClCompile Include="src\cheap\graphics\graphics_entity.cpp" />
+    <ClCompile Include="src\cheap\graphics\renderer.cpp" />
+    <ClCompile Include="src\cheap\graphics\base\shader_program.cpp" />
     <ClCompile Include="src\cheap\core\app.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\cheap\core\texture.cpp" />
-    <ClCompile Include="src\cheap\core\transform.cpp" />
-    <ClCompile Include="src\cheap\core\vertex_array.cpp" />
+    <ClCompile Include="src\cheap\graphics\base\texture.cpp" />
+    <ClCompile Include="src\cheap\graphics\base\transform.cpp" />
+    <ClCompile Include="src\cheap\graphics\base\vertex_array.cpp" />
     <ClCompile Include="src\cheap\core\window.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
@@ -210,8 +208,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\cheap\core\shaders\fragment" />
-    <None Include="src\cheap\core\shaders\vertex" />
+    <None Include="src\cheap\graphics\base\shaders\fragment" />
+    <None Include="src\cheap\graphics\base\shaders\vertex" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

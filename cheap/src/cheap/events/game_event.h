@@ -6,7 +6,7 @@ namespace cheap {
 	class game_event : public event
 	{
 	public:
-		GET_CATEGORY(event::category::game);
+		GET_CATEGORY(event::category::GAME);
 
 		game_event() = default;
 		~game_event() override = default;

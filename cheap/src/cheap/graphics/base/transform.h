@@ -1,47 +1,43 @@
 ﻿#pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 namespace cheap {
-	struct vector2
-	{
-		float x;
-		float y;
-	};
-
-	enum class flip_axis { flip_none, flip_x, flip_y, flip_xy };
-
-
 	class transform
 	{
 	public:
-		transform();
 
-		[[nodiscard]] vector2   get_pos() const;
-		[[nodiscard]] vector2   get_scale() const;
-		[[nodiscard]] float     get_layer() const;
-		[[nodiscard]] float     get_width() const;
-		[[nodiscard]] float     get_height() const;
-		[[nodiscard]] float     get_rotation() const;
-		[[nodiscard]] flip_axis get_flip() const;
-		// Change the given position according to the saved rotation/flip axis
-		[[nodiscard]] vector2 get_transformed_pos(float x, float y) const;
+		transform()
+			:
+			mMatrix(glm::mat4(1.0f))
+		{
 
-		void set_pos(float x, float y);
-		void set_scale(float x, float y);
-		void set_layer(float layer);
-		void set_width(float width);
-		void set_height(float height);
-		void set_rotation(float rotation);
-		void set_flip(flip_axis flip_axis);
-		void set_layout_child(bool is_layout_child);
+			LOG();
+		}
+		~transform()
+		{
+			LOG();
+		}
+
+		[[nodiscard]] glm::mat4 get() const
+		{
+			return mMatrix;
+		}
+
+		[[nodiscard]] glm::mat4 get_translate(const float aOffset_x, const float aOffset_y, const float aOffset_z) const
+		{
+			return glm::translate(mMatrix, glm::vec3(aOffset_x, aOffset_y, aOffset_z));
+		}
+
+		// 
+		[[nodiscard]] glm::mat4 get_rotate(const float aAngle_degree, const float aAxis_x, const float aAxis_y, const float aAxis_z) const
+		{
+			return glm::rotate(mMatrix, glm::radians(aAngle_degree), glm::vec3(aAxis_x, aAxis_y, aAxis_z));
+		}
 
 	private:
-		glm::vec2 m_pos_;
-		glm::vec2 m_scale_;
-		glm::vec2 m_dimens_;
-		float m_rotation_;
-		flip_axis m_flip_axis_;
-		float m_layer_;
-		bool m_is_layout_child_;
+		glm::mat4 mMatrix;
 	};
 }

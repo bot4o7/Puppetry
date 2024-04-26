@@ -1,60 +1,185 @@
 ﻿#pragma once
-#include "base.h"
 
-#ifdef CP_OPENGL_API
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <glm/ext/matrix_transform.hpp>
 
 namespace cheap {
-	// OpenGL texture slots has 16 at least.
-	class shader_program2 final : public base
+	// TODO look up your shader files, confirm the names of uniforms
+	#define VERTEX_SHADER_GLSL_UNIFORM_TRANSFORM_MATRIX_NAME "uTransform"
+	#define VERTEX_SHADER_GLSL_UNIFORM_PROJECTION_MATRIX_NAME "uScale"
+	#define FRAGMENT_SHADER_GLSL_UNIFORM_TEXTURE_SLOT_NAME "uTexture"
+
+	class shader_program
 	{
 	public:
-		shader_program();
+		unsigned int mId;
+		// constructor generates the shader on the fly
+		// ------------------------------------------------------------------------
+		shader_program(const char* vertexPath, const char* fragmentPath)
+		{
+			// 1. retrieve the vertex/fragment source code from filePath
+			std::string vertexCode;
+			std::string fragmentCode;
+			std::ifstream vShaderFile;
+			std::ifstream fShaderFile;
+			// ensure ifstream objects can throw exceptions:
+			vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+			fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+			try {
+				// open files
+				vShaderFile.open(vertexPath);
+				fShaderFile.open(fragmentPath);
+				std::stringstream vShaderStream, fShaderStream;
+				// read file's buffer contents into streams
+				vShaderStream << vShaderFile.rdbuf();
+				fShaderStream << fShaderFile.rdbuf();
+				// close file handlers
+				vShaderFile.close();
+				fShaderFile.close();
+				// convert stream into string
+				vertexCode = vShaderStream.str();
+				fragmentCode = fShaderStream.str();
+			} catch (std::ifstream::failure& e) {
+				std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
+			}
+			const char* vShaderCode = vertexCode.c_str();
+			const char* fShaderCode = fragmentCode.c_str();
+			// 2. compile shaders
+			unsigned int vertex, fragment;
+			// vertex shader
+			vertex = glCreateShader(GL_VERTEX_SHADER);
+			glShaderSource(vertex, 1, &vShaderCode, NULL);
+			glCompileShader(vertex);
+			checkCompileErrors(vertex, "VERTEX");
+			// fragment Shader
+			fragment = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(fragment, 1, &fShaderCode, NULL);
+			glCompileShader(fragment);
+			checkCompileErrors(fragment, "FRAGMENT");
+			// shader Program
+			mId = glCreateProgram();
+			glAttachShader(mId, vertex);
+			glAttachShader(mId, fragment);
+			glLinkProgram(mId);
+			checkCompileErrors(mId, "PROGRAM");
+			// delete the shaders as they're linked into our program now and no longer necessary
+			glDeleteShader(vertex);
+			glDeleteShader(fragment);
 
-		~shader_program() override;
-
-		void bind() const;
-
-		static void unbind();
-
-		// should I use Reference or Row Pointer or Smart Pointer?
-		void set_uniform_vec1_texture_slot_array(const int* texture_slot_array) const;
-
-		void set_uniform_mat4_projection_array(glm::mat4* projection_array) const;
+		}
+		// activate the shader
+		// ------------------------------------------------------------------------
+		void bind() const
+		{
+			glUseProgram(mId);
+		}
+		void unbind()
+		{
+			glUseProgram(0);
+		}
+		void set_tex(int tex_slot)
+		{
+			setInt(FRAGMENT_SHADER_GLSL_UNIFORM_TEXTURE_SLOT_NAME, tex_slot);
+		}
+		void use(const glm::mat4& aTransform, const int aTexture_slot)
+		{
+			bind();
+			set_transform(aTransform);
+			set_tex(aTexture_slot);
+		}
+		void set_transform(const glm::mat4& mat)
+		{
+			setMat4(VERTEX_SHADER_GLSL_UNIFORM_TRANSFORM_MATRIX_NAME, mat);
+		}
+		void set_scale(const glm::mat4& mat)
+		{
+			setMat4(VERTEX_SHADER_GLSL_UNIFORM_PROJECTION_MATRIX_NAME, mat);
+		}
+		// utility uniform functions
+		// ------------------------------------------------------------------------
+		void setBool(const std::string& name, bool value) const
+		{
+			glUniform1i(glGetUniformLocation(mId, name.c_str()), (int)value);
+		}
+		// ------------------------------------------------------------------------
+		void setInt(const std::string& name, int value) const
+		{
+			glUniform1i(glGetUniformLocation(mId, name.c_str()), value);
+		}
+		// ------------------------------------------------------------------------
+		void setFloat(const std::string& name, float value) const
+		{
+			glUniform1f(glGetUniformLocation(mId, name.c_str()), value);
+		}
+		// ------------------------------------------------------------------------
+		void setVec2(const std::string& name, const glm::vec2& value) const
+		{
+			glUniform2fv(glGetUniformLocation(mId, name.c_str()), 1, &value[0]);
+		}
+		void setVec2(const std::string& name, float x, float y) const
+		{
+			glUniform2f(glGetUniformLocation(mId, name.c_str()), x, y);
+		}
+		// ------------------------------------------------------------------------
+		void setVec3(const std::string& name, const glm::vec3& value) const
+		{
+			glUniform3fv(glGetUniformLocation(mId, name.c_str()), 1, &value[0]);
+		}
+		void setVec3(const std::string& name, float x, float y, float z) const
+		{
+			glUniform3f(glGetUniformLocation(mId, name.c_str()), x, y, z);
+		}
+		// ------------------------------------------------------------------------
+		void setVec4(const std::string& name, const glm::vec4& value) const
+		{
+			glUniform4fv(glGetUniformLocation(mId, name.c_str()), 1, &value[0]);
+		}
+		void setVec4(const std::string& name, float x, float y, float z, float w) const
+		{
+			glUniform4f(glGetUniformLocation(mId, name.c_str()), x, y, z, w);
+		}
+		// ------------------------------------------------------------------------
+		void setMat2(const std::string& name, const glm::mat2& mat) const
+		{
+			glUniformMatrix2fv(glGetUniformLocation(mId, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+		}
+		// ------------------------------------------------------------------------
+		void setMat3(const std::string& name, const glm::mat3& mat) const
+		{
+			glUniformMatrix3fv(glGetUniformLocation(mId, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+		}
+		// ------------------------------------------------------------------------
+		void setMat4(const std::string& name, const glm::mat4& mat) const
+		{
+			glUniformMatrix4fv(glGetUniformLocation(mId, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+		}
 
 	private:
-		//static const std::string m_vertex_shader_file;
-		//static const std::string m_fragment_shader_file;
-		//std::unordered_map<std::string, int> m_uniform_locations;
-
-		//int get_uniform_location(const std::string& name)
-		//{
-		//	LOG();
-		//	// Check is the location is already saved
-		//	//if (m_uniform_locations.contains(name))
-		//		//return m_uniform_locations[name];
-		//	if (m_uniform)
-
-
-		//	// Find the uniform location in the shader program
-		//	const int location = glGetUniformLocation(m_id_, name.c_str());
-		//	m_uniform_locations[name] = location;
-
-		//	if (location == -1)
-		//		PRINTLN("ERROR::SHADER_UNIFORM " + name + " not found or not set correctly.");
-
-		//	return location;
-		//}
-
-		int get_uniform_projection_array_location(const char* name) const;
-
-		int get_uniform_texture_slot_array_location(const char* name) const;
-
-		static unsigned int create_program();
-
-		[[nodiscard]] static unsigned int compile_shader(const unsigned int shader_type, const std::string& shader_path);
-
-		static void check_compile_errors(const unsigned int shader_id, const unsigned int shader_type);
+		// utility function for checking shader compilation/linking errors.
+		// ------------------------------------------------------------------------
+		void checkCompileErrors(GLuint shader, std::string type)
+		{
+			GLint success;
+			GLchar infoLog[1024];
+			if (type != "PROGRAM") {
+				glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+				if (!success) {
+					glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+					std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+				}
+			} else {
+				glGetProgramiv(shader, GL_LINK_STATUS, &success);
+				if (!success) {
+					glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+					std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+				}
+			}
+		}
 	};
-
 }
-#endif

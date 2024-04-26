@@ -7,34 +7,34 @@ namespace cheap {
 	public:
 		enum class type
 		{
-			update,
-			render,
-			window_resize,
-			window_close,
+			UPDATE,
+			RENDER,
+			WINDOW_RESIZE,
+			WINDOW_CLOSE,
 			//window_move,
-			window_fullscreen_mode_update
+			WINDOW_FULLSCREEN_MODE_UPDATE
 		};
 
-		GET_CATEGORY(event::category::app);
+		GET_CATEGORY(event::category::APP);
 
 		~app_event() override = default;
 	protected:
 		app_event() = default;
 	};
 
-	class app_update_event : public app_event
+	class app_update_event final : public app_event
 	{
 	public:
-		GET_TYPE_AND_IS_TYPE(app_event::type::update);
+		GET_TYPE_AND_IS_TYPE(app_event::type::UPDATE);
 
 		app_update_event() = default;
 		~app_update_event() override = default;
 	};
 
-	class app_render_event :public app_event
+	class app_render_event final :public app_event
 	{
 	public:
-		GET_TYPE_AND_IS_TYPE(app_event::type::render);
+		GET_TYPE_AND_IS_TYPE(app_event::type::RENDER);
 
 		app_render_event() = default;
 		~app_render_event() override = default;
@@ -43,50 +43,38 @@ namespace cheap {
 	class app_window_resize_event final :public app_event
 	{
 	public:
-		unsigned int m_width;
-		unsigned int m_height;
+		unsigned int mWidth;
+		unsigned int mHeight;
 
-		GET_TYPE_AND_IS_TYPE(app_event::type::window_resize);
+		GET_TYPE_AND_IS_TYPE(app_event::type::WINDOW_RESIZE);
 
-		app_window_resize_event(const unsigned int width, const unsigned int height) : m_width(width), m_height(height) { }
+		app_window_resize_event(const unsigned int aWidth, const unsigned int aHeight) : mWidth(aWidth), mHeight(aHeight) { }
 		~app_window_resize_event() override = default;
 	};
-
-	//class app_window_move_event final :public app_event
-	//{
-	//public:
-	//	int m_x;
-	//	int m_y;
-
-	//	GET_TYPE_AND_IS_TYPE(app_event::type::window_move);
-
-	//	app_window_move_event(const int x, const int y) : m_x(x), m_y(y) { }
-	//	~app_window_move_event() override = default;
-	//};
 
 	class app_window_close_event final : public app_event
 	{
 	public:
-		GET_TYPE_AND_IS_TYPE(app_event::type::window_close);
+		GET_TYPE_AND_IS_TYPE(app_event::type::WINDOW_CLOSE);
 
 		app_window_close_event() = default;
 		~app_window_close_event() override = default;
 	};
 
-	class app_window_fullscreen_mode_update_event : public app_event
+	class app_window_fullscreen_mode_update_event final : public app_event
 	{
 	public:
 		enum class fullscreen_mode
 		{
-			window,
-			no_broad,
-			fullscreen
+			WINDOW,
+			NO_BROAD,
+			FULLSCREEN
 		};
 
-		fullscreen_mode m_mode;
-		GET_TYPE_AND_IS_TYPE(app_event::type::window_fullscreen_mode_update);
+		fullscreen_mode mMode;
+		GET_TYPE_AND_IS_TYPE(app_event::type::WINDOW_FULLSCREEN_MODE_UPDATE);
 
-		explicit app_window_fullscreen_mode_update_event(const fullscreen_mode mode) : m_mode(mode) { }
+		explicit app_window_fullscreen_mode_update_event(const fullscreen_mode aMode) : mMode(aMode) { }
 		~app_window_fullscreen_mode_update_event() override = default;
 	};
 }

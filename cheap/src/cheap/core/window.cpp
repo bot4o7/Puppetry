@@ -142,15 +142,11 @@ namespace cheap {
 	{
 		LOG();
 		// Free previously loaded icons
-		//if (static_cast<GLFWimage*>(m_icons_[0])->pixels)
-		//	stbi_image_free(static_cast<GLFWimage*>(m_icons_[0])->pixels);
 		if (mIcons->pixels)
 			stbi_image_free(mIcons->pixels);
 
 		// Flip the image vertically before loading
 		stbi_set_flip_vertically_on_load(0);
-		//static_cast<GLFWimage*>(m_icons_[0])->pixels = stbi_load(image_path.c_str(), &static_cast<GLFWimage*>(m_icons_[0])->width, &static_cast<GLFWimage*>(m_icons_[0])->height, 0, 4);
-		//glfwSetWindowIcon(m_raw_window_, 1, static_cast<GLFWimage*>(m_icons_[0]));
 		mIcons->pixels = stbi_load(aImage_path.c_str(), &mIcons->width,
 			&mIcons->height, nullptr, 4);
 		glfwSetWindowIcon(mRaw_window_, 1, mIcons);
@@ -256,8 +252,6 @@ namespace cheap {
 	{
 		LOG();
 		if (gladLoadGL())
-			//if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
-			//if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 			return true;
 
 		PRINTLN("gladLoadGL() failed.");

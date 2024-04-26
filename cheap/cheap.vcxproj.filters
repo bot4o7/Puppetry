@@ -60,34 +60,31 @@
     <ClInclude Include="src\cheap\utils\utils.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\core\render_test.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cheap\core\shader_test.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\cheap\core\Camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\core\shader_program.h">
+    <ClInclude Include="src\cheap\graphics\base\shader_program.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\core\base.h">
+    <ClInclude Include="src\cheap\graphics\base\base.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\core\vertex_array.h">
+    <ClInclude Include="src\cheap\graphics\base\vertex_array.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\core\texture.h">
+    <ClInclude Include="src\cheap\graphics\base\texture.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\core\graphics_entity.h">
+    <ClInclude Include="src\cheap\graphics\graphics_entity.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\core\transform.h">
+    <ClInclude Include="src\cheap\graphics\base\transform.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\core\renderer.h">
+    <ClInclude Include="src\cheap\graphics\renderer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\graphics_lib.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -113,30 +110,27 @@
     <ClCompile Include="src\cheap\utils\utils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\core\shader_test.cpp">
+    <ClCompile Include="src\cheap\graphics\base\shader_program.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\core\shader_program.cpp">
+    <ClCompile Include="src\cheap\graphics\base\vertex_array.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\core\vertex_array.cpp">
+    <ClCompile Include="src\cheap\graphics\base\texture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\core\texture.cpp">
+    <ClCompile Include="src\cheap\graphics\graphics_entity.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\core\graphics_entity.cpp">
+    <ClCompile Include="src\cheap\graphics\base\transform.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\core\transform.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cheap\core\renderer.cpp">
+    <ClCompile Include="src\cheap\graphics\renderer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\cheap\core\shaders\fragment" />
-    <None Include="src\cheap\core\shaders\vertex" />
+    <None Include="src\cheap\graphics\base\shaders\fragment" />
+    <None Include="src\cheap\graphics\base\shaders\vertex" />
   </ItemGroup>
 </Project>

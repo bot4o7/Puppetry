@@ -48,8 +48,6 @@ namespace cheap {
 		[[nodiscard]] bool        is_fullscreen() const;
 
 		// for example, 16:9 and 4:3, the 16 and 4 are  numerators, the 9 and 3 are denominator
-		// numer = numerator
-		// denom = denominator
 		static void set_aspect_ration(unsigned int aNumerator, unsigned int aDenominator);
 		// if width < 0, will not set width 
 		// if height < 0, will not set height
@@ -83,14 +81,12 @@ namespace cheap {
 		std::vector<std::function<void()>> mClose_functions_;
 		std::function<void()>              mUpdate_callback_;
 
-
 		bool        init(bool aIs_turn_on_vsync = true);
 		static bool init_glfw();
 		bool        init_window();
 		static bool init_glad();
 		void        set_up_window(bool aIs_turn_on_vsync = true);
 		void        set_up_callbacks() const;
-
 
 		[[nodiscard]] bool is_window_ptr_null() const;
 	};
