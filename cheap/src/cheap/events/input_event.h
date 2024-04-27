@@ -9,12 +9,25 @@ namespace cheap {
 	public:
 		enum class device
 		{
+			NONE,
 			KEYBOARD,
 			MOUSE
 		};
 
-		[[nodiscard]] virtual device get_device() const = 0;
+		[[nodiscard]] virtual device get_device() const
+		{
+			return device::NONE;
+		}
 
+		[[nodiscard]] int get_type()const override
+		{
+			return -1;
+		}
+
+		[[nodiscard]] bool is_type(const int aSub_type) const override
+		{
+			return false;
+		}
 		GET_CATEGORY(event::category::INPUT);
 
 		~input_event() override = default;
@@ -71,7 +84,7 @@ namespace cheap {
 	{
 	public:
 		int mButton;
-		float mX, mY;
+		double mX, mY;
 
 		enum type
 		{
@@ -84,14 +97,14 @@ namespace cheap {
 
 		GET_DEVICE(input_event::device::MOUSE);
 
-		~mouse_event() override;
+		~mouse_event() override = default;
 
 	protected:
 		explicit mouse_event(const int aButton) : mButton(aButton), mX(-1.0f), mY(-1.0f) { }
 
-		mouse_event(const float aX, const float aY) : mButton(CP_MOUSE_BUTTON_LAST + 1), mX(aX), mY(aY) { }
+		mouse_event(const double aX, const double aY) : mButton(CP_MOUSE_BUTTON_LAST + 1), mX(aX), mY(aY) { }
 
-		mouse_event(const int aButton, const float aX, const float aY) : mButton(aButton), mX(aX), mY(aY) { }
+		mouse_event(const int aButton, const double aX, const double aY) : mButton(aButton), mX(aX), mY(aY) { }
 	};
 
 	class mouse_pressed_event final :public  mouse_event
@@ -102,8 +115,8 @@ namespace cheap {
 
 		mouse_pressed_event() = delete;
 		explicit mouse_pressed_event(const int aButton) : mouse_event(aButton) { }
-		mouse_pressed_event(const float aX, const float aY) = delete;
-		mouse_pressed_event(const int aButton, const float aX, const float aY) : mouse_event(aButton, aX, aY) { }
+		mouse_pressed_event(const double aX, const double aY) = delete;
+		mouse_pressed_event(const int aButton, const double aX, const double aY) : mouse_event(aButton, aX, aY) { }
 	};
 
 	class mouse_released_event final :public  mouse_event
@@ -113,8 +126,8 @@ namespace cheap {
 
 		mouse_released_event() = delete;
 		explicit mouse_released_event(const int aButton) : mouse_event(aButton) { }
-		mouse_released_event(const float aX, const float aY) = delete;
-		mouse_released_event(const int aButton, const float aX, const float aY) : mouse_event(aButton, aX, aY) { }
+		mouse_released_event(const double aX, const double aY) = delete;
+		mouse_released_event(const int aButton, const double aX, const double aY) : mouse_event(aButton, aX, aY) { }
 
 		~mouse_released_event() override = default;
 	};
@@ -126,8 +139,8 @@ namespace cheap {
 
 		mouse_scrolled_event() = delete;
 		explicit mouse_scrolled_event(const int aButton) = delete;
-		mouse_scrolled_event(const float aX, const float aY) : mouse_event(aX, aY) { }
-		mouse_scrolled_event(const int aButton, const float aX, const float aY) = delete;
+		mouse_scrolled_event(const double aX, const double aY) : mouse_event(aX, aY) { }
+		mouse_scrolled_event(const int aButton, const double aX, const double aY) = delete;
 
 		~mouse_scrolled_event() override = default;
 	};
@@ -139,8 +152,8 @@ namespace cheap {
 
 		mouse_moved_event() = delete;
 		explicit mouse_moved_event(const int aButton) = delete;
-		mouse_moved_event(const float aX, const float aY) : mouse_event(aX, aY) { }
-		mouse_moved_event(const int aButton, const float aX, const float aY) = delete;
+		mouse_moved_event(const double aX, const double aY) : mouse_event(aX, aY) { }
+		mouse_moved_event(const int aButton, const double aX, const double aY) = delete;
 
 		~mouse_moved_event() override = default;
 	};

@@ -7,6 +7,7 @@ namespace cheap {
 
 	class window
 	{
+	public:
 		class window_data
 		{
 		public:
@@ -20,7 +21,6 @@ namespace cheap {
 			~window_data();
 		};
 
-	public:
 		window(
 			const std::string& aTitle,
 			int                                aWindow_width,
@@ -87,6 +87,8 @@ namespace cheap {
 		static bool init_glad();
 		void        set_up_window(bool aIs_turn_on_vsync = true);
 		void        set_up_callbacks() const;
+
+
 
 		[[nodiscard]] bool is_window_ptr_null() const;
 	};

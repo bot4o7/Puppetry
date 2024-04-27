@@ -3,21 +3,29 @@
 
 
 #include "../events/app_event.h"
+#include "../events/input_event.h"
 #include "../graphics/renderer.h"
 #include "../graphics/base/shader_program.h"
 
 #ifdef CP_OPENGL_API
 namespace cheap {
-	app::app(std::string& title, unsigned int width, unsigned int height) :
-		m_window_(std::make_shared<window>(title, width, height,
-			[this](event* input_event) {this->on_event(input_event); },
-			[this]() {this->update(); })),
+	app::app(std::string& aTitle, unsigned int aWidth, unsigned int aHeight)
+		:
+		mWindow(
+			std::make_shared<window>(
+				aTitle,
+				aWidth,
+				aHeight,
+				[this](event* input_event) {this->on_event(input_event); },
+				[this]() {this->update(); })),
 		/*mCursorManager(std::make_shared<CursorManager>()), mInput(std::make_shared<Input>()),
 		mRenderer(std::make_shared<Renderer>()), mEntityManager(std::make_shared<EntityManager>()),*/
 		//m_renderer_(std::make_shared<renderer>()),
-		m_event_system_(std::make_shared <event_system>()
+		mInput_system(std::make_shared<input_system>(mWindow->get_raw_window())),
+		mEvent_system(
+			std::make_shared <event_system>()
 			/*mInputManager(std::make_shared<InputManager>()), mFontManager(std::make_shared<FontManager>()),
-				mAudioManager(std::make_shared<AudioManager>()), mFileManager(std::make_shared<FileManager>()*/)
+	  mAudioManager(std::make_shared<AudioManager>()), mFileManager(std::make_shared<FileManager>()*/)
 	{
 		LOG();
 		// Initialize all subsystems
@@ -31,9 +39,16 @@ namespace cheap {
 		//mStateManager->Init(mFileManager.get());
 		//mInputManager->Init(mWindow->GetGLFWWindow());
 	}
-	app::app(unsigned int width, unsigned int height) :m_window_(std::make_shared<window>("cheap game", width, height,
-		[this](event* input_event) {this->on_event(input_event); },
-		[this]() {this->update(); })), m_event_system_(std::make_shared <event_system>())
+	app::app(unsigned int aWidth, unsigned int aHeight)
+		:
+		mWindow(
+			std::make_shared<window>(
+				"cheap game",
+				aWidth,
+				aHeight,
+				[this](event* aInput_event) {this->on_event(aInput_event); },
+				[this]() {this->update(); })), mInput_system(std::make_shared<input_system>(mWindow->get_raw_window())),
+		mEvent_system(std::make_shared <event_system>())
 	{
 		LOG();
 	}
@@ -101,7 +116,7 @@ namespace cheap {
 		// Clear past events
 		//m_event_system_->clear();
 		// Clear old graphics and poll events
-		m_window_->clear();
+		mWindow->clear();
 	}
 	void app::update()
 	{
@@ -112,26 +127,26 @@ namespace cheap {
 		//m_renderer_->submit(mEntityManager->GetEntities());
 		//m_renderer_->submit();
 		// Update the graphics in the window
-		m_window_->update();
+		mWindow->update();
 	}
 	bool app::is_running()
 	{
 		//LOG();
-		return !m_window_->is_closed();
+		return !mWindow->is_closed();
 	}
 	void app::exit()
 	{
 		LOG();
-		m_window_->close();
+		mWindow->close();
 	}
 
-	void app::on_event(event* new_event)
+	void app::on_event(event* aNew_event)
 	{
 		LOG();
 		//m_event_system_->handle_event(input_event);
-		switch (new_event->get_category()) {
+		switch (aNew_event->get_category()) {
 			case event::category::APP:
-				switch (static_cast<app_event::type>(new_event->get_type())) {
+				switch (static_cast<app_event::type>(aNew_event->get_type())) {
 					case app_event::type::RENDER:
 						PRINTLN("app_event::render");
 						break;
@@ -148,23 +163,61 @@ namespace cheap {
 						PRINTLN("app_event::window_close");
 						break;
 					default:
-						PRINTLN("ERROR::No such app_event::type : " + new_event->get_type());
+						PRINTLN("ERROR::No such app_event::type : " + aNew_event->get_type());
 				}
 				break;
 			case event::category::INPUT:
+				switch ((dynamic_cast<input_event*>(aNew_event))->get_device()) {
+					case input_event::device::KEYBOARD:
+						switch ((dynamic_cast<key_event*>(aNew_event))->get_type()) {
+							case key_event::type::PRESSED:
+								PRINTLN("key_event::pressed");
+								break;
+							case key_event::type::RELEASED:
+								PRINTLN("key_event::released");
+								break;
+							case key_event::type::TYPED:
+								PRINTLN("key_event::typed");
+								break;
+							default:
+								LOG_INFO("key_event no such type");
+						}
+						break;
+					case input_event::device::MOUSE:
+						switch ((dynamic_cast<mouse_event*>(aNew_event))->get_type()) {
+							case mouse_event::type::PRESSED:
+								PRINTLN("mouse_event::pressed");
+								break;
+							case mouse_event::type::RELEASED:
+								PRINTLN("mouse_event::released");
+								break;
+							case mouse_event::type::MOVED:
+								PRINTLN("mouse_event::moved");
+								break;
+							case mouse_event::type::SCROLLED:
+								PRINTLN("mouse_event::scrolled");
+								break;
+							default:
+								LOG_INFO("mouse event no such type");
+						}
+						break;
+					default:
+						LOG_INFO("the input_event's get_device() is not KEYBOARD or MOUSE");
+				}
 				break;
 			case event::category::GAME:
 				break;
 			default:
 				PRINTLN("no such category");
 		}
+		delete aNew_event;
 	}
 
 	// input* get_input() const;
-	window* app::get_window()
+	window* app::get_window() const
 	{
 		//LOG();
-		return m_window_.get();
+		return mWindow.get();
 	}
 	// cursor_system* get();
 	// entity_system* get();

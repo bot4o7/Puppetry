@@ -2,6 +2,7 @@
 #include "window.h"
 
 #include "../events/app_event.h"
+//#include "../events/input_event.h"
 
 #define STB_IMAGE_STATIC
 #define STB_IMAGE_IMPLEMENTATION
@@ -310,6 +311,29 @@ namespace cheap {
 
 				data->mEvent_callback(event);
 			});
+		//	glfwSetCursorPosCallback(
+		//		mRaw_window_, [](GLFWwindow* aWindow, const double aPos_x, const double aPos_y) {
+
+		//			// xpos	The new cursor x - coordinate, relative to the left edge of the content area.
+		//			// ypos	The new cursor y - coordinate, relative to the top edge of the content area.
+
+		//			const auto data = static_cast<window::window_data*>(glfwGetWindowUserPointer(aWindow));
+
+		//			LOG_INFO("Cursor Pos Callback: x=" << aPos_x << "  y=" << aPos_y);
+
+		//			int width, height;
+		//			glfwGetFramebufferSize(aWindow, &width, &height);
+		//			LOG_INFO("glfwGetFramebufferSize: width=" << width << "  height=" << height);
+
+		//			const float offset_x = (width - data->mWidth) / 2;
+		//			const float offset_y = (height - data->mHeight) / 2;
+		//			LOG_INFO("offset_x=" << offset_x << "  offset_y=" << offset_y);
+
+		//			const auto event = new mouse_moved_event((double)(aPos_x - offset_x), (double)(data->mHeight - aPos_y + offset_y));
+		//			LOG_INFO("aPos_x - offset_x=" << aPos_x - offset_x << "  data->mHeight - aPos_y + offset_y=" << data->mHeight - aPos_y + offset_y);
+		//			data->mEvent_callback(event);
+		//		}
+		//	);
 	}
 };
 #endif

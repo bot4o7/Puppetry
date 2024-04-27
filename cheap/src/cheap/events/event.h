@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 namespace cheap {
+	// TODO may need to implement [move ctor] and [move assignment]
 	class event
 	{
 	public:
@@ -18,6 +19,9 @@ namespace cheap {
 		[[nodiscard]] virtual bool       is_type(const int aSub_type) const = 0;
 
 		virtual ~event() = default;
+
+		event(const event& aExist_event) = delete;
+		event& operator=(const event& aExist_event) = delete;
 	protected:
 		event() : mIs_handled(false) { }
 	};
