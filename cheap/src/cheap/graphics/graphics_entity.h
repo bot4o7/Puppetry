@@ -26,19 +26,62 @@ namespace cheap {
 		enum class LBH_aspect_ratio { vertex_layout_placeholder };
 		enum class LBW_aspect_ratio { vertex_layout_placeholder };
 
+
+		// pass the position (x,y,z)of the center of rectangle picture
+		// pass the width and height of the rectangle picture
+		graphics_entity(
+			float aX, float aY, float aZ,
+			float width, float height,
+			const char* aPic_file_path, bool aIsRGBA = false)
+			:
+			mTexture(new texture(aPic_file_path, aIsRGBA)),
+			mVertex_array(get_vertex_array(width, height,
+				aX, aY, aZ))
+		{
+			LOG();
+		}
+		// pass the position (x,y,z)of the center of rectangle picture
+		// pass the height of the rectangle picture,
+		// use picture's origin aspect to calculate width
+		graphics_entity(
+			float aX, float aY, float aZ,
+			float width, bool aPlaceholder_height,
+			const char* aPic_file_path, bool aIsRGBA = false)
+			:
+			mTexture(new texture(aPic_file_path, aIsRGBA)),
+			mVertex_array(get_vertex_array(width, width / mTexture->get_aspect_ratio(),
+				aX, aY, aZ))
+		{
+			LOG();
+		}
+		// pass the position (x,y,z)of the center of rectangle picture
+		// pass the width of the rectangle picture,
+		// use picture's origin aspect to calculate height
+		graphics_entity(
+			float aX, float aY, float aZ,
+			bool aPlaceholder_width, float height,
+			const char* aPic_file_path, bool aIsRGBA = false)
+			:
+			mTexture(new texture(aPic_file_path, aIsRGBA)),
+			mVertex_array(get_vertex_array(height* mTexture->get_aspect_ratio(), height,
+				aX, aY, aZ))
+		{
+			LOG();
+		}
+
 		// pass  left, bottom right,top
-		graphics_entity(LBRT, const float aLeft, const float aBottom, const float aRight, const float aTop, const char* aPic_file_path, const bool aIs_RGBA = false);
+		graphics_entity(LBRT, float aLeft, float aBottom, float aRight, float aTop, const char* aPic_file_path, bool aIs_RGBA = false);
 		// pass to_top, to_bottom to_left to_right
-		graphics_entity(TO_LBRT, const float aLeft, const float aBottom, const float aTo_right, const float aTo_top, const char* aPic_file_path, const bool aIs_RGBA = false);
+		graphics_entity(TO_LBRT, float aLeft, float aBottom, float aTo_right, float aTo_top, const char* aPic_file_path, bool aIs_RGBA = false);
 		// pass left_bottom_position, width, height
-		graphics_entity(LBWH, const float aLeft, const float aBottom, const float aWidth, const float aHeight, const char* aPic_file_path, const bool aIs_RGBA = false);
+		graphics_entity(LBWH, float aLeft, float aBottom, float aWidth, float aHeight, const char* aPic_file_path, bool aIs_RGBA = false);
 
 		// pass L B and height, and aspect_ratio
 		// use picture's origin aspect ratio to calculate width
-		graphics_entity(LBH_aspect_ratio, const float aLeft, const float aBottom, const float aHeight, const float aWindow_aspect_ratio, const char* aPic_file_path, const bool aIs_RGBA = false);
+		graphics_entity(LBH_aspect_ratio, float aLeft, float aBottom, float aHeight, float aWindow_aspect_ratio, const char* aPic_file_path, bool aIs_RGBA = false);
 		// pass L B and width, and aspect_ratio
 		// use picture's origin aspect ratio to calculate height
-		graphics_entity(LBW_aspect_ratio, const float aLeft, const float aBottom, const float aWidth, const float aWindow_aspect_ratio, const char* aPic_file_path, const bool aIs_RGBA = false);
+		graphics_entity(LBW_aspect_ratio, float aLeft, float aBottom, float aWidth, float aWindow_aspect_ratio, const char* aPic_file_path, bool aIs_RGBA = false);
 
 
 		~graphics_entity();
@@ -55,12 +98,15 @@ namespace cheap {
 		// shader_program.use() 的顺序跟VAO,texture的绑定没关系，draw之前调用即可
 		//
 		// 目前，VAO 和 texture 似乎不必手动 unbind, texture 似乎不必unbind，只需你不用的时候释放掉内存就行 glDeleteTextures
-		void before_draw(const int aTexture_slot) const;
+		void before_draw(int aTexture_slot) const;
 
 	private:
 		texture* mTexture;
 		vertex_array* mVertex_array;
 
-		static vertex_array* get_vertex_array_by_proportion_of_edge_to_border(const float aTop, const float aBottom, const float aLeft, const float aRight);
+		static vertex_array* get_vertex_array(
+			const float aWidth,
+			const float aHeight,
+			const float aX, const float aY, const float aZ);
 	};
 }

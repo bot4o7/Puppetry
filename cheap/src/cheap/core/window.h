@@ -5,6 +5,9 @@
 
 namespace cheap {
 
+	#define DEFAULT_ASPECT_RATIO_NUMERATOR 16
+	#define DEFAULT_ASPECT_RATIO_DENOMINATOR 9
+
 	class window
 	{
 	public:
@@ -39,7 +42,9 @@ namespace cheap {
 		[[nodiscard]] int get_layout_x() const;
 		[[nodiscard]] int get_layout_y() const;
 
-		[[nodiscard]] float       get_aspect_ration() const;
+		[[nodiscard]] float       get_aspect_ratio() const;
+		[[nodiscard]] int       get_aspect_ratio_numerator() const;
+		[[nodiscard]] int       get_aspect_ratio_denominator() const;
 		[[nodiscard]] unsigned int         get_start_width() const;
 		[[nodiscard]] unsigned int         get_start_height() const;
 		[[nodiscard]] unsigned int         get_width() const;
@@ -48,7 +53,8 @@ namespace cheap {
 		[[nodiscard]] bool        is_fullscreen() const;
 
 		// for example, 16:9 and 4:3, the 16 and 4 are  numerators, the 9 and 3 are denominator
-		static void set_aspect_ration(unsigned int aNumerator, unsigned int aDenominator);
+		void set_aspect_ratio(int aNumerator, int aDenominator);
+		void keep_aspect_ratio() const;
 		// if width < 0, will not set width 
 		// if height < 0, will not set height
 		void resize(unsigned int aWidth, unsigned int aHeight);
@@ -68,18 +74,19 @@ namespace cheap {
 		void        close() const;
 
 	private:
-		GLFWwindow* mRaw_window_;
+		GLFWwindow* mRaw_window;
 		std::string mTitle;
 		// background_color_rgba
 		int         mStart_width, mStart_height;
-		float       mAspect_ration;
+		int       mAspect_ratio_numerator;
+		int       mAspect_ratio_denominator;
 		int         mX, mY;
 		window_data mWindow_data;
 		bool        mIs_fullscreen;
 		GLFWimage* mIcons;
 		//void* m_icons_[1];
-		std::vector<std::function<void()>> mClose_functions_;
-		std::function<void()>              mUpdate_callback_;
+		std::vector<std::function<void()>> mClose_functions;
+		std::function<void()>              mUpdate_callback;
 
 		bool        init(bool aIs_turn_on_vsync = true);
 		static bool init_glfw();

@@ -69,9 +69,9 @@ namespace cheap {
 		return mId;
 	}
 
-	float texture::get_aspect_ration() const
+	float texture::get_aspect_ratio() const
 	{
-		LOG_INFO("mWidth: " << mWidth << "  mHeight: " << mHeight << "   Aspect_ration: " << (static_cast<float>(mWidth) / mHeight));
+		LOG();
 		return static_cast<float>(mWidth) / mHeight;
 	}
 }

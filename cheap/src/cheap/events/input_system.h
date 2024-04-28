@@ -38,18 +38,17 @@ namespace cheap {
 
 					const auto data = static_cast<window::window_data*>(glfwGetWindowUserPointer(aWindow));
 
-					LOG_INFO("Cursor Pos Callback: x=" << aPos_x << "  y=" << aPos_y);
+					//LOG_INFO("指针坐标 Cursor Pos Callback: x=" << aPos_x << "  y=" << aPos_y);
 
 					int width, height;
 					glfwGetFramebufferSize(aWindow, &width, &height);
-					LOG_INFO("glfwGetFramebufferSize: width=" << width << "  height=" << height);
+					//LOG_INFO("帧缓冲的宽高 glfwGetFramebufferSize: width=" << width << "  height=" << height);
 
-					const float offset_x = (width - data->mWidth) / 2;
-					const float offset_y = (height - data->mHeight) / 2;
-					LOG_INFO("offset_x=" << offset_x << "  offset_y=" << offset_y);
+					// 因为我使用的图像的坐标是
+					double x = aPos_x;
+					double y = aPos_y;
 
-					const auto event = new mouse_moved_event((double)(aPos_x - offset_x), (double)(data->mHeight - aPos_y + offset_y));
-					LOG_INFO("aPos_x - offset_x=" << aPos_x - offset_x << "  data->mHeight - aPos_y + offset_y=" << data->mHeight - aPos_y + offset_y);
+					const auto event = new mouse_moved_event(x, y);
 					data->mEvent_callback(event);
 				}
 			);

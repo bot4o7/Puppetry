@@ -34,6 +34,9 @@ namespace cheap {
 	#define ELEMENT_INDICES (void*)0
 	// --------------------- OpenGL definitions ------------------------
 
+	#define DEFAULT_NEAR (-1000.0f)
+	#define	DEFAULT_FAR (1000.0f)
+
 	class renderer
 	{
 	public:
@@ -67,7 +70,7 @@ namespace cheap {
 
 		static void clear();
 
-		void draw(const int aTexture_slot = GL_TEXTURE0);
+		void draw(const int aTexture_slot = GL_TEXTURE0) const;
 
 		void update() const;
 

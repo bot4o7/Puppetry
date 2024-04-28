@@ -29,18 +29,19 @@ namespace cheap {
 		const int                          aX,
 		const int                          aY,
 		const bool                         aIs_fullscreen)
-		: mRaw_window_(nullptr),
+		: mRaw_window(nullptr),
 		mTitle(aTitle),
 		/*m_background_color_rgba()*/
 		mStart_width(aWindow_width),
 		mStart_height(aWindow_height),
-		mAspect_ration(16.0f / 9.0f),
+		mAspect_ratio_numerator(DEFAULT_ASPECT_RATIO_NUMERATOR),
+		mAspect_ratio_denominator(DEFAULT_ASPECT_RATIO_DENOMINATOR),
 		mX(aX),
 		mY(aY),
 		mWindow_data(aWindow_width, aWindow_height, aEvent_callback_function),
 		mIs_fullscreen(aIs_fullscreen),
 		mIcons(/*new GLFWimage(0, 0, nullptr)*/),
-		mUpdate_callback_(aUpdate_callback)
+		mUpdate_callback(aUpdate_callback)
 	{
 		LOG();
 		if (init())
@@ -55,7 +56,7 @@ namespace cheap {
 		if (is_window_ptr_null())
 			PRINTLN("m_raw_window_pointer is nullptr.");
 		else {
-			glfwDestroyWindow(mRaw_window_);
+			glfwDestroyWindow(mRaw_window);
 			glfwTerminate();
 		}
 		if (mIcons != nullptr && mIcons->pixels)
@@ -73,9 +74,15 @@ namespace cheap {
 
 	int window::get_layout_y() const { return mY; }
 
-	bool window::is_window_ptr_null() const { return mRaw_window_ == nullptr; }
+	bool window::is_window_ptr_null() const { return mRaw_window == nullptr; }
 
-	float window::get_aspect_ration() const { return mAspect_ration; }
+	float window::get_aspect_ratio() const
+	{
+		return static_cast<float>(mAspect_ratio_numerator) / mAspect_ratio_denominator;
+	}
+
+	int window::get_aspect_ratio_numerator() const { return mAspect_ratio_numerator; }
+	int window::get_aspect_ratio_denominator() const { return mAspect_ratio_denominator; }
 
 	unsigned int window::get_start_width() const { return mStart_width; }
 
@@ -89,10 +96,19 @@ namespace cheap {
 
 	bool window::is_fullscreen() const { return mIs_fullscreen; }
 
-	void window::set_aspect_ration(unsigned int aNumerator, unsigned int aDenominator)
+	void window::set_aspect_ratio(const int aNumerator, const  int aDenominator)
 	{
 		LOG();
-		PRINTLN("set_aspect_ration() is not implemented yet.");
+		mAspect_ratio_numerator = aNumerator;
+		mAspect_ratio_denominator = aDenominator;
+		keep_aspect_ratio();
+	}
+	void window::keep_aspect_ratio() const
+	{
+		glfwSetWindowAspectRatio(
+			mRaw_window,
+			mAspect_ratio_numerator,
+			mAspect_ratio_denominator);
 	}
 
 	void window::resize(const unsigned int aWidth, const unsigned int aHeight)
@@ -113,7 +129,7 @@ namespace cheap {
 		if (is_window_ptr_null()) return;
 
 		mTitle = aTitle;
-		glfwSetWindowTitle(mRaw_window_, mTitle.c_str());
+		glfwSetWindowTitle(mRaw_window, mTitle.c_str());
 	}
 
 	void window::set_fullscreen(const bool aIs_fullscreen)
@@ -125,14 +141,14 @@ namespace cheap {
 			if (mIs_fullscreen) return;
 
 			// Save current position of the window
-			glfwGetWindowPos(mRaw_window_, &mX, &mY);
+			glfwGetWindowPos(mRaw_window, &mX, &mY);
 			GLFWmonitor* primary_monitor = glfwGetPrimaryMonitor();
 			const GLFWvidmode* video_mode = glfwGetVideoMode(primary_monitor);
-			glfwSetWindowMonitor(mRaw_window_, primary_monitor, 0, 0, video_mode->width, video_mode->height,
+			glfwSetWindowMonitor(mRaw_window, primary_monitor, 0, 0, video_mode->width, video_mode->height,
 				video_mode->refreshRate);
 		} else {
 			if (!mIs_fullscreen) return;
-			glfwSetWindowMonitor(mRaw_window_, nullptr, mX, mY, mStart_width, mStart_height,
+			glfwSetWindowMonitor(mRaw_window, nullptr, mX, mY, mStart_width, mStart_height,
 				GLFW_DONT_CARE);
 		}
 
@@ -150,31 +166,31 @@ namespace cheap {
 		stbi_set_flip_vertically_on_load(0);
 		mIcons->pixels = stbi_load(aImage_path.c_str(), &mIcons->width,
 			&mIcons->height, nullptr, 4);
-		glfwSetWindowIcon(mRaw_window_, 1, mIcons);
+		glfwSetWindowIcon(mRaw_window, 1, mIcons);
 	}
 
 	GLFWwindow* window::get_raw_window() const
 	{
 		//LOG();
-		return mRaw_window_;
+		return mRaw_window;
 	}
 
 	bool window::is_closed() const
 	{
 		//LOG();
-		return glfwWindowShouldClose(mRaw_window_) == GL_TRUE;
+		return glfwWindowShouldClose(mRaw_window) == GL_TRUE;
 	}
 
 	void window::on_close(std::function<void()> aClose_function)
 	{
 		LOG();
-		mClose_functions_.emplace_back(aClose_function);
+		mClose_functions.emplace_back(aClose_function);
 	}
 
 	void window::run_close_functions() const
 	{
 		LOG();
-		for (auto& close_function : mClose_functions_)
+		for (auto& close_function : mClose_functions)
 			close_function();
 	}
 
@@ -191,13 +207,13 @@ namespace cheap {
 	{
 		LOG();
 		// Swap front and back window buffers
-		glfwSwapBuffers(mRaw_window_);
+		glfwSwapBuffers(mRaw_window);
 	}
 
 	void window::close() const
 	{
 		LOG();
-		glfwSetWindowShouldClose(mRaw_window_, GL_TRUE);
+		glfwSetWindowShouldClose(mRaw_window, GL_TRUE);
 	}
 
 	// success if return true
@@ -233,19 +249,19 @@ namespace cheap {
 	bool window::init_window()
 	{
 		LOG();
-		mRaw_window_ = glfwCreateWindow(
+		mRaw_window = glfwCreateWindow(
 			mWindow_data.mWidth, mWindow_data.mHeight,
 			mTitle.c_str(),
 			mIs_fullscreen ? glfwGetPrimaryMonitor() : nullptr,
 			nullptr);
 
-		if (mRaw_window_ == nullptr) {
+		if (mRaw_window == nullptr) {
 			PRINTLN("m_init_window() failed.");
 			glfwTerminate();
 			return false;
 		}
 
-		glfwMakeContextCurrent(mRaw_window_);
+		glfwMakeContextCurrent(mRaw_window);
 		return true;
 	}
 
@@ -276,16 +292,16 @@ namespace cheap {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		// Associate the window data with the GLFW window
-		glfwSetWindowUserPointer(mRaw_window_, &mWindow_data);
+		glfwSetWindowUserPointer(mRaw_window, &mWindow_data);
 		// Save the current position of the window
-		glfwGetWindowPos(mRaw_window_, &mX, &mY);
+		glfwGetWindowPos(mRaw_window, &mX, &mY);
 	}
 
 	void window::set_up_callbacks() const
 	{
 		LOG();
 		glfwSetFramebufferSizeCallback(
-			mRaw_window_,
+			mRaw_window,
 			[](GLFWwindow* aWindow, const int aWidth, const int aHeight) {
 				LOG();
 
@@ -302,7 +318,7 @@ namespace cheap {
 			});
 
 		glfwSetWindowCloseCallback(
-			mRaw_window_, [](GLFWwindow* aWindow) {
+			mRaw_window, [](GLFWwindow* aWindow) {
 				LOG();
 
 				const auto data = static_cast<window_data*>(glfwGetWindowUserPointer(aWindow));

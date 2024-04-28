@@ -11,7 +11,12 @@ namespace cheap {
 		mShader_program(
 			shader_program(
 				(mShader_path + mVertex_shader_filename).c_str(),
-				(mShader_path + mFragment_shader_filename).c_str())
+				(mShader_path + mFragment_shader_filename).c_str(),
+				static_cast<float>(aWindow->get_width()) / 2.0f,
+				static_cast<float>(aWindow->get_height()) / 2.0f,
+				DEFAULT_NEAR,
+				DEFAULT_FAR
+			)
 		),
 		mDraw_tasks(std::vector<graphics_entity*>()),
 		mTransform(transform())
@@ -61,7 +66,7 @@ namespace cheap {
 		const float aHeight, const bool aIs_RGBA)
 	{
 		LOG();
-		mDraw_tasks.emplace_back(new graphics_entity(graphics_entity::LBH_aspect_ratio::vertex_layout_placeholder, aLeft, aBottom, aHeight, mWindow->get_aspect_ration(),
+		mDraw_tasks.emplace_back(new graphics_entity(graphics_entity::LBH_aspect_ratio::vertex_layout_placeholder, aLeft, aBottom, aHeight, mWindow->get_aspect_ratio(),
 			(PIC_PATH + aPic_file_name).c_str(), aIs_RGBA)
 		);
 	}
@@ -71,7 +76,7 @@ namespace cheap {
 	{
 		LOG();
 		mDraw_tasks.emplace_back(new graphics_entity(graphics_entity::LBW_aspect_ratio::vertex_layout_placeholder,
-			aLeft, aBottom, aWidth, mWindow->get_aspect_ration(), (PIC_PATH + aPic_file_name).c_str(), aIs_RGBA)
+			aLeft, aBottom, aWidth, mWindow->get_aspect_ratio(), (PIC_PATH + aPic_file_name).c_str(), aIs_RGBA)
 		);
 	}
 
@@ -81,10 +86,10 @@ namespace cheap {
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
-	void renderer::draw(const int aTexture_slot)
+	void renderer::draw(const int aTexture_slot) const
 	{
 		for (const auto task : mDraw_tasks) {
-			mShader_program.use(mTransform.get(), GL_TEXTURE0);
+			mShader_program.use(GL_TEXTURE0);
 
 			//LOG();
 			task->before_draw(aTexture_slot);

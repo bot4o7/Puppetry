@@ -65,7 +65,7 @@ namespace cheap {
 
 		[[nodiscard]] unsigned int get_id() const;
 
-		[[nodiscard]] float get_aspect_ration() const;
+		[[nodiscard]] float get_aspect_ratio() const;
 
 	private:
 		unsigned int mId;

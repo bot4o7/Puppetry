@@ -72,12 +72,18 @@ namespace cheap {
 			-0.5f, 0.0f,
 			1.0f,
 			true);*/
-		my_renderer.add_draw_task_LBH(
-			"ys.png",
-			0.0f, 0.0f,
-			1.0f,
-			true);
+			/*my_renderer.add_draw_task_LBH(
+				"ys.png",
+				0.0f, 0.0f,
+				1.0f,
+				true);*/
 
+
+		graphics_entity task(
+			0.0f, 0.0f, 0.0f, true,
+			1.0f,
+			"src/cheap/graphics/pic/ys.png",
+			true);
 		while (app::is_running()) {
 			if (const float current_frame = static_cast<float>(glfwGetTime()); current_frame - last_frame > 2.0f) {
 				constexpr float       pace = 0.1f;
@@ -105,6 +111,9 @@ namespace cheap {
 			}
 			cheap::renderer::clear();
 			my_renderer.draw(GL_TEXTURE0);
+
+			task.before_draw(GL_TEXTURE0);
+			glDrawElements(ELEMENT_MODE, ELEMENT_COUNT, ELEMENT_TYPE, ELEMENT_INDICES);
 
 			my_renderer.update();
 		}
@@ -154,6 +163,7 @@ namespace cheap {
 						PRINTLN("app_event::update");
 						break;
 					case app_event::type::WINDOW_RESIZE:
+						mWindow->keep_aspect_ratio();
 						PRINTLN("app_event::window_resize");
 						break;
 					case app_event::type::WINDOW_FULLSCREEN_MODE_UPDATE:
