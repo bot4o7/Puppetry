@@ -37,13 +37,12 @@ namespace cheap {
 
 	void vertex_array::bind_VAO() const
 	{
-		//LOG();
 		glBindVertexArray(mVertex_array_object_id);
 	}
 
 	void vertex_array::bind() const
 	{
-		//LOG();
+		LOG();
 		bind_VAO();
 		// bind VBO
 		glBindBuffer(VBO_TARGET,

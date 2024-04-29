@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "event.h"
-#include "event.h"
 
 namespace cheap {
 	class game_event : public event

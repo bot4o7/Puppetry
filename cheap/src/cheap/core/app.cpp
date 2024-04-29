@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "app.h"
 
-
 #include "../events/app_event.h"
 #include "../events/input_event.h"
 #include "../graphics/renderer.h"
@@ -62,22 +61,9 @@ namespace cheap {
 	{
 		LOG();
 
-		renderer                      my_renderer(get_window());
+		const renderer                      my_renderer(get_window());
 		const float                   begin_frame = static_cast<float>(glfwGetTime());
-		//bool switch_pic = false;
 		float     last_frame = begin_frame;
-
-		/*my_renderer.add_draw_task(
-			"ys.png",
-			-0.5f, 0.0f,
-			1.0f,
-			true);*/
-			/*my_renderer.add_draw_task_LBH(
-				"ys.png",
-				0.0f, 0.0f,
-				1.0f,
-				true);*/
-
 
 		const graphics_entity task(
 			-0.5f, 0.0f, 0.0f, true,

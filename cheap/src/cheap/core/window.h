@@ -36,9 +36,6 @@ namespace cheap {
 		);
 		~window();
 
-		// if x < 0, will not set layout_x
-		// if y < 0, will not set layout_y
-		void              set_layout(int aX, int aY) const;
 		[[nodiscard]] int get_layout_x() const;
 		[[nodiscard]] int get_layout_y() const;
 

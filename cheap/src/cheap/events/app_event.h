@@ -11,7 +11,6 @@ namespace cheap {
 			RENDER,
 			WINDOW_RESIZE,
 			WINDOW_CLOSE,
-			//window_move,
 			WINDOW_FULLSCREEN_MODE_UPDATE
 		};
 

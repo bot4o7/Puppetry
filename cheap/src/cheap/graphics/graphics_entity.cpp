@@ -2,52 +2,29 @@
 #include "graphics_entity.h"
 
 namespace cheap {
-	graphics_entity::graphics_entity(LBRT, const float aLeft, const float aBottom, const float aRight, const float aTop,
-		const char* aPic_file_path, const bool aIs_RGBA) :
-		mTexture(new texture(aPic_file_path, aIs_RGBA)),
-		mVertex_array(get_vertex_array(
-			1.0, 1.0, 0, 0, 0))
-	{
-		LOG();
-	}
-
-	graphics_entity::graphics_entity(TO_LBRT, const float aLeft, const float aBottom, const float aTo_right,
-		const float aTo_top, const char* aPic_file_path, const bool aIs_RGBA) :
-		mTexture(new texture(aPic_file_path, aIs_RGBA)),
-		mVertex_array(get_vertex_array(
-			1.0, 1.0, 0, 0, 0))
-	{
-		LOG();
-	}
-
-	graphics_entity::graphics_entity(LBWH, const float aLeft, const float aBottom, const float aWidth,
+	graphics_entity::graphics_entity(const float aX, const float aY, const float aZ, const float aWidth,
 		const float aHeight, const char* aPic_file_path, const bool aIs_RGBA) :
 		mTexture(new texture(aPic_file_path, aIs_RGBA)),
-		mVertex_array(get_vertex_array(
-			aWidth, aHeight, 0, 0, 0))
+		mVertex_array(get_vertex_array(aWidth, aHeight,
+			aX, aY, aZ))
 	{
 		LOG();
 	}
 
-	graphics_entity::graphics_entity(LBH_aspect_ratio, const float aLeft, const float aBottom, const float aHeight,
-		const float aWindow_aspect_ratio, const char* aPic_file_path, const bool aIs_RGBA) :
+	graphics_entity::graphics_entity(const float aX, const float aY, const float aZ, const float aWidth,
+		bool aPlaceholder_height, const char* aPic_file_path, const bool aIs_RGBA) :
 		mTexture(new texture(aPic_file_path, aIs_RGBA)),
-		mVertex_array/*(get_vertex_array_by_proportion_of_edge_to_border(
-			POS_BOTTOM + (aBottom + aHeight) * 2.0f,
-			POS_BOTTOM + aBottom * 2.0f,
-			POS_LEFT + aLeft * 2.0f,
-			POS_LEFT + (aLeft + aHeight * mTexture->get_aspect_ration()) * 2.0f / aWindow_aspect_ratio))*/
-			(get_vertex_array(
-				aHeight* mTexture->get_aspect_ratio(), aHeight, 0, 0, 0))
+		mVertex_array(get_vertex_array(aWidth, aWidth / mTexture->get_aspect_ratio(),
+			aX, aY, aZ))
 	{
 		LOG();
 	}
 
-	graphics_entity::graphics_entity(LBW_aspect_ratio, const float aLeft, const float aBottom, const float aWidth,
-		const float aWindow_aspect_ratio, const char* aPic_file_path, const bool aIs_RGBA) :
+	graphics_entity::graphics_entity(const float aX, const float aY, const float aZ, bool aPlaceholder_width,
+		const float aHeight, const char* aPic_file_path, const bool aIs_RGBA) :
 		mTexture(new texture(aPic_file_path, aIs_RGBA)),
-		mVertex_array(get_vertex_array(
-			aWidth, aWidth / mTexture->get_aspect_ratio(), 0, 0, 0))
+		mVertex_array(get_vertex_array(aHeight* mTexture->get_aspect_ratio(), aHeight,
+			aX, aY, aZ))
 	{
 		LOG();
 	}
@@ -61,7 +38,6 @@ namespace cheap {
 
 	void graphics_entity::before_draw(const int aTexture_slot) const
 	{
-		//LOG();
 		mTexture->bind(aTexture_slot);
 		mVertex_array->bind_VAO();
 	}
