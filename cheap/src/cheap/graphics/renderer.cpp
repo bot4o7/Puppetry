@@ -12,14 +12,9 @@ namespace cheap {
 			shader_program(
 				(mShader_path + mVertex_shader_filename).c_str(),
 				(mShader_path + mFragment_shader_filename).c_str(),
-				static_cast<float>(aWindow->get_width()) / 2.0f,
-				static_cast<float>(aWindow->get_height()) / 2.0f,
-				DEFAULT_NEAR,
-				DEFAULT_FAR
-			)
+				aWindow->get_aspect_ratio())
 		),
-		mDraw_tasks(std::vector<graphics_entity*>()),
-		mTransform(transform())
+		mDraw_tasks(std::vector<graphics_entity*>())
 	{
 		LOG();
 		if (mWindow == nullptr)

@@ -22,7 +22,7 @@ namespace cheap {
 	// ----- VAO, VBO, IBO/EBO   Macros definitions------------
 	#define VERTICES_LENGTH 20
 	#define INDICES_LENGTH 6
-	#define LAYOUT_LENGTH 3
+	#define LAYOUT_LENGTH 12
 
 	#define POS_INDEX 0
 	#define TEXCOORD_INDEX 1
@@ -42,7 +42,7 @@ namespace cheap {
 	#define LAYOUT_NORMALIZED GL_FALSE
 
 	#define STRIDE (5*sizeof(float))
-	#define STRIDE_LAYOUT 0
+	#define STRIDE_LAYOUT (3*sizeof(float))
 
 	#define POS_POINTER (void*)0
 	#define TEXCOORD_POINTER (void*)(3 * sizeof(float))
@@ -77,8 +77,7 @@ namespace cheap {
 		vertex_array(
 			float* aVertices,
 			unsigned int* aIndices,
-			float* aLayout,
-			const bool aIs_these_array_need_to_be_delete_in_dtor = true);
+			bool          aIs_these_array_need_to_be_delete_in_dtor = true);
 
 		// TODO 万一这两个数组的生命周期不属于 vertex_array，我届时需更改这里
 		// delete[] mVertices;
@@ -108,7 +107,6 @@ namespace cheap {
 		bool mIs_these_array_need_to_be_delete_in_dtor;
 		float* mVertices;
 		unsigned int* mIndices;
-		float* mLayout;
 
 		unsigned int mVertex_array_object_id;
 		unsigned int mVertex_buffer_object_id;

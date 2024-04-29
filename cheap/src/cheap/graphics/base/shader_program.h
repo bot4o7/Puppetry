@@ -33,10 +33,7 @@ namespace cheap {
 		shader_program(
 			const char* aVertex_path,
 			const char* aFragment_path,
-			const float aHalf_screen_width,
-			const float aHalf_screen_height,
-			const float aNear,
-			const float aFar);
+			const float aAspect);
 		~shader_program() = default;
 
 		void create_program(const char* aVertex_path, const char* aFragment_path) const

@@ -5,13 +5,11 @@ namespace cheap {
 	vertex_array::vertex_array(
 		float* aVertices,
 		unsigned int* aIndices,
-		float* aLayout,
 		const bool aIs_these_array_need_to_be_delete_in_dtor)
 		:
 		mIs_these_array_need_to_be_delete_in_dtor(aIs_these_array_need_to_be_delete_in_dtor),
 		mVertices(aVertices),
 		mIndices(aIndices),
-		mLayout(aLayout),
 		mVertex_array_object_id(0),
 		mVertex_buffer_object_id(0),
 		mIndex_buffer_object_id(0)
@@ -24,7 +22,6 @@ namespace cheap {
 		bind();
 		unbind();
 	}
-
 
 	vertex_array::~vertex_array()
 	{
@@ -54,7 +51,7 @@ namespace cheap {
 		// TODO 因为我这里的 mVertices 是指针，不是显式数组，需要指定数量，否则 sizeof(mVertices)只是一个指针的大小
 		glBufferData(
 			VBO_TARGET,
-			VERTICES_LENGTH * sizeof(VERTICES_TYPE),
+			(VERTICES_LENGTH + LAYOUT_LENGTH) * sizeof(VERTICES_TYPE),
 			mVertices,
 			BUFFER_USAGE);
 
@@ -89,14 +86,15 @@ namespace cheap {
 			TEXCOORD_POINTER);
 		glEnableVertexAttribArray(TEXCOORD_INDEX);
 
-		/*	glVertexAttribPointer(
-				POS_INDEX,
-				POS_SIZE,
-				POS_TYPE,
-				POS_NORMALIZED,
-				STRIDE,
-				POS_POINTER);
-			glEnableVertexAttribArray(POS_INDEX);*/
+		// layout coords attribute
+		glVertexAttribPointer(
+			LAYOUT_INDEX,
+			LAYOUT_SIZE,
+			LAYOUT_TYPE,
+			LAYOUT_NORMALIZED,
+			STRIDE_LAYOUT,
+			LAYOUT_POINTER);
+		glEnableVertexAttribArray(LAYOUT_INDEX);
 	}
 
 	void vertex_array::unbind()

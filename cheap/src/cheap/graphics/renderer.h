@@ -34,8 +34,8 @@ namespace cheap {
 	#define ELEMENT_INDICES (void*)0
 	// --------------------- OpenGL definitions ------------------------
 
-	#define DEFAULT_NEAR (-1000.0f)
-	#define	DEFAULT_FAR (1000.0f)
+	//#define DEFAULT_NEAR (-1000.0f)
+	//#define	DEFAULT_FAR (1000.0f)
 
 	class renderer
 	{
@@ -84,6 +84,5 @@ namespace cheap {
 		shader_program mShader_program;
 
 		std::vector<graphics_entity*> mDraw_tasks;
-		transform mTransform;
 	};
 }

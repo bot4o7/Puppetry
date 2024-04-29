@@ -1,7 +1,7 @@
 ﻿#version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoord;
-//layout (location = 2) in vec3 aLayout;
+layout (location = 2) in vec3 aLayout;
 
 out vec2 TexCoord;
 
@@ -10,20 +10,17 @@ uniform mat4 uProjection;
 uniform mat4 uView;
 // scale->rotate->layout->translate
 uniform mat4 uTranslate;
-//uniform vec3 uLayout;
 uniform mat4 uRotate;
 uniform mat4 uScale;
 
 void main()
 {
-	//mat4 mLayout = mat4(
-	//	1.0, 0.0, 0.0, 0.0,
-	//	0.0, 1.0, 0.0, 0.0,
-	//	0.0, 0.0, 1.0, 0.0,
-	//	aLayout.x, aLayout.y, aLayout.z, 1.0
-	//);
-	//gl_Position = uProjection * uView * uTranslate * mLayout * uRotate * uScale * vec4(aPos.x, aPos.y, aPos.z, 1.0);
-	gl_Position = uProjection * uView * uTranslate * uRotate * uScale * vec4(aPos.x, aPos.y, aPos.z, 1.0);
-	//gl_Position = uView * uTranslate * uRotate * uScale * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+	mat4 mLayout = mat4(
+		1.0, 0.0, 0.0, 0.0,
+		0.0, 1.0, 0.0, 0.0,
+		0.0, 0.0, 1.0, 0.0,
+		aLayout, 1.0
+	);
+	gl_Position = uTranslate * mLayout * uProjection * uView *  uRotate * uScale * vec4(aPos.x, aPos.y, aPos.z, 1.0);
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
 }

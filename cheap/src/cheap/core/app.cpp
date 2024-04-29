@@ -79,8 +79,13 @@ namespace cheap {
 				true);*/
 
 
-		graphics_entity task(
-			0.0f, 0.0f, 0.0f, true,
+		const graphics_entity task(
+			-0.5f, 0.0f, 0.0f, true,
+			1.0f,
+			"src/cheap/graphics/pic/ys.png",
+			true);
+		const graphics_entity task2(
+			0.5f, 0.0f, 0.0f, true,
 			1.0f,
 			"src/cheap/graphics/pic/ys.png",
 			true);
@@ -113,6 +118,8 @@ namespace cheap {
 			my_renderer.draw(GL_TEXTURE0);
 
 			task.before_draw(GL_TEXTURE0);
+			glDrawElements(ELEMENT_MODE, ELEMENT_COUNT, ELEMENT_TYPE, ELEMENT_INDICES);
+			task2.before_draw(GL_TEXTURE0);
 			glDrawElements(ELEMENT_MODE, ELEMENT_COUNT, ELEMENT_TYPE, ELEMENT_INDICES);
 
 			my_renderer.update();

@@ -11,29 +11,11 @@ namespace cheap {
 	shader_program::shader_program(
 		const char* aVertex_path,
 		const char* aFragment_path,
-		const float aHalf_screen_width,
-		const float aHalf_screen_height,
-		const float aNear,
-		const float aFar)
+		const float aAspect)
 		:
 		mId(glCreateProgram()),
 		mOpacity(UNIFORM_OPAQUE),
-		/*mProjection(transform::get_orthogonal_projection(
-			-aHalf_screen_width,
-			aHalf_screen_width,
-			aHalf_screen_height,
-			-aHalf_screen_height,
-			aNear,
-			aFar
-		)),*/
-		mProjection(transform::get_orthogonal_projection(
-			-1.f,
-			1.f,
-			-1.f,
-			1.f,
-			-1000.f,
-			1000.f
-		)),
+		mProjection(transform::get_orthogonal_projection(aAspect)),
 		mView(transform::get_view()),
 		mTranslate(transform::get_identity_matrix()),
 		mRotate(transform::get_identity_matrix()),

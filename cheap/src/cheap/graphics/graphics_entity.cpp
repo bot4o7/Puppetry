@@ -72,9 +72,8 @@ namespace cheap {
 		const float aX, const float aY, const float aZ)
 	{
 		LOG();
-		const auto vertices = new float[VERTICES_LENGTH];
+		const auto vertices = new float[VERTICES_LENGTH + LAYOUT_LENGTH];
 		const auto indices = new unsigned int[INDICES_LENGTH];
-		const auto layout = new float[LAYOUT_LENGTH] {aX, aY, aZ };
 
 		// top right
 		vertices[0] = aWidth;    // x pos
@@ -110,6 +109,20 @@ namespace cheap {
 		indices[4] = 2;
 		indices[5] = 3;
 
-		return new vertex_array(vertices, indices, layout);
+		// layout x y z
+		vertices[20] = aX;
+		vertices[21] = aY;
+		vertices[22] = aZ;
+		vertices[23] = aX;
+		vertices[24] = aY;
+		vertices[25] = aZ;
+		vertices[26] = aX;
+		vertices[27] = aY;
+		vertices[28] = aZ;
+		vertices[29] = aX;
+		vertices[30] = aY;
+		vertices[31] = aZ;
+
+		return new vertex_array(vertices, indices);
 	}
 }
