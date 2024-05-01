@@ -14,28 +14,33 @@ namespace cheap {
 			WINDOW_FULLSCREEN_MODE_UPDATE
 		};
 
-		GET_CATEGORY(event::category::APP);
-
 		~app_event() override = default;
+
+		GET_CATEGORY(event::category::APP);
+		GET_TYPE_AND_IS_TYPE(type, mType);
+
 	protected:
-		app_event() = default;
+		explicit app_event(const type aType) :mType(aType)
+		{
+		}
+
+	private:
+		type mType;
 	};
 
 	class app_update_event final : public app_event
 	{
 	public:
-		GET_TYPE_AND_IS_TYPE(app_event::type::UPDATE);
 
-		app_update_event() = default;
+		app_update_event() : app_event(type::UPDATE) { }
 		~app_update_event() override = default;
 	};
 
 	class app_render_event final :public app_event
 	{
 	public:
-		GET_TYPE_AND_IS_TYPE(app_event::type::RENDER);
 
-		app_render_event() = default;
+		app_render_event() : app_event(type::RENDER) { }
 		~app_render_event() override = default;
 	};
 
@@ -45,18 +50,16 @@ namespace cheap {
 		unsigned int mWidth;
 		unsigned int mHeight;
 
-		GET_TYPE_AND_IS_TYPE(app_event::type::WINDOW_RESIZE);
 
-		app_window_resize_event(const unsigned int aWidth, const unsigned int aHeight) : mWidth(aWidth), mHeight(aHeight) { }
+		app_window_resize_event(const unsigned int aWidth, const unsigned int aHeight) : app_event(type::WINDOW_RESIZE), mWidth(aWidth), mHeight(aHeight) { }
 		~app_window_resize_event() override = default;
 	};
 
 	class app_window_close_event final : public app_event
 	{
 	public:
-		GET_TYPE_AND_IS_TYPE(app_event::type::WINDOW_CLOSE);
 
-		app_window_close_event() = default;
+		app_window_close_event() : app_event(type::WINDOW_CLOSE) { }
 		~app_window_close_event() override = default;
 	};
 
@@ -71,9 +74,8 @@ namespace cheap {
 		};
 
 		fullscreen_mode mMode;
-		GET_TYPE_AND_IS_TYPE(app_event::type::WINDOW_FULLSCREEN_MODE_UPDATE);
 
-		explicit app_window_fullscreen_mode_update_event(const fullscreen_mode aMode) : mMode(aMode) { }
+		explicit app_window_fullscreen_mode_update_event(const fullscreen_mode aMode) :app_event(type::WINDOW_FULLSCREEN_MODE_UPDATE), mMode(aMode) { }
 		~app_window_fullscreen_mode_update_event() override = default;
 	};
 }

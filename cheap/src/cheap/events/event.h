@@ -15,8 +15,6 @@ namespace cheap {
 
 		[[nodiscard]] virtual category get_category() const = 0;
 		[[nodiscard]] virtual bool       is_category(const category aCategory_input) const = 0;
-		[[nodiscard]] virtual int        get_type() const = 0;
-		[[nodiscard]] virtual bool       is_type(const int aSub_type) const = 0;
 
 		virtual ~event() = default;
 
@@ -35,12 +33,12 @@ namespace cheap {
 	return category_input == get_category();\
 	}
 
-	#define GET_TYPE_AND_IS_TYPE(my_type) [[nodiscard]] int get_type() const override\
+	#define GET_TYPE_AND_IS_TYPE(type_name, arg) [[nodiscard]] type_name get_type() const\
 	{\
-		return static_cast<int>(my_type);\
+		return arg;\
 	}\
-	[[nodiscard]] bool is_type(const int sub_type) const override\
+	[[nodiscard]] bool is_type(type_name aType) const\
 	{\
-		return sub_type == get_type();\
+		return aType == get_type();\
 	}
 }

@@ -63,7 +63,7 @@ namespace cheap {
 
 		[[nodiscard]] level* get_top_layer_level() const
 		{
-			LOG();
+			//LOG();
 			return mList_dummy_head.mBelow;
 		}
 

@@ -34,22 +34,6 @@ namespace cheap {
 
 		~renderer();
 
-
-		/*void add_draw_task(
-			float          aX, float aY, float aZ,
-			float          aHeight,
-			const std::string& aPic_file_name, bool aIs_RGBA);
-
-		void add_draw_task(
-			float          aX, float    aY, float aZ,
-			float          aWidth, bool aPlaceholder_height,
-			const std::string& aPic_file_name, bool aIs_RGBA);
-
-		void        add_draw_task(
-			float          aX, float     aY, float aZ,
-			float          aWidth, float aHeight,
-			const std::string& aPic_file_name, bool aIs_RGBA);*/
-
 		void add_new_task(graphics_entity* aGraphics_entity) const
 		{
 			mLayer_manager->add_layer(aGraphics_entity);
@@ -70,6 +54,5 @@ namespace cheap {
 		std::shared_ptr<window> mWindow;
 		std::shared_ptr<layer_manager> mLayer_manager;
 		shader_program mShader_program;
-
 	};
 }

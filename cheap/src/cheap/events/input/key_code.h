@@ -1,7 +1,8 @@
 ﻿#pragma once
 // these are GLFW standard
+// exactly same with GLFW standard
 #ifdef CP_GLFW_INPUT_API
-//namespace cheap {
+// --------------------------- Key Code ---------------------------
 #define 	CP_KEY_SPACE   32
 
 #define 	CP_KEY_APOSTROPHE   39 /* ' */
@@ -243,5 +244,5 @@
 #define 	CP_KEY_MENU   348
 
 #define 	CP_KEY_LAST   CP_KEY_MENU
-//}
+// --------------------------- Key Code ---------------------------
 #endif

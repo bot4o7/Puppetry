@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\cheap\entity\graphics_entity.h" />
+    <ClInclude Include="src\cheap\events\input\mouse_button.h" />
     <ClInclude Include="src\cheap\graphics\layers\layer.h" />
     <ClInclude Include="src\cheap\events\input_system.h" />
     <ClInclude Include="src\cheap\graphics\base\base.h" />
@@ -169,7 +170,6 @@
     <ClInclude Include="src\cheap\events\event_system.h" />
     <ClInclude Include="src\cheap\events\game_event.h" />
     <ClInclude Include="src\cheap\events\input\key_code.h" />
-    <ClInclude Include="src\cheap\events\input\mouse_button.h" />
     <ClInclude Include="src\cheap\events\input_event.h" />
     <ClInclude Include="src\cheap\utils\log.h" />
     <ClInclude Include="src\cheap\core\app.h" />

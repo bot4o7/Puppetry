@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #ifdef CP_GLFW_INPUT_API
-//namespace cheap {
+// --------------------- Mouse Button ---------------------
 #define 	CP_MOUSE_BUTTON_1   0
 
 #define 	CP_MOUSE_BUTTON_2   1
@@ -25,5 +25,12 @@
 #define 	CP_MOUSE_BUTTON_RIGHT   CP_MOUSE_BUTTON_2
 
 #define 	CP_MOUSE_BUTTON_MIDDLE   CP_MOUSE_BUTTON_3
-//}
+
+// ---    my custom placeholder NOT OpenGL --------------
+#define 	CP_MOUSE_MOVE   10
+#define 	CP_MOUSE_ENTER   11
+#define 	CP_MOUSE_LEAVE   12
+#define 	CP_MOUSE_SCROLL   13
+// ---    my custom placeholder NOT OpenGL --------------
+// --------------------- Mouse Button ---------------------
 #endif

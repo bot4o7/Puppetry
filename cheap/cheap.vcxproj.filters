@@ -39,9 +39,6 @@
     <ClInclude Include="src\cheap\events\input\key_code.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\events\input\mouse_button.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\cheap\events\game_event.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -97,6 +94,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\cheap\entity\graphics_entity.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\events\input\mouse_button.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,161 +1,172 @@
 ﻿#pragma once
 #include "event.h"
 #include "input/mouse_button.h"
-#include "input/key_code.h"
 
 namespace cheap {
+
 	class input_event : public event
 	{
 	public:
-		enum class device
+
+		enum class type
 		{
-			NONE,
 			KEYBOARD,
 			MOUSE
 		};
 
-		[[nodiscard]] virtual device get_device() const
-		{
-			return device::NONE;
-		}
+		explicit input_event(const type aType) : mType(aType) { }
+		~input_event() override = default;
 
-		[[nodiscard]] int get_type()const override
-		{
-			return -1;
-		}
-
-		[[nodiscard]] bool is_type(const int aSub_type) const override
-		{
-			return false;
-		}
 		GET_CATEGORY(event::category::INPUT);
 
-		~input_event() override = default;
-	protected:
-		input_event() = default;
+		GET_TYPE_AND_IS_TYPE(type, mType);
+
+	private:
+		type mType;
 	};
 
-	#define GET_DEVICE(my_device) [[nodiscard]] device get_device() const override { return my_device; }
+
+	#define GET_ACTION(action_name, arg) [[nodiscard]] action_name get_action() const\
+	{\
+		return arg;\
+	}\
+	[[nodiscard]] bool is_action(action_name aAction) const\
+	{\
+		return aAction == get_action();\
+	}
+
 
 	// -------------- KeyEvent 键盘事件 -------------------
 	class key_event : public input_event
 	{
 	public:
-		int mCode;
+		int mKey;
 
-		enum type
+		enum action
 		{
-			PRESSED,
-			RELEASED,
-			// TODO KeyType is not Implemented NOW
-			TYPED
+			PRESS,
+			REPEAT,
+			RELEASE,
+			TEXT_INPUT
 		};
 
-		GET_DEVICE(input_event::device::KEYBOARD);
-
 		~key_event() override = default;
+
+		GET_ACTION(action, mAction);
+
 	protected:
-		explicit key_event(const int key) : mCode(key) { }
+		explicit key_event(const int aKey, action aAction) : input_event(type::KEYBOARD), mKey(aKey), mAction(aAction) { }
+	private:
+		action mAction;
 	};
 
-	class key_pressed_event final : public key_event
+	class key_press_event final : public key_event
 	{
 	public:
-		bool mIs_repeat;
-
-		GET_TYPE_AND_IS_TYPE(key_event::type::PRESSED);
-
-		key_pressed_event(const int aKey, const bool aIs_repeat) : key_event(aKey), mIs_repeat(aIs_repeat) { }
-		~key_pressed_event() override = default;
+		explicit key_press_event(const int aKey) : key_event(aKey, action::PRESS) { }
+		~key_press_event() override = default;
 	};
 
-	class key_released_event final : public key_event
+	class key_repeat_event final : public key_event
 	{
 	public:
-		GET_TYPE_AND_IS_TYPE(key_event::type::RELEASED);
+		explicit key_repeat_event(const int aKey) : key_event(aKey, action::REPEAT) { }
+		~key_repeat_event() override = default;
+	};
 
-
-		explicit key_released_event(const int aKey) : key_event(aKey) { }
-		~key_released_event() override = default;
+	class key_release_event final : public key_event
+	{
+	public:
+		explicit key_release_event(const int aKey) : key_event(aKey, action::RELEASE) { }
+		~key_release_event() override = default;
+	};
+	class key_text_input_event final : public key_event
+	{
+	public:
+		explicit key_text_input_event(const int aKey) : key_event(aKey, action::TEXT_INPUT) { }
+		~key_text_input_event() override = default;
 	};
 	// -------------- key_event 键盘事件 -------------------
 	// -------------- MouseEvent 鼠标事件 -----------------
 	class mouse_event : public input_event
 	{
 	public:
-		int mButton;
-		double mX, mY;
+		char mButton;
 
-		enum type
+		enum action
 		{
-			// TODO does Mouse Event need to be MButtonE:ME, MPositionE:ME 要不要把按钮事件和位置事件分开
-			PRESSED,   // 鼠标按键事件不需要坐标属性？还是需要
-			RELEASED, // 如果不需要，那么把MB事件跟Key事件合并可能更简洁。 
-			SCROLLED,
-			MOVED
+			MOVE,
+			ENTER,
+			LEAVE,
+			PRESS,
+			REPEAT,
+			RELEASE,
+			SCROLL
 		};
-
-		GET_DEVICE(input_event::device::MOUSE);
 
 		~mouse_event() override = default;
 
+		GET_ACTION(action, mAction);
+
 	protected:
-		explicit mouse_event(const int aButton) : mButton(aButton), mX(-1.0f), mY(-1.0f) { }
-
-		mouse_event(const double aX, const double aY) : mButton(CP_MOUSE_BUTTON_LAST + 1), mX(aX), mY(aY) { }
-
-		mouse_event(const int aButton, const double aX, const double aY) : mButton(aButton), mX(aX), mY(aY) { }
+		mouse_event(char aButton, action aAction) : input_event(type::MOUSE), mButton(aButton), mAction(aAction) { }
+	private:
+		action mAction;
 	};
 
-	class mouse_pressed_event final :public  mouse_event
+	class mouse_move_event : public mouse_event
 	{
 	public:
+		double mX;
+		double mY;
 
-		GET_TYPE_AND_IS_TYPE(mouse_event::type::PRESSED);
+		mouse_move_event(const double aX, const double aY) : mouse_event(CP_MOUSE_MOVE, action::MOVE), mX(aX), mY(aY) { }
 
-		mouse_pressed_event() = delete;
-		explicit mouse_pressed_event(const int aButton) : mouse_event(aButton) { }
-		mouse_pressed_event(const double aX, const double aY) = delete;
-		mouse_pressed_event(const int aButton, const double aX, const double aY) : mouse_event(aButton, aX, aY) { }
+		~mouse_move_event() override = default;
 	};
 
-	class mouse_released_event final :public  mouse_event
+	class mouse_enter_event : public mouse_event
 	{
 	public:
-		GET_TYPE_AND_IS_TYPE(mouse_event::type::RELEASED);
-
-		mouse_released_event() = delete;
-		explicit mouse_released_event(const int aButton) : mouse_event(aButton) { }
-		mouse_released_event(const double aX, const double aY) = delete;
-		mouse_released_event(const int aButton, const double aX, const double aY) : mouse_event(aButton, aX, aY) { }
-
-		~mouse_released_event() override = default;
+		mouse_enter_event() : mouse_event(CP_MOUSE_ENTER, action::ENTER) { }
+		~mouse_enter_event() override = default;
 	};
 
-	class mouse_scrolled_event final : public mouse_event
+	class mouse_leave_event : public mouse_event
 	{
 	public:
-		GET_TYPE_AND_IS_TYPE(mouse_event::type::SCROLLED);
-
-		mouse_scrolled_event() = delete;
-		explicit mouse_scrolled_event(const int aButton) = delete;
-		mouse_scrolled_event(const double aX, const double aY) : mouse_event(aX, aY) { }
-		mouse_scrolled_event(const int aButton, const double aX, const double aY) = delete;
-
-		~mouse_scrolled_event() override = default;
+		mouse_leave_event() : mouse_event(CP_MOUSE_LEAVE, action::LEAVE) { }
+		~mouse_leave_event() override = default;
 	};
 
-	class mouse_moved_event : public mouse_event
+	class mouse_press_event final :public  mouse_event
 	{
 	public:
-		GET_TYPE_AND_IS_TYPE(mouse_event::type::MOVED);
+		explicit mouse_press_event(const char aButton) :mouse_event(aButton, action::PRESS) { }
+		~mouse_press_event() override = default;
+	};
+	class mouse_repeat_event final :public  mouse_event
+	{
+	public:
+		explicit mouse_repeat_event(const char aButton) :mouse_event(aButton, action::REPEAT) { }
+		~mouse_repeat_event() override = default;
+	};
+	class mouse_release_event final :public  mouse_event
+	{
+	public:
+		explicit mouse_release_event(const char aButton) :mouse_event(aButton, action::RELEASE) { }
+		~mouse_release_event() override = default;
+	};
 
-		mouse_moved_event() = delete;
-		explicit mouse_moved_event(const int aButton) = delete;
-		mouse_moved_event(const double aX, const double aY) : mouse_event(aX, aY) { }
-		mouse_moved_event(const int aButton, const double aX, const double aY) = delete;
+	class mouse_scroll_event : public mouse_event
+	{
+	public:
+		double mX_offset;
+		double mY_offset;
 
-		~mouse_moved_event() override = default;
+		mouse_scroll_event(const double aX, const double aY) : mouse_event(CP_MOUSE_SCROLL, action::SCROLL), mX_offset(aX), mY_offset(aY) { }
+
+		~mouse_scroll_event() override = default;
 	};
 	// -------------- MouseEvent 鼠标事件 -----------------
 }

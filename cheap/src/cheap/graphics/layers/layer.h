@@ -50,48 +50,6 @@ namespace cheap {
 				mGraphics_entity->mPic_file_path.c_str(),
 				mGraphics_entity->mIs_RGBA
 			)
-			//mGraphics_rectangle(
-			//	mGraphics_entity->mWidth > 0.f ?
-			//	(mGraphics_entity->mHeight > 0.f ?
-			//		// width > 0,  height > 0
-			//		graphics_rectangle(
-			//			mGraphics_entity->mX,
-			//			mGraphics_entity->mY,
-			//			mGraphics_entity->mZ,
-			//			mGraphics_entity->mWidth,
-			//			mGraphics_entity->mHeight,
-			//			mGraphics_entity->mPic_file_path.c_str(),
-			//			mGraphics_entity->mIs_RGBA)
-			//		:
-			//		// width > 0,  height < 0
-			//		graphics_rectangle(
-			//			mGraphics_entity->mX,
-			//			mGraphics_entity->mY,
-			//			mGraphics_entity->mZ,
-			//			mGraphics_entity->mWidth,
-			//			true,
-			//			mGraphics_entity->mPic_file_path.c_str(),
-			//			mGraphics_entity->mIs_RGBA))
-			//	:
-			//	// width < 0,  height > 0
-			//	(mGraphics_entity->mHeight > 0.f ?
-			//		graphics_rectangle(
-			//			mGraphics_entity->mX,
-			//			mGraphics_entity->mY,
-			//			mGraphics_entity->mZ,
-			//			true,
-			//			mGraphics_entity->mHeight,
-			//			mGraphics_entity->mPic_file_path.c_str(),
-			//			mGraphics_entity->mIs_RGBA)
-			//		:
-			//		// width < 0,  height < 0
-			//		graphics_rectangle(
-			//			mGraphics_entity->mX,
-			//			mGraphics_entity->mY,
-			//			mGraphics_entity->mZ,
-			//			mGraphics_entity->mPic_file_path.c_str(),
-			//			mGraphics_entity->mIs_RGBA))
-			//)
 		{
 			LOG();
 		}
@@ -119,7 +77,7 @@ namespace cheap {
 
 		void before_draw(const int aTexture_slot) const
 		{
-			LOG();
+			//LOG();
 			mGraphics_rectangle.before_draw(aTexture_slot);
 		}
 

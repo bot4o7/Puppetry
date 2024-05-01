@@ -2,9 +2,8 @@
 #include "app.h"
 
 #include "../events/app_event.h"
-#include "../events/input_event.h"
+#include "../events/event.h"
 #include "../graphics/renderer.h"
-#include "../graphics/base/shader_program.h"
 
 #ifdef CP_OPENGL_API
 namespace cheap {
@@ -15,12 +14,12 @@ namespace cheap {
 				DEFAULT_TITLE,
 				aWidth,
 				aHeight,
-				[this](event* aInput_event) {this->on_event(aInput_event); },
-				[this]() {this->update(); })), mInput_system(std::make_shared<input_system>(mWindow->get_raw_window())
-				),
-		mEvent_system(std::make_shared <event_system>()),
-		mLayer_manager(std::make_shared<layer_manager>()),
-		mRenderer(std::make_shared<renderer>(mWindow, mLayer_manager))
+				[this](event* aEvent) {this->on_event(aEvent); },
+				[this]() {this->update(); })), mLayer_manager(std::make_shared<layer_manager>()),
+		mRenderer(std::make_shared<renderer>(mWindow, mLayer_manager)),
+		mInput_system(std::make_shared<input_system>(mWindow->get_raw_window())
+		),
+		mEvent_system(std::make_shared <event_system>())
 	{
 		LOG();
 	}
@@ -62,17 +61,6 @@ namespace cheap {
 			true,
 			true);
 
-		/*graphics_rectangle task(
-			0.5f, 0.0f, -0.1f, true,
-			1.0f,
-			"src/cheap/graphics/pic/ys.png",
-			true);
-		graphics_rectangle task2(
-			-0.2f, 0.0f, 1.0f, true,
-			1.0f,
-			"src/cheap/graphics/pic/friends.png",
-			true);*/
-
 		mRenderer->add_new_task(&task);
 		mRenderer->add_new_task(&task2);
 
@@ -81,8 +69,6 @@ namespace cheap {
 				constexpr float       pace = 0.1f;
 				const float delta_frame = current_frame - begin_frame;
 
-
-				//switch_pic = !switch_pic;
 				last_frame = current_frame;
 			}
 			mRenderer->clear();
@@ -91,7 +77,7 @@ namespace cheap {
 		}
 	}
 
-	void app::clear()
+	void app::clear() const
 	{
 		LOG();
 		// Clear past events
@@ -99,7 +85,7 @@ namespace cheap {
 		// Clear old graphics and poll events
 		mWindow->clear();
 	}
-	void app::update()
+	void app::update() const
 	{
 		LOG();
 		// Set the active entities to be processed in this frame
@@ -110,7 +96,7 @@ namespace cheap {
 		// Update the graphics in the window
 		mWindow->update();
 	}
-	bool app::is_running()
+	bool app::is_running() const
 	{
 		//LOG();
 		return !mWindow->is_closed();
@@ -127,7 +113,7 @@ namespace cheap {
 		//m_event_system_->handle_event(input_event);
 		switch (aNew_event->get_category()) {
 			case event::category::APP:
-				switch (static_cast<app_event::type>(aNew_event->get_type())) {
+				switch (dynamic_cast<app_event*>(aNew_event)->get_type()) {
 					case app_event::type::RENDER:
 						PRINTLN("app_event::render");
 						break;
@@ -145,46 +131,58 @@ namespace cheap {
 						PRINTLN("app_event::window_close");
 						break;
 					default:
-						PRINTLN("ERROR::No such app_event::type : " + aNew_event->get_type());
+						LOG_INFO("ERROR::No such app_event::type " << static_cast<int>(dynamic_cast<app_event*>(aNew_event)->get_type()));
 				}
 				break;
 			case event::category::INPUT:
-				switch ((dynamic_cast<input_event*>(aNew_event))->get_device()) {
-					case input_event::device::KEYBOARD:
-						switch ((dynamic_cast<key_event*>(aNew_event))->get_type()) {
-							case key_event::type::PRESSED:
-								PRINTLN("key_event::pressed");
+				switch (dynamic_cast<input_event*>(aNew_event)->get_type()) {
+					case input_event::type::KEYBOARD:
+						switch ((dynamic_cast<key_event*>(aNew_event))->get_action()) {
+							case key_event::action::PRESS:
+								PRINTLN("key_event::press");
 								break;
-							case key_event::type::RELEASED:
-								PRINTLN("key_event::released");
+							case key_event::action::RELEASE:
+								PRINTLN("key_event::release");
 								break;
-							case key_event::type::TYPED:
-								PRINTLN("key_event::typed");
+							case key_event::action::REPEAT:
+								PRINTLN("key_event::repeat");
+								break;
+							case key_event::action::TEXT_INPUT:
+								PRINTLN("key_event::text_input");
 								break;
 							default:
-								LOG_INFO("key_event no such type");
+								LOG_INFO("key_event no such action");
 						}
 						break;
-					case input_event::device::MOUSE:
-						switch ((dynamic_cast<mouse_event*>(aNew_event))->get_type()) {
-							case mouse_event::type::PRESSED:
-								PRINTLN("mouse_event::pressed");
+					case input_event::type::MOUSE:
+						switch ((dynamic_cast<mouse_event*>(aNew_event))->get_action()) {
+							case mouse_event::action::PRESS:
+								PRINTLN("mouse_event::press");
 								break;
-							case mouse_event::type::RELEASED:
+							case mouse_event::action::RELEASE:
 								PRINTLN("mouse_event::released");
 								break;
-							case mouse_event::type::MOVED:
-								PRINTLN("mouse_event::moved");
+							case mouse_event::action::MOVE:
+								PRINTLN("mouse_event::move");
 								break;
-							case mouse_event::type::SCROLLED:
-								PRINTLN("mouse_event::scrolled");
+							case mouse_event::action::SCROLL:
+								PRINTLN("mouse_event::scroll");
+								break;
+							case mouse_event::action::ENTER:
+								PRINTLN("mouse_event::enter");
+								break;
+							case mouse_event::action::LEAVE:
+								PRINTLN("mouse_event::leave");
+								break;
+							case mouse_event::action::REPEAT:
+								PRINTLN("mouse_event::repeat");
 								break;
 							default:
-								LOG_INFO("mouse event no such type");
+								LOG_INFO("mouse event no such action");
 						}
 						break;
 					default:
-						LOG_INFO("the input_event's get_device() is not KEYBOARD or MOUSE");
+						LOG_INFO("the input_event's get_type() is not KEYBOARD or MOUSE");
 				}
 				break;
 			case event::category::GAME:
