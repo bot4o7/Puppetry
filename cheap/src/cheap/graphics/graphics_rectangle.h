@@ -5,31 +5,34 @@
 namespace cheap {
 
 
-	class graphics_entity
+	class graphics_rectangle
 	{
 	public:
 		// pass the position (x,y,z)of the center of rectangle picture
 		// pass the width and height of the rectangle picture
-		graphics_entity(
-			const float aX, const float            aY, const float aZ,
-			const float aWidth, const float         aHeight,
-			const char* aPic_file_path, const bool aIs_RGBA = false);
+		graphics_rectangle(
+			float   aX, float            aY, float aZ,
+			float   aWidth, float        aHeight,
+			const char* aPic_file_path, bool aIs_RGBA = false);
 		// pass the position (x,y,z)of the center of rectangle picture
 		// pass the height of the rectangle picture,
 		// use picture's origin aspect to calculate width
-		graphics_entity(
-			const float aX, const float            aY, const float aZ,
-			const float aWidth, bool                aPlaceholder_height,
-			const char* aPic_file_path, const bool aIs_RGBA = false);
+		graphics_rectangle(
+			float   aX, float            aY, float aZ,
+			float   aWidth, bool         aPlaceholder_height,
+			const char* aPic_file_path, bool aIs_RGBA = false);
 		// pass the position (x,y,z)of the center of rectangle picture
 		// pass the width of the rectangle picture,
 		// use picture's origin aspect to calculate height
-		graphics_entity(
-			const float aX, const float                 aY, const float aZ,
-			bool            aPlaceholder_width, const float aHeight,
-			const char* aPic_file_path, const bool      aIs_RGBA = false);
+		graphics_rectangle(
+			float   aX, float                 aY, float aZ,
+			bool        aPlaceholder_width, float aHeight,
+			const char* aPic_file_path, bool      aIs_RGBA = false);
+		// pass position of xyz.   set width and height to 1.0f
+		graphics_rectangle(float       aX, float aY, float aZ, bool aPlaceholder_width, bool aPlaceholder_height,
+			const char* aPic_file_path, bool aIs_RGBA);
 
-		~graphics_entity();
+		~graphics_rectangle();
 
 
 		// before draw
@@ -45,6 +48,11 @@ namespace cheap {
 		// 目前，VAO 和 texture 似乎不必手动 unbind, texture 似乎不必unbind，只需你不用的时候释放掉内存就行 glDeleteTextures
 		void before_draw(int aTexture_slot) const;
 
+		// TODO
+		void update()
+		{
+			LOG_INFO("graphics_rectangle::update() : NOT IMPLEMENTED YET.......");
+		}
 	private:
 		texture* mTexture;
 		vertex_array* mVertex_array;

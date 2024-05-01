@@ -11,6 +11,10 @@ namespace cheap {
 		:
 		mId(glCreateProgram()),
 		mOpacity(UNIFORM_OPAQUE),
+		/*mProjection(transform::get_perspective_projection(
+			90.f, 16, 9,
+			1.0f, -1000.f
+		)),*/
 		mProjection(transform::get_orthogonal_projection(aAspect)),
 		mView(transform::get_view()),
 		mTranslate(transform::get_identity_matrix()),

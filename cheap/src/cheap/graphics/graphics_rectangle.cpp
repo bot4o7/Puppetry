@@ -1,8 +1,8 @@
 ﻿#include "pch.h"
-#include "graphics_entity.h"
+#include "graphics_rectangle.h"
 
 namespace cheap {
-	graphics_entity::graphics_entity(const float aX, const float aY, const float aZ, const float aWidth,
+	graphics_rectangle::graphics_rectangle(const float aX, const float aY, const float aZ, const float aWidth,
 		const float aHeight, const char* aPic_file_path, const bool aIs_RGBA) :
 		mTexture(new texture(aPic_file_path, aIs_RGBA)),
 		mVertex_array(get_vertex_array(aWidth, aHeight,
@@ -11,7 +11,7 @@ namespace cheap {
 		LOG();
 	}
 
-	graphics_entity::graphics_entity(const float aX, const float aY, const float aZ, const float aWidth,
+	graphics_rectangle::graphics_rectangle(const float aX, const float aY, const float aZ, const float aWidth,
 		bool aPlaceholder_height, const char* aPic_file_path, const bool aIs_RGBA) :
 		mTexture(new texture(aPic_file_path, aIs_RGBA)),
 		mVertex_array(get_vertex_array(aWidth, aWidth / mTexture->get_aspect_ratio(),
@@ -20,7 +20,7 @@ namespace cheap {
 		LOG();
 	}
 
-	graphics_entity::graphics_entity(const float aX, const float aY, const float aZ, bool aPlaceholder_width,
+	graphics_rectangle::graphics_rectangle(const float aX, const float aY, const float aZ, bool aPlaceholder_width,
 		const float aHeight, const char* aPic_file_path, const bool aIs_RGBA) :
 		mTexture(new texture(aPic_file_path, aIs_RGBA)),
 		mVertex_array(get_vertex_array(aHeight* mTexture->get_aspect_ratio(), aHeight,
@@ -28,21 +28,28 @@ namespace cheap {
 	{
 		LOG();
 	}
+	graphics_rectangle::graphics_rectangle(const float aX, const float aY, const float aZ, bool aPlaceholder_width, bool aPlaceholder_height, const char* aPic_file_path, const bool aIs_RGBA) :
+		mTexture(new texture(aPic_file_path, aIs_RGBA)),
+		mVertex_array(get_vertex_array(1.0f, 1.0f,
+			aX, aY, aZ))
+	{
+		LOG();
+	}
 
-	graphics_entity::~graphics_entity()
+	graphics_rectangle::~graphics_rectangle()
 	{
 		LOG();
 		delete mVertex_array;
 		delete mTexture;
 	}
 
-	void graphics_entity::before_draw(const int aTexture_slot) const
+	void graphics_rectangle::before_draw(const int aTexture_slot) const
 	{
 		mTexture->bind(aTexture_slot);
 		mVertex_array->bind_VAO();
 	}
 
-	vertex_array* graphics_entity::get_vertex_array(
+	vertex_array* graphics_rectangle::get_vertex_array(
 		const float aWidth,
 		const float aHeight,
 		const float aX, const float aY, const float aZ)

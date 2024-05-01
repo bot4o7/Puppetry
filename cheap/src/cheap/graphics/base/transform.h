@@ -11,7 +11,7 @@ namespace cheap {
 	#define ID_MAT glm::mat4(1.0f)
 
 	// default camera position
-	#define DEFAULT_CAM_POS glm::vec3(0.0f, 0.0f, 1.0f)
+	#define DEFAULT_CAM_POS glm::vec3(0.0f, 0.0f, 2.0f)
 	// default camera direction
 	#define DEFAULT_CAM_DIR glm::vec3(0.0f, 0.0f, 0.0f)
 	// default camera world up direction
@@ -26,9 +26,9 @@ namespace cheap {
 	// orthogonal projection
 	#define DEFAULT_ORTHO_PROJ_TOP (1.f)
 	// orthogonal projection
-	#define DEFAULT_ORTHO_PROJ_NEAR (-1000.f)
+	#define DEFAULT_ORTHO_PROJ_NEAR (1000.0f)
 	// orthogonal projection
-	#define DEFAULT_ORTHO_PROJ_FAR (1000.f)
+	#define DEFAULT_ORTHO_PROJ_FAR (-1000.f)
 
 	class transform
 	{

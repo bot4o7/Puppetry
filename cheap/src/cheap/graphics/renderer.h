@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "graphics_entity.h"
 #include "base/shader_program.h"
 #include "../core/window.h"
+#include "../graphics/layers/layer_manager.h"
 
 namespace cheap {
 
@@ -30,11 +30,12 @@ namespace cheap {
 	class renderer
 	{
 	public:
-		explicit renderer(window* aWindow);
+		explicit renderer(const std::shared_ptr<window>& aWindow, const std::shared_ptr<layer_manager>& aLayer_manager);
 
 		~renderer();
 
-		void add_draw_task(
+
+		/*void add_draw_task(
 			float          aX, float aY, float aZ,
 			float          aHeight,
 			const std::string& aPic_file_name, bool aIs_RGBA);
@@ -47,7 +48,12 @@ namespace cheap {
 		void        add_draw_task(
 			float          aX, float     aY, float aZ,
 			float          aWidth, float aHeight,
-			const std::string& aPic_file_name, bool aIs_RGBA);
+			const std::string& aPic_file_name, bool aIs_RGBA);*/
+
+		void add_new_task(graphics_entity* aGraphics_entity) const
+		{
+			mLayer_manager->add_layer(aGraphics_entity);
+		}
 
 		static void clear();
 
@@ -61,9 +67,9 @@ namespace cheap {
 		std::string mVertex_shader_filename;
 		std::string mFragment_shader_filename;
 
-		window* mWindow;
+		std::shared_ptr<window> mWindow;
+		std::shared_ptr<layer_manager> mLayer_manager;
 		shader_program mShader_program;
 
-		std::vector<graphics_entity*> mDraw_tasks;
 	};
 }

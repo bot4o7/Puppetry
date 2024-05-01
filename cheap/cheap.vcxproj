@@ -149,10 +149,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\cheap\entity\graphics_entity.h" />
+    <ClInclude Include="src\cheap\graphics\layers\layer.h" />
     <ClInclude Include="src\cheap\events\input_system.h" />
     <ClInclude Include="src\cheap\graphics\base\base.h" />
-    <ClInclude Include="src\cheap\graphics\graphics_entity.h" />
+    <ClInclude Include="src\cheap\graphics\graphics_rectangle.h" />
     <ClInclude Include="src\cheap\graphics\graphics_lib.h" />
+    <ClInclude Include="src\cheap\graphics\layers\layer_manager.h" />
     <ClInclude Include="src\cheap\graphics\renderer.h" />
     <ClInclude Include="src\cheap\graphics\base\shader_program.h" />
     <ClInclude Include="src\cheap\core\Camera.h" />
@@ -176,8 +179,12 @@
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\cheap\entity\entity.cpp" />
+    <ClCompile Include="src\cheap\entity\graphics_entity.cpp" />
+    <ClCompile Include="src\cheap\graphics\layers\layer.cpp" />
     <ClCompile Include="src\cheap\events\input_system.cpp" />
-    <ClCompile Include="src\cheap\graphics\graphics_entity.cpp" />
+    <ClCompile Include="src\cheap\graphics\graphics_rectangle.cpp" />
+    <ClCompile Include="src\cheap\graphics\layers\layer_manager.cpp" />
     <ClCompile Include="src\cheap\graphics\renderer.cpp" />
     <ClCompile Include="src\cheap\graphics\base\shader_program.cpp" />
     <ClCompile Include="src\cheap\core\app.cpp">

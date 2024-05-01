@@ -1,4 +1,4 @@
-﻿#version 330 core
+#version 330 core
 out vec4 FragColor;
 
 in vec2 TexCoord;
@@ -11,4 +11,7 @@ void main()
 {
 	FragColor = texture(uTexture, TexCoord);
 	FragColor.a *= uOpacity;
+	if(gl_FragCoord.z == 0.3){
+		FragColor = vec4(gl_FragCoord.z,0.0,0.0,1.0);
+	}
 }

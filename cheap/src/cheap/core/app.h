@@ -2,15 +2,16 @@
 #include "window.h"
 #include "../events/event_system.h"
 #include "../events/input_system.h"
+#include "../graphics/renderer.h"
+#include "../graphics/layers/layer_manager.h"
 
 #ifdef CP_OPENGL_API
 namespace cheap {
-	class event;
+	#define DEFAULT_TITLE "cheap game"
 
 	class app
 	{
 	public:
-		explicit app(std::string& aTitle, unsigned int aWidth = 1184, unsigned int aHeight = 666);
 		explicit app(unsigned int aWidth = 1184, unsigned int aHeight = 666);
 		~app();
 
@@ -37,6 +38,8 @@ namespace cheap {
 		// use shared pointers for each subsystem so that app can be copied
 
 		std::shared_ptr<window> mWindow;
+		std::shared_ptr<layer_manager> mLayer_manager;
+		std::shared_ptr<renderer> mRenderer;
 		// cursor_system* get();
 		// input*
 		//std::shared_ptr<renderer> m_renderer_;

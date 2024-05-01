@@ -8,46 +8,19 @@
 
 #ifdef CP_OPENGL_API
 namespace cheap {
-	app::app(std::string& aTitle, unsigned int aWidth, unsigned int aHeight)
-		:
-		mWindow(
-			std::make_shared<window>(
-				aTitle,
-				aWidth,
-				aHeight,
-				[this](event* input_event) {this->on_event(input_event); },
-				[this]() {this->update(); })),
-		/*mCursorManager(std::make_shared<CursorManager>()), mInput(std::make_shared<Input>()),
-		mRenderer(std::make_shared<Renderer>()), mEntityManager(std::make_shared<EntityManager>()),*/
-		//m_renderer_(std::make_shared<renderer>()),
-		mInput_system(std::make_shared<input_system>(mWindow->get_raw_window())),
-		mEvent_system(
-			std::make_shared <event_system>()
-			/*mInputManager(std::make_shared<InputManager>()), mFontManager(std::make_shared<FontManager>()),
-	  mAudioManager(std::make_shared<AudioManager>()), mFileManager(std::make_shared<FileManager>()*/)
-	{
-		LOG();
-		// Initialize all subsystems
-		//Logger::Init(mFileManager->GetRootFolder());
-		//Random::Init();
-
-		//mCursorManager->Init(mWindow->GetGLFWWindow());
-		//mRenderer->Init(mWindow->GetWidth(), mWindow->GetHeight(), mFileManager->GetShaderPath());
-		//mEntityManager->Init(mFontManager.get());
-		//mEventManager->Init(mWindow.get(), mInput.get(), mRenderer.get(), mCursorManager.get());
-		//mStateManager->Init(mFileManager.get());
-		//mInputManager->Init(mWindow->GetGLFWWindow());
-	}
 	app::app(unsigned int aWidth, unsigned int aHeight)
 		:
 		mWindow(
 			std::make_shared<window>(
-				"cheap game",
+				DEFAULT_TITLE,
 				aWidth,
 				aHeight,
 				[this](event* aInput_event) {this->on_event(aInput_event); },
-				[this]() {this->update(); })), mInput_system(std::make_shared<input_system>(mWindow->get_raw_window())),
-		mEvent_system(std::make_shared <event_system>())
+				[this]() {this->update(); })), mInput_system(std::make_shared<input_system>(mWindow->get_raw_window())
+				),
+		mEvent_system(std::make_shared <event_system>()),
+		mLayer_manager(std::make_shared<layer_manager>()),
+		mRenderer(std::make_shared<renderer>(mWindow, mLayer_manager))
 	{
 		LOG();
 	}
@@ -61,54 +34,60 @@ namespace cheap {
 	{
 		LOG();
 
-		const renderer                      my_renderer(get_window());
+		//const renderer                      my_renderer(mWindow, mLayer_manager);
 		const float                   begin_frame = static_cast<float>(glfwGetTime());
 		float     last_frame = begin_frame;
 
-		const graphics_entity task(
-			-0.5f, 0.0f, 0.0f, true,
+
+		graphics_entity task(
+			1,
+			graphics_entity::type::OBJ,
+			0.5f, 0.0f, -0.1f,
+			0.f, 1.0f,
+			"src/cheap/graphics/pic/ys.png",
+			true,
+			true,
+			false,
+			true,
+			true);
+		graphics_entity task2(
+			2,
+			graphics_entity::type::OBJ,
+			-0.2f, 0.0f, 0.1f,
+			0.f, 1.0f,
+			"src/cheap/graphics/pic/friends.png",
+			true,
+			true,
+			false,
+			true,
+			true);
+
+		/*graphics_rectangle task(
+			0.5f, 0.0f, -0.1f, true,
 			1.0f,
 			"src/cheap/graphics/pic/ys.png",
 			true);
-		const graphics_entity task2(
-			0.5f, 0.0f, 0.0f, true,
+		graphics_rectangle task2(
+			-0.2f, 0.0f, 1.0f, true,
 			1.0f,
-			"src/cheap/graphics/pic/ys.png",
-			true);
+			"src/cheap/graphics/pic/friends.png",
+			true);*/
+
+		mRenderer->add_new_task(&task);
+		mRenderer->add_new_task(&task2);
+
 		while (app::is_running()) {
 			if (const float current_frame = static_cast<float>(glfwGetTime()); current_frame - last_frame > 2.0f) {
 				constexpr float       pace = 0.1f;
 				const float delta_frame = current_frame - begin_frame;
 
-				/*if (switch_pic) {
-					my_renderer.add_draw_task(
-						"friends.png",
-						0.0f + pace * delta_frame, 0.0f + pace * delta_frame,
-						0.2f,
-						0.29228f,
-						true);
-				} else {
-					my_renderer.add_draw_task(
-						"ys.png",
-						0.0f + pace * delta_frame, 0.0f + pace * delta_frame,
-						0.248f,
-						0.248f,
-						true);
-				}*/
-
 
 				//switch_pic = !switch_pic;
 				last_frame = current_frame;
 			}
-			cheap::renderer::clear();
-			my_renderer.draw(GL_TEXTURE0);
-
-			task.before_draw(GL_TEXTURE0);
-			glDrawElements(ELEMENT_MODE, ELEMENT_COUNT, ELEMENT_TYPE, ELEMENT_INDICES);
-			task2.before_draw(GL_TEXTURE0);
-			glDrawElements(ELEMENT_MODE, ELEMENT_COUNT, ELEMENT_TYPE, ELEMENT_INDICES);
-
-			my_renderer.update();
+			mRenderer->clear();
+			mRenderer->draw();
+			mRenderer->update();
 		}
 	}
 
