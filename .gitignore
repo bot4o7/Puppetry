@@ -50,3 +50,6 @@ x64/
 /bin
 /bin-int
 */lib
+/cheap/data/fonts
+/cheap/data/images
+/opengl3_test/arial.ttf
