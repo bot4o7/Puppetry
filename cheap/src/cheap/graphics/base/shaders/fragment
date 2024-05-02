@@ -9,9 +9,9 @@ uniform float uOpacity;
 
 void main()
 {
-	FragColor = texture(uTexture, TexCoord);
-	FragColor.a *= uOpacity;
-	if(gl_FragCoord.z == 0.3){
-		FragColor = vec4(gl_FragCoord.z,0.0,0.0,1.0);
-	}
+	vec4 color = texture(uTexture, TexCoord);
+	if(color.a < 0.001)
+		discard;
+	color.a *= uOpacity;
+	FragColor = color;
 }

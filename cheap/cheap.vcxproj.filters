@@ -57,9 +57,6 @@
     <ClInclude Include="src\cheap\utils\utils.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\core\Camera.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\cheap\graphics\base\shader_program.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -97,6 +94,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\cheap\events\input\mouse_button.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\graphics_text.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -155,9 +155,14 @@
     <ClCompile Include="src\cheap\entity\graphics_entity.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\cheap\graphics\graphics_text.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\cheap\graphics\base\shaders\fragment" />
     <None Include="src\cheap\graphics\base\shaders\vertex" />
+    <None Include="src\cheap\graphics\base\shaders\text.fs" />
+    <None Include="src\cheap\graphics\base\shaders\text.vs" />
   </ItemGroup>
 </Project>

@@ -20,7 +20,6 @@ namespace cheap {
 		float mHeight;
 		std::string mPic_file_path;
 		bool mIs_RGBA;
-
 		bool mIs_show;
 		bool mIs_block_mouse;
 		bool mIs_receive_mouse;
@@ -48,6 +47,7 @@ namespace cheap {
 			bool               aIs_block_mouse,
 			bool               aIs_receive_mouse,
 			bool               aIs_receive_keyboard);
+
 
 		~graphics_entity() override = default;
 

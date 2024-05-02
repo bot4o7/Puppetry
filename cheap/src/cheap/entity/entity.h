@@ -17,6 +17,7 @@ namespace cheap {
 			LOG();
 		}
 
+
 		virtual ~entity() = default;
 
 		[[nodiscard]] virtual category get_category() const = 0;
