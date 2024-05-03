@@ -35,12 +35,16 @@ namespace cheap {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void renderer::draw(const int aTexture_slot) const
+	void renderer::draw_layers(const int aTexture_slot)
 	{
 		for (auto task = mLayer_manager->get_top_layer_level(); task != nullptr;) {
-			task->mLayer->before_draw(aTexture_slot);
-			glDrawElements(ELEMENT_MODE, ELEMENT_COUNT, ELEMENT_TYPE, ELEMENT_INDICES);
-			task = task->mBelow;
+			if (task->mLayer->is_show()) {
+				mShader_program.set_opacity(task->mLayer->get_opacity());
+
+				task->mLayer->before_draw(aTexture_slot);
+				glDrawElements(ELEMENT_MODE, ELEMENT_COUNT, ELEMENT_TYPE, ELEMENT_INDICES);
+				task = task->mBelow;
+			}
 		}
 	}
 

@@ -6,13 +6,13 @@ namespace cheap {
 
 	#define VERTEX_SHADER_GLSL_UNIFORM_PROJECTION_NAME "uProjection"
 	#define VERTEX_SHADER_GLSL_UNIFORM_VIEW_NAME "uView"
-	#define VERTEX_SHADER_GLSL_UNIFORM_TRANSLATE_NAME "uTranslate"
-	#define VERTEX_SHADER_GLSL_UNIFORM_LAYOUT_NAME "uLayout"
-	#define VERTEX_SHADER_GLSL_UNIFORM_ROTATE_NAME "uRotate"
+	#define VERTEX_SHADER_GLSL_UNIFORM_TRANSLATION_NAME "uTranslation"
+	#define VERTEX_SHADER_GLSL_UNIFORM_ROTATION_NAME "uRotation"
 	#define VERTEX_SHADER_GLSL_UNIFORM_SCALE_NAME "uScale"
 
 	#define FRAGMENT_SHADER_GLSL_UNIFORM_TEXTURE_SLOT_NAME "uTexture"
 	#define FRAGMENT_SHADER_GLSL_UNIFORM_OPACITY_NAME "uOpacity"
+	#define FRAGMENT_SHADER_GLSL_UNIFORM_COLOR_NAME "uColor"
 
 	// uniform opaque, transparency = 1.0
 	#define UNIFORM_OPAQUE 1.0f
@@ -39,6 +39,22 @@ namespace cheap {
 
 		void use(int aTexture_slot) const;
 
+
+		void bind_color() const
+		{
+			set_vec4(FRAGMENT_SHADER_GLSL_UNIFORM_COLOR_NAME, mColor);
+		}
+
+		void set_color(
+			const float aColor_r,
+			const float aColor_g,
+			const float aColor_b,
+			const float aColor_a
+		)
+		{
+			mColor = glm::vec4(aColor_r, aColor_g, aColor_b, aColor_a);
+			bind_color();
+		}
 
 		void bind_projection() const;
 
@@ -69,15 +85,15 @@ namespace cheap {
 
 		void set_transform() const;
 
-		void use_transform(int aTexture_slot, const glm::mat4& aTranslate = ID_MAT, const glm::mat4& aRotate = ID_MAT, const glm::mat4& aScale = ID_MAT, float aOpacity = UNIFORM_OPAQUE);
+		void use_transform(int aTexture_slot, const glm::mat4& aTranslation = ID_MAT, const glm::mat4& aRotation = ID_MAT, const glm::mat4& aScale = ID_MAT, float aOpacity = UNIFORM_OPAQUE);
 
-		void bind_translate() const;
+		void bind_translation() const;
 
-		void set_translate(const glm::mat4& aMat);
+		void set_translation(const glm::mat4& aMat);
 
-		void set_rotate(const glm::mat4& aMat);
+		void set_rotation(const glm::mat4& aMat);
 
-		void bind_rotate() const;
+		void bind_rotation() const;
 
 		void set_scale(const glm::mat4& aMat);
 
@@ -89,14 +105,52 @@ namespace cheap {
 
 		void bind_opacity() const;
 
+
+		void use_projection(glm::mat4 aProjection)
+		{
+			set_mat4(VERTEX_SHADER_GLSL_UNIFORM_PROJECTION_NAME, aProjection);
+		}
+		void use_view(glm::mat4 aView)
+		{
+			set_mat4(VERTEX_SHADER_GLSL_UNIFORM_VIEW_NAME, aView);
+		}
+		void use_translation(glm::mat4 aTranslation)
+		{
+			set_mat4(VERTEX_SHADER_GLSL_UNIFORM_TRANSLATION_NAME, aTranslation);
+		}
+		void use_rotation(glm::mat4 aRotation)
+		{
+			set_mat4(VERTEX_SHADER_GLSL_UNIFORM_ROTATION_NAME, aRotation);
+		}
+		void use_scale(glm::mat4 aScale)
+		{
+			set_mat4(VERTEX_SHADER_GLSL_UNIFORM_SCALE_NAME, aScale);
+		}
+		void use_opacity(float aOpacity)
+		{
+			set_float(FRAGMENT_SHADER_GLSL_UNIFORM_OPACITY_NAME, aOpacity);
+		}
+
+		void use_color(glm::vec4 aColor)
+		{
+			set_vec4(FRAGMENT_SHADER_GLSL_UNIFORM_COLOR_NAME, aColor);
+		}
+
+
 	private:
 		float mOpacity;
+		glm::vec4 mColor;
 
 		glm::mat4 mProjection;
 		glm::mat4 mView;
-		glm::mat4 mTranslate;
-		glm::mat4 mRotate;
+		glm::mat4 mTranslation;
+		glm::mat4 mRotation;
 		glm::mat4 mScale;
+
+
+
+
+
 
 
 		// utility function for checking shader compilation/linking errors.

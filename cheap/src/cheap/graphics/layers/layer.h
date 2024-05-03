@@ -61,7 +61,7 @@ namespace cheap {
 		[[nodiscard]] graphics_entity::type get_type() const { return mGraphics_entity->mType; }
 		[[nodiscard]] unsigned int get_id() const { return mGraphics_entity->mId; }
 		[[nodiscard]] float get_depth() const { return mGraphics_entity->mZ; }
-
+		[[nodiscard]] float get_opacity() const { return mGraphics_entity->mOpacity; }
 		[[nodiscard]] bool                      is_show() const { return mGraphics_entity->mIs_show; }
 		[[nodiscard]] bool                      is_block_mouse() const { return mGraphics_entity->mIs_block_mouse; }
 		[[nodiscard]] bool                      is_receive_mouse() const { return mGraphics_entity->mIs_receive_mouse; }

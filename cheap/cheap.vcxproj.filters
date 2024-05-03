@@ -99,6 +99,27 @@
     <ClInclude Include="src\cheap\graphics\graphics_text.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\cheap\graphics\animations\animation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\animations\translation_animation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\animations\rotation_animation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\animations\reflection_animation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\animations\shift_animation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\animations\color_animation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cheap\graphics\animations\opacity_animation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cheap\core\app.cpp">
@@ -156,6 +177,27 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\cheap\graphics\graphics_text.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\animations\animation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\animations\translation_animation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\animations\rotation_animation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\animations\reflection_animation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\animations\shift_animation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\animations\color_animation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\graphics\animations\opacity_animation.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

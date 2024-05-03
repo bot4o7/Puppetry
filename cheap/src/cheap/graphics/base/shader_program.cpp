@@ -17,8 +17,8 @@ namespace cheap {
 		)),*/
 		mProjection(transform::get_orthogonal_projection(aAspect)),
 		mView(transform::get_view()),
-		mTranslate(transform::get_identity_matrix()),
-		mRotate(transform::get_identity_matrix()),
+		mTranslation(transform::get_identity_matrix()),
+		mRotation(transform::get_identity_matrix()),
 		mScale(transform::get_identity_matrix())
 	{
 		create_program(aVertex_path, aFragment_path);
@@ -26,8 +26,8 @@ namespace cheap {
 		bind_opacity();
 		bind_projection();
 		bind_view();
-		bind_translate();
-		bind_rotate();
+		bind_translation();
+		bind_rotation();
 		bind_scale();
 	}
 
@@ -141,43 +141,43 @@ namespace cheap {
 	void shader_program::set_transform() const
 	{
 		bind();
-		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_TRANSLATE_NAME, mTranslate);
-		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_ROTATE_NAME, mRotate);
+		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_TRANSLATE_NAME, mTranslation);
+		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_ROTATE_NAME, mRotation);
 		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_SCALE_NAME, mScale);
 		set_float(FRAGMENT_SHADER_GLSL_UNIFORM_OPACITY_NAME, mOpacity);
 	}
 
-	void shader_program::use_transform(const int aTexture_slot, const glm::mat4& aTranslate, const glm::mat4& aRotate,
+	void shader_program::use_transform(const int aTexture_slot, const glm::mat4& aTranslation, const glm::mat4& aRotation,
 		const glm::mat4& aScale, const float aOpacity)
 	{
 		bind();
-		set_translate(aTranslate);
-		set_rotate(aRotate);
+		set_translation(aTranslation);
+		set_rotation(aRotation);
 		set_scale(aScale);
 		set_texture_slot(aTexture_slot);
 		set_opacity(aOpacity);
 	}
 
-	void shader_program::bind_translate() const
+	void shader_program::bind_translation() const
 	{
-		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_TRANSLATE_NAME, mTranslate);
+		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_TRANSLATE_NAME, mTranslation);
 	}
 
-	void shader_program::set_translate(const glm::mat4& aMat)
+	void shader_program::set_translation(const glm::mat4& aMat)
 	{
-		mTranslate = aMat;
-		bind_translate();
+		mTranslation = aMat;
+		bind_translation();
 	}
 
-	void shader_program::set_rotate(const glm::mat4& aMat)
+	void shader_program::set_rotation(const glm::mat4& aMat)
 	{
-		mRotate = aMat;
-		bind_rotate();
+		mRotation = aMat;
+		bind_rotation();
 	}
 
-	void shader_program::bind_rotate() const
+	void shader_program::bind_rotation() const
 	{
-		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_ROTATE_NAME, mRotate);
+		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_ROTATE_NAME, mRotation);
 	}
 
 	void shader_program::set_scale(const glm::mat4& aMat)

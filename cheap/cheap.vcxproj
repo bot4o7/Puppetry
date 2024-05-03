@@ -149,8 +149,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\cheap\graphics\animations\animation.h" />
     <ClInclude Include="src\cheap\entity\graphics_entity.h" />
     <ClInclude Include="src\cheap\events\input\mouse_button.h" />
+    <ClInclude Include="src\cheap\graphics\animations\color_animation.h" />
+    <ClInclude Include="src\cheap\graphics\animations\opacity_animation.h" />
+    <ClInclude Include="src\cheap\graphics\animations\reflection_animation.h" />
+    <ClInclude Include="src\cheap\graphics\animations\rotation_animation.h" />
+    <ClInclude Include="src\cheap\graphics\animations\shift_animation.h" />
+    <ClInclude Include="src\cheap\graphics\animations\translation_animation.h" />
     <ClInclude Include="src\cheap\graphics\graphics_text.h" />
     <ClInclude Include="src\cheap\graphics\layers\layer.h" />
     <ClInclude Include="src\cheap\events\input_system.h" />
@@ -179,8 +186,15 @@
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\cheap\graphics\animations\animation.cpp" />
     <ClCompile Include="src\cheap\entity\entity.cpp" />
     <ClCompile Include="src\cheap\entity\graphics_entity.cpp" />
+    <ClCompile Include="src\cheap\graphics\animations\color_animation.cpp" />
+    <ClCompile Include="src\cheap\graphics\animations\opacity_animation.cpp" />
+    <ClCompile Include="src\cheap\graphics\animations\reflection_animation.cpp" />
+    <ClCompile Include="src\cheap\graphics\animations\rotation_animation.cpp" />
+    <ClCompile Include="src\cheap\graphics\animations\shift_animation.cpp" />
+    <ClCompile Include="src\cheap\graphics\animations\translation_animation.cpp" />
     <ClCompile Include="src\cheap\graphics\graphics_text.cpp" />
     <ClCompile Include="src\cheap\graphics\layers\layer.cpp" />
     <ClCompile Include="src\cheap\events\input_system.cpp" />

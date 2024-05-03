@@ -18,6 +18,7 @@ namespace cheap {
 		float mZ;
 		float mWidth;
 		float mHeight;
+		float mOpacity;
 		std::string mPic_file_path;
 		bool mIs_RGBA;
 		bool mIs_show;
@@ -41,6 +42,7 @@ namespace cheap {
 			float              aZ,
 			float              aWidth,
 			float              aHeight,
+			float              mOpacity,
 			const std::string& aPic_file_path,
 			bool               aIs_RGBA,
 			bool               aIs_show,

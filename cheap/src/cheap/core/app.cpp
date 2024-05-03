@@ -42,6 +42,7 @@ namespace cheap {
 			graphics_entity::type::OBJ,
 			0.5f, 0.0f, -0.1f,
 			0.f, 1.0f,
+			1.0f,
 			"data/images/ys.png",
 			true,
 			true,
@@ -53,6 +54,7 @@ namespace cheap {
 			graphics_entity::type::OBJ,
 			-0.2f, 0.0f, 0.1f,
 			0.f, 1.0f,
+			1.0f,
 			"data/images/friends.png",
 			true,
 			true,
@@ -73,7 +75,7 @@ namespace cheap {
 				last_frame = current_frame;
 			}*/
 			mRenderer->clear();
-			mRenderer->draw();
+			mRenderer->draw_layers();
 			mRenderer->update();
 
 		}

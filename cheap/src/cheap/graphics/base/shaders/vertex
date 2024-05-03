@@ -10,8 +10,8 @@ out float Deep;
 uniform mat4 uProjection;
 uniform mat4 uView;
 // scale->rotate->layout->translate
-uniform mat4 uTranslate;
-uniform mat4 uRotate;
+uniform mat4 uTranslation;
+uniform mat4 uRotation;
 uniform mat4 uScale;
 
 void main()
@@ -22,6 +22,6 @@ void main()
 		0.0, 0.0, 1.0, 0.0,
 		aLayout, 1.0
 	);
-	gl_Position = mLayout * uTranslate * uProjection * uView * uRotate * uScale * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+	gl_Position = mLayout * uTranslation * uProjection * uView * uRotation * uScale * vec4(aPos.x, aPos.y, aPos.z, 1.0);
 	TexCoord = aTexCoord;
 }

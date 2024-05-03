@@ -41,7 +41,7 @@ namespace cheap {
 
 		static void clear();
 
-		void draw(int aTexture_slot = GL_TEXTURE0) const;
+		void draw_layers(int aTexture_slot = GL_TEXTURE0);
 
 		void update() const;
 
