@@ -10,7 +10,7 @@ namespace cheap {
 		const float aAspect)
 		:
 		mId(glCreateProgram()),
-		mOpacity(UNIFORM_OPAQUE),
+		mColor(UNIFORM_COLOR),
 		/*mProjection(transform::get_perspective_projection(
 			90.f, 16, 9,
 			1.0f, -1000.f
@@ -24,6 +24,7 @@ namespace cheap {
 		create_program(aVertex_path, aFragment_path);
 		bind();
 		bind_opacity();
+		bind_color();
 		bind_projection();
 		bind_view();
 		bind_translation();
@@ -141,14 +142,15 @@ namespace cheap {
 	void shader_program::set_transform() const
 	{
 		bind();
-		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_TRANSLATE_NAME, mTranslation);
-		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_ROTATE_NAME, mRotation);
+		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_TRANSLATION_NAME, mTranslation);
+		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_ROTATION_NAME, mRotation);
 		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_SCALE_NAME, mScale);
 		set_float(FRAGMENT_SHADER_GLSL_UNIFORM_OPACITY_NAME, mOpacity);
+		set_vec4(FRAGMENT_SHADER_GLSL_UNIFORM_COLOR_NAME, mColor);
 	}
 
 	void shader_program::use_transform(const int aTexture_slot, const glm::mat4& aTranslation, const glm::mat4& aRotation,
-		const glm::mat4& aScale, const float aOpacity)
+		const glm::mat4& aScale, const float aOpacity, const glm::vec4& aColor)
 	{
 		bind();
 		set_translation(aTranslation);
@@ -156,11 +158,12 @@ namespace cheap {
 		set_scale(aScale);
 		set_texture_slot(aTexture_slot);
 		set_opacity(aOpacity);
+		set_color(aColor);
 	}
 
 	void shader_program::bind_translation() const
 	{
-		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_TRANSLATE_NAME, mTranslation);
+		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_TRANSLATION_NAME, mTranslation);
 	}
 
 	void shader_program::set_translation(const glm::mat4& aMat)
@@ -177,7 +180,7 @@ namespace cheap {
 
 	void shader_program::bind_rotation() const
 	{
-		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_ROTATE_NAME, mRotation);
+		set_mat4(VERTEX_SHADER_GLSL_UNIFORM_ROTATION_NAME, mRotation);
 	}
 
 	void shader_program::set_scale(const glm::mat4& aMat)
@@ -206,8 +209,6 @@ namespace cheap {
 	{
 		set_float(FRAGMENT_SHADER_GLSL_UNIFORM_OPACITY_NAME, mOpacity);
 	}
-
-
 	void shader_program::bind() const
 	{
 		glUseProgram(mId);

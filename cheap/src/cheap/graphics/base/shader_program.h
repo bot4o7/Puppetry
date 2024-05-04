@@ -12,10 +12,13 @@ namespace cheap {
 
 	#define FRAGMENT_SHADER_GLSL_UNIFORM_TEXTURE_SLOT_NAME "uTexture"
 	#define FRAGMENT_SHADER_GLSL_UNIFORM_OPACITY_NAME "uOpacity"
+	// color multiplier ? 这个值会被乘到 FragColor上，或许还需要一个 相加的？
 	#define FRAGMENT_SHADER_GLSL_UNIFORM_COLOR_NAME "uColor"
 
-	// uniform opaque, transparency = 1.0
-	#define UNIFORM_OPAQUE 1.0f
+	// uniform  glm::vec4 color (0,0,0,0)
+	#define UNIFORM_COLOR glm::vec4()
+	// uniform  opacity
+	#define UNIFORM_OPACITY 1.0f
 
 	class shader_program
 	{
@@ -46,13 +49,19 @@ namespace cheap {
 		}
 
 		void set_color(
-			const float aColor_r,
-			const float aColor_g,
-			const float aColor_b,
-			const float aColor_a
+			const float aColor_r = 0.f,
+			const float aColor_g = 0.f,
+			const float aColor_b = 0.f
 		)
 		{
-			mColor = glm::vec4(aColor_r, aColor_g, aColor_b, aColor_a);
+			mColor = glm::vec4(aColor_r, aColor_g, aColor_b, 0.f);
+			bind_color();
+		}
+
+		void set_color(
+			const glm::vec4 aColor = UNIFORM_COLOR)
+		{
+			mColor = aColor;
 			bind_color();
 		}
 
@@ -85,7 +94,7 @@ namespace cheap {
 
 		void set_transform() const;
 
-		void use_transform(int aTexture_slot, const glm::mat4& aTranslation = ID_MAT, const glm::mat4& aRotation = ID_MAT, const glm::mat4& aScale = ID_MAT, float aOpacity = UNIFORM_OPAQUE);
+		void use_transform(int aTexture_slot, const glm::mat4& aTranslation = ID_MAT, const glm::mat4& aRotation = ID_MAT, const glm::mat4& aScale = ID_MAT, const float aOpacity = UNIFORM_OPACITY, const glm::vec4& aColor = UNIFORM_COLOR);
 
 		void bind_translation() const;
 
@@ -100,38 +109,44 @@ namespace cheap {
 		void bind_scale() const;
 
 		void set_texture_slot(int aTex_slot) const;
-
-		void set_opacity(float aOpacity);
+		void set_opacity(float aOpacity = UNIFORM_OPACITY);
 
 		void bind_opacity() const;
 
-
-		void use_projection(glm::mat4 aProjection)
+		void use_projection(
+			const glm::mat4& aProjection) const
 		{
 			set_mat4(VERTEX_SHADER_GLSL_UNIFORM_PROJECTION_NAME, aProjection);
 		}
-		void use_view(glm::mat4 aView)
+		void use_view(
+			const glm::mat4& aView) const
 		{
 			set_mat4(VERTEX_SHADER_GLSL_UNIFORM_VIEW_NAME, aView);
 		}
-		void use_translation(glm::mat4 aTranslation)
+		void use_translation(
+			const glm::mat4& aTranslation) const
 		{
 			set_mat4(VERTEX_SHADER_GLSL_UNIFORM_TRANSLATION_NAME, aTranslation);
 		}
-		void use_rotation(glm::mat4 aRotation)
+		void use_rotation(
+			const glm::mat4& aRotation) const
 		{
 			set_mat4(VERTEX_SHADER_GLSL_UNIFORM_ROTATION_NAME, aRotation);
 		}
-		void use_scale(glm::mat4 aScale)
+		void use_scale(
+			const glm::mat4& aScale) const
 		{
 			set_mat4(VERTEX_SHADER_GLSL_UNIFORM_SCALE_NAME, aScale);
 		}
-		void use_opacity(float aOpacity)
+
+		void use_opacity(
+			const float aOpacity) const
 		{
 			set_float(FRAGMENT_SHADER_GLSL_UNIFORM_OPACITY_NAME, aOpacity);
 		}
 
-		void use_color(glm::vec4 aColor)
+		void use_color(
+			const glm::vec4 aColor) const
 		{
 			set_vec4(FRAGMENT_SHADER_GLSL_UNIFORM_COLOR_NAME, aColor);
 		}
@@ -146,11 +161,6 @@ namespace cheap {
 		glm::mat4 mTranslation;
 		glm::mat4 mRotation;
 		glm::mat4 mScale;
-
-
-
-
-
 
 
 		// utility function for checking shader compilation/linking errors.

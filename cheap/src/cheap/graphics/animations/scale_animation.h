@@ -4,63 +4,63 @@
 #include "../base/transform.h"
 
 namespace cheap {
-	class translation_animation : public animation
+	class scale_animation : public animation
 	{
 	public:
 
-		translation_animation(
-			const float aX,
-			const float aY,
-			const float aZ,
+		scale_animation(
+			const float aX_scale,
+			const float aY_scale,
+			const float aZ_scale,
 			const double aBegin_time,
 			const double aDuration,
 			const relationship aRelationship)
 			:
 			animation(
-				type::TRANSLATION,
+				type::SCALE,
 				aBegin_time,
 				aDuration,
 				aRelationship),
-			mOffset{ aX,aY,aZ }
+			mScalar{ aX_scale - 1.f,aY_scale - 1.f,aZ_scale - 1.f }
 		{
 			LOG();
 		}
-		translation_animation(
-			const float aX,
-			const float aY,
-			const float aZ,
+		scale_animation(
+			const float aX_scale,
+			const float aY_scale,
+			const float aZ_scale,
 			const double aBegin_time,
 			const double aDuration,
 			const unsigned int aCount,
 			const relationship aRelationship)
 			:
 			animation(
-				type::TRANSLATION,
+				type::SCALE,
 				aBegin_time,
 				aDuration,
 				aCount,
 				aRelationship),
-			mOffset{ aX,aY,aZ }
+			mScalar{ aX_scale - 1.f,aY_scale - 1.f,aZ_scale - 1.f }
 		{
 			LOG();
 		}
 
-		~translation_animation()
+		~scale_animation()
 		{
 
 		}
 
 		[[nodiscard]] glm::mat4 get(const double aCurrent_time) const
 		{
-			const double factor = get_frame(aCurrent_time);
-			return transform::get_translate(
-				mOffset[0] * factor,
-				mOffset[1] * factor,
-				mOffset[2] * factor);
+			const double factor = 1.0 + get_frame(aCurrent_time);
+			return transform::get_scale(
+				1.f + mScalar[0] * factor,
+				1.f + mScalar[1] * factor,
+				1.f + mScalar[2] * factor);
 		}
 
 	private:
-		float mOffset[3];
+		float mScalar[3];
 	};
 
 }

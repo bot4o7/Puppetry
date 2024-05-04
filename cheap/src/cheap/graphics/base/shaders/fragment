@@ -5,12 +5,14 @@ in vec2 TexCoord;
 
 // texture samplers
 uniform sampler2D uTexture;
+uniform float uOpacity;
 uniform vec4 uColor;
 
 void main()
 {
-	vec4 color = texture(uTexture, TexCoord) * uColor;
+	vec4 color = texture(uTexture, TexCoord) + uColor;
 	if(color.a < 0.001)
 		discard;
+	color.a *= uOpacity;
 	FragColor = color;
 }

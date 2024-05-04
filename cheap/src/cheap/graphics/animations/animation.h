@@ -1,6 +1,9 @@
 ﻿#pragma once
 
 namespace cheap {
+
+	#define PI 3.1415926535897931
+
 	class animation
 	{
 	public:
@@ -22,12 +25,37 @@ namespace cheap {
 			OPACITY
 		};
 
+		enum class relationship
+		{
+			// y = ax
+			// a * duration = 1
+			LINEAR,
+			// y = sin(ax)
+			// sin(a duration) = 1 = sin(90°) = sin(PI/2)
+			// a = 90°/duration = PI / 2*duration
+			SIN,
+			// y = ax^2
+			// a duration^2 = 1
+			// a = 1/duration*duration
+			SQUARE,
+		};
+
+
+		[[nodiscard]] double get_frame(const double aCurrent_time) const
+		{
+			return get_time_ratio(aCurrent_time) * get_y(aCurrent_time);
+		}
 		// 根据所给时间进行一次动画
 		animation(
 			const type  aType,
 			const double aBegin_time,
-			const double aDuration)
-			: mType(aType),
+			const double aDuration,
+			const relationship aRelationship
+		)
+			:
+			mType(aType),
+			mRelationship(aRelationship),
+			mParam(calculate_param(aRelationship, aDuration)),
 			mCount(1),
 			mIs_loop(false),
 			mBegin_time(aBegin_time),
@@ -40,8 +68,12 @@ namespace cheap {
 			const type  aType,
 			const double aBegin_time,
 			const double aDuration,
-			const unsigned int aCount)
-			: mType(aType),
+			const unsigned int aCount,
+			const relationship aRelationship)
+			:
+			mType(aType),
+			mRelationship(aRelationship),
+			mParam(calculate_param(aRelationship, aDuration)),
 			mCount(aCount),
 			mIs_loop(false),
 			mBegin_time(aBegin_time),
@@ -54,8 +86,12 @@ namespace cheap {
 			const type  aType,
 			const double aBegin_time,
 			const double aDuration,
-			const bool aIs_loop)
-			: mType(aType),
+			const bool aIs_loop,
+			const relationship aRelationship)
+			:
+			mType(aType),
+			mRelationship(aRelationship),
+			mParam(calculate_param(aRelationship, aDuration)),
 			mCount(1),
 			mIs_loop(aIs_loop),
 			mBegin_time(aBegin_time),
@@ -66,8 +102,12 @@ namespace cheap {
 		// 给一个未设置 开始时间、次数的非循环动画， 但是有运行周期
 		animation(
 			const type  aType,
-			const double aDuration)
-			: mType(aType),
+			const double aDuration,
+			const relationship aRelationship)
+			:
+			mType(aType),
+			mRelationship(aRelationship),
+			mParam(calculate_param(aRelationship, aDuration)),
 			mCount(0),
 			mIs_loop(false),
 			mBegin_time(0.0),
@@ -82,7 +122,7 @@ namespace cheap {
 
 		[[nodiscard]] type get_type()const { return mType; }
 
-		bool is_loop() const { return mIs_loop; }
+		[[nodiscard]] bool is_loop() const { return mIs_loop; }
 
 		// 1. 是否有剩余次数
 		// 2. 是否到了开始时间
@@ -103,6 +143,7 @@ namespace cheap {
 		void update_time(
 			const double aBegin_time)
 		{
+			LOG();
 			const double duration_time = mEnd_time - mBegin_time;
 			mBegin_time = aBegin_time;
 			mEnd_time = mBegin_time + duration_time;
@@ -111,6 +152,8 @@ namespace cheap {
 			const double aBegin_time,
 			const double aDuration)
 		{
+			LOG();
+
 			mBegin_time = aBegin_time;
 			mEnd_time = mBegin_time + aDuration;
 		}
@@ -121,6 +164,8 @@ namespace cheap {
 			const double       aBegin_time,
 			const double       aDuration = -1)
 		{
+			LOG();
+
 			if (aDuration < 0)
 				update_time(aBegin_time);
 			else
@@ -130,10 +175,12 @@ namespace cheap {
 		}
 		// reset Begin, End, Count
 		void replay(
-			unsigned int       aCount,
+			const unsigned int       aCount,
 			const double       aBegin_time,
 			const double       aDuration = -1)
 		{
+			LOG();
+
 			if (aDuration < 0)
 				update_time(aBegin_time);
 			else
@@ -155,6 +202,8 @@ namespace cheap {
 		// 复合动画怎么终止呢？ 
 		void end()
 		{
+			LOG();
+
 			// TODO
 			mCount = 1;
 			mIs_loop = false;
@@ -162,9 +211,9 @@ namespace cheap {
 		}
 
 		// 没有剩余次数 count，就无法进行
-		bool is_finished() const { return mCount < 1; }
+		[[nodiscard]] bool is_finished() const { return mCount < 1; }
 		// 到了开始时间 begin_time
-		bool is_not_begin(const double aCurrent_time) const { return aCurrent_time < mBegin_time; }
+		[[nodiscard]] bool is_not_begin(const double aCurrent_time) const { return aCurrent_time < mBegin_time; }
 		// 到了结束时间 end_time 且无剩余次数、且非循环
 		bool is_end(const double aCurrent_time)
 		{
@@ -186,7 +235,8 @@ namespace cheap {
 		}
 	private:
 		type mType;
-
+		relationship mRelationship;
+		double mParam;
 		// if count > 0,  do it, and then count -= 1;
 		// if count <= 0, end;
 		// if mBegin_time > mEnd_time, loop forever until set it stop
@@ -200,5 +250,62 @@ namespace cheap {
 		double mEnd_time;
 
 
+
+		[[nodiscard]] double get_y(const double aX) const
+		{
+			switch (mRelationship) {
+				case relationship::LINEAR:
+					return do_linear(aX);
+				case relationship::SQUARE:
+					return do_square(aX);
+				case relationship::SIN:
+					return do_sin(aX);
+				default:
+					LOG_INFO("animation.h : no such relationship");
+			}
+			return 0;
+		}
+
+		[[nodiscard]] double get_time_ratio(const double aCurrent_time) const
+		{
+			return (aCurrent_time - mBegin_time) / (mEnd_time - mBegin_time);
+		}
+
+
+		// y = ax
+		// a = 1 / duration
+		[[nodiscard]] double do_linear(
+			const double aX) const
+		{
+			return mParam * aX;
+		}
+		// y = a x^2
+		// a = 1/duration * duration
+		[[nodiscard]] double do_square(
+			const double aX) const
+		{
+			return mParam * aX * aX;
+		}
+		// y = sin(ax)
+		// a = PI/2 / duration
+		[[nodiscard]] double do_sin(
+			const double aX) const
+		{
+			return sin(mParam * aX);
+		}
+		double static calculate_param(relationship aRelationship, const double aDuration)
+		{
+			switch (aRelationship) {
+				case relationship::LINEAR:
+					return 1.0 / aDuration;
+				case relationship::SIN:
+					return 1.0 / aDuration / aDuration;
+				case relationship::SQUARE:
+					return 0.5 * PI / aDuration;
+				default:
+					LOG_INFO("no such animation::relationship");
+			}
+			return 1.0;
+		}
 	};
 }

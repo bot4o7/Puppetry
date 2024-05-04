@@ -30,6 +30,35 @@ namespace cheap {
 	{
 	public:
 
+		explicit layer(graphics_entity* aGraphics_entity, bool aPlaceholder_to_calculate_height)
+			:
+			mGraphics_entity(aGraphics_entity),
+			mGraphics_rectangle(
+				mGraphics_entity->mX,
+				mGraphics_entity->mY,
+				mGraphics_entity->mZ,
+				mGraphics_entity->mWidth,
+				true,
+				mGraphics_entity->mPic_file_path.c_str(),
+				mGraphics_entity->mIs_RGBA)
+		{
+			LOG();
+		}
+		explicit layer(bool aPlaceholder_to_calculate_width, graphics_entity* aGraphics_entity)
+			:
+			mGraphics_entity(aGraphics_entity),
+			mGraphics_rectangle(
+				mGraphics_entity->mX,
+				mGraphics_entity->mY,
+				mGraphics_entity->mZ,
+				true,
+				mGraphics_entity->mHeight,
+				mGraphics_entity->mPic_file_path.c_str(),
+				mGraphics_entity->mIs_RGBA)
+		{
+			LOG();
+		}
+
 		explicit layer(graphics_entity* aGraphics_entity)
 			:
 			mGraphics_entity(aGraphics_entity),
@@ -37,19 +66,10 @@ namespace cheap {
 				mGraphics_entity->mX,
 				mGraphics_entity->mY,
 				mGraphics_entity->mZ,
-				mGraphics_entity->mWidth > 0.f
-				?
-				mGraphics_entity->mWidth
-				:
-				true,
-				mGraphics_entity->mHeight > 0.f
-				?
-				mGraphics_entity->mHeight
-				:
-				true,
+				mGraphics_entity->mWidth,
+				mGraphics_entity->mHeight,
 				mGraphics_entity->mPic_file_path.c_str(),
-				mGraphics_entity->mIs_RGBA
-			)
+				mGraphics_entity->mIs_RGBA)
 		{
 			LOG();
 		}
@@ -73,6 +93,27 @@ namespace cheap {
 		{
 			LOG();
 			mGraphics_rectangle.update();
+		}
+
+		void set_anim(animation* aAnim) const
+		{
+			delete mGraphics_entity->mAnimation;
+			mGraphics_entity->mAnimation = aAnim;
+		}
+
+		void stop_anim() const
+		{
+			mGraphics_entity->mAnimation->end();
+		}
+
+		void set_anim_begin(const double aBegin_time) const
+		{
+			mGraphics_entity->mAnimation->replay(aBegin_time);
+		}
+
+		[[nodiscard]] animation* get_anim() const
+		{
+			return mGraphics_entity->mAnimation;
 		}
 
 		void before_draw(const int aTexture_slot) const

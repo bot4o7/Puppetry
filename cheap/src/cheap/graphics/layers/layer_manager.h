@@ -15,8 +15,24 @@ namespace cheap {
 			:
 			mAbove(nullptr),
 			mBelow(nullptr),
-			mLayer(new layer(aGraphics_entity))
+			mLayer(nullptr)
 		{
+			if (aGraphics_entity->mWidth > 0.f) {
+				if (aGraphics_entity->mHeight > 0.f)
+					mLayer = new layer(aGraphics_entity);
+				else
+					mLayer = new layer(aGraphics_entity, true);
+			} else {
+				if (aGraphics_entity->mHeight > 0.f)
+					mLayer = new layer(true, aGraphics_entity);
+				else {
+					LOG_INFO("操你妈。你他妈刚刚是不是传了一个长宽都不是正数的 graphics_entity");
+					aGraphics_entity->mWidth = 1.f;
+					aGraphics_entity->mHeight = 1.f;
+					mLayer = new layer(aGraphics_entity);
+				}
+			}
+
 			LOG();
 		}
 

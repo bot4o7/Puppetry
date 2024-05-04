@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "entity.h"
+#include "../graphics/animations/animation.h"
 
 namespace cheap {
 	class graphics_entity : public  cheap::entity
@@ -25,6 +26,7 @@ namespace cheap {
 		bool mIs_block_mouse;
 		bool mIs_receive_mouse;
 		bool mIs_receive_keyboard;
+		animation* mAnimation;
 
 		// data
 		// on_event_list
@@ -51,7 +53,11 @@ namespace cheap {
 			bool               aIs_receive_keyboard);
 
 
-		~graphics_entity() override = default;
+		~graphics_entity() override
+		{
+			delete mAnimation;
+		}
+
 
 		[[nodiscard]] category get_category() const override
 		{

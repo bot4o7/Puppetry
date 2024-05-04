@@ -31,7 +31,8 @@ namespace cheap {
 		mIs_show(aIs_show),
 		mIs_block_mouse(aIs_block_mouse),
 		mIs_receive_mouse(aIs_receive_mouse),
-		mIs_receive_keyboard(aIs_receive_keyboard)
+		mIs_receive_keyboard(aIs_receive_keyboard),
+		mAnimation(nullptr)
 	{
 		LOG();
 	}

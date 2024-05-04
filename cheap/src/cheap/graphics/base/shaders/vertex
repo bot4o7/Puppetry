@@ -4,7 +4,6 @@ layout (location = 1) in vec2 aTexCoord;
 layout (location = 2) in vec3 aLayout;
 
 out vec2 TexCoord;
-out float Deep;
 
 // projection -> view -> model
 uniform mat4 uProjection;

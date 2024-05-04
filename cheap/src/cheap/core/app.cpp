@@ -3,6 +3,7 @@
 
 #include "../events/event.h"
 #include "../graphics/renderer.h"
+#include "../graphics/animations/scale_animation.h"
 
 #ifdef CP_OPENGL_API
 namespace cheap {
@@ -41,7 +42,7 @@ namespace cheap {
 			1,
 			graphics_entity::type::OBJ,
 			0.5f, 0.0f, -0.1f,
-			0.f, 1.0f,
+			-1.f, 0.6f,
 			1.0f,
 			"data/images/ys.png",
 			true,
@@ -53,7 +54,7 @@ namespace cheap {
 			2,
 			graphics_entity::type::OBJ,
 			-0.2f, 0.0f, 0.1f,
-			0.f, 1.0f,
+			-1.f, 0.6f,
 			1.0f,
 			"data/images/friends.png",
 			true,
@@ -64,9 +65,13 @@ namespace cheap {
 
 		mRenderer->add_new_task(&task);
 		mRenderer->add_new_task(&task2);
+		double a_time = glfwGetTime();
 
+		task.mAnimation = new scale_animation(1.5f, 1.5f, 1.0f, a_time, 20, animation::relationship::LINEAR);
+		task2.mAnimation = new scale_animation(1.5f, 1.5f, 1.0f, a_time, 20, animation::relationship::LINEAR);
 
-
+		task.mAnimation->replay(a_time + 1);
+		task2.mAnimation->replay(a_time + 2);
 		while (app::is_running()) {
 			/*if (const float current_frame = static_cast<float>(glfwGetTime()); current_frame - last_frame > 2.0f) {
 				constexpr float       pace = 0.1f;
@@ -74,8 +79,13 @@ namespace cheap {
 
 				last_frame = current_frame;
 			}*/
+			float current = glfwGetTime();
+
+			if (task.mAnimation->is_finished()) task.mAnimation->replay(current);
+			if (task2.mAnimation->is_finished()) task2.mAnimation->replay(current);
+
 			mRenderer->clear();
-			mRenderer->draw_layers();
+			mRenderer->draw_layers(current);
 			mRenderer->update();
 
 		}

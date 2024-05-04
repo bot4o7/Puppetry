@@ -149,6 +149,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\cheap\graphics\animations\scale_animation.h" />
+    <ClInclude Include="src\cheap\graphics\pages\page.h" />
     <ClInclude Include="src\cheap\graphics\animations\animation.h" />
     <ClInclude Include="src\cheap\entity\graphics_entity.h" />
     <ClInclude Include="src\cheap\events\input\mouse_button.h" />
@@ -186,6 +188,8 @@
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\cheap\graphics\animations\scale_animation.cpp" />
+    <ClCompile Include="src\cheap\graphics\pages\page.cpp" />
     <ClCompile Include="src\cheap\graphics\animations\animation.cpp" />
     <ClCompile Include="src\cheap\entity\entity.cpp" />
     <ClCompile Include="src\cheap\entity\graphics_entity.cpp" />
