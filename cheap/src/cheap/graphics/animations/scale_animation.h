@@ -52,7 +52,7 @@ namespace cheap {
 
 		[[nodiscard]] glm::mat4 get(const double aCurrent_time) const
 		{
-			const double factor = 1.0 + get_frame(aCurrent_time);
+			const double factor = get_frame(aCurrent_time);
 			return transform::get_scale(
 				1.f + mScalar[0] * factor,
 				1.f + mScalar[1] * factor,
