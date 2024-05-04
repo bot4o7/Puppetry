@@ -46,6 +46,33 @@ namespace cheap {
 
 		void update() const;
 
+		// 0.proj
+		// 1.view
+		// 2.trans
+		// 3.rotate
+		// 4.scale
+		// 5.opacity
+		// 6.color
+		// 7. tex NO
+		void reset_uniform(bool* aIndex)
+		{
+			if (aIndex[0])
+				mShader_program.bind_projection();
+			if (aIndex[1])
+				mShader_program.bind_view();
+			if (aIndex[2])
+				mShader_program.bind_translation();
+			if (aIndex[3])
+				mShader_program.bind_rotation();
+			if (aIndex[4])
+				mShader_program.bind_scale();
+			if (aIndex[5])
+				mShader_program.bind_opacity();
+			if (aIndex[6])
+				mShader_program.bind_color();
+		}
+
+
 	private:
 		std::string mShader_path;
 		std::string mPic_path;

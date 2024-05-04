@@ -14,10 +14,12 @@ namespace cheap {
 			const float aAxis_z,
 			const double aBegin_time,
 			const double aDuration,
-			const relationship aRelationship)
+			const relationship aRelationship,
+			const bool aIs_shuttle)
 			:
 			animation(
 				type::ROTATION,
+				aIs_shuttle,
 				aBegin_time,
 				aDuration,
 				aRelationship),
@@ -34,10 +36,12 @@ namespace cheap {
 			const double aBegin_time,
 			const double aDuration,
 			const unsigned int aCount,
-			const relationship aRelationship)
+			const relationship aRelationship,
+			const bool aIs_shuttle)
 			:
 			animation(
 				type::ROTATION,
+				aIs_shuttle,
 				aBegin_time,
 				aDuration,
 				aCount,

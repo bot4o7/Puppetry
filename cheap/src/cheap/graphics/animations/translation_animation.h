@@ -14,10 +14,12 @@ namespace cheap {
 			const float aZ,
 			const double aBegin_time,
 			const double aDuration,
-			const relationship aRelationship)
+			const relationship aRelationship,
+			const bool aIs_shuttle)
 			:
 			animation(
 				type::TRANSLATION,
+				aIs_shuttle,
 				aBegin_time,
 				aDuration,
 				aRelationship),
@@ -32,10 +34,12 @@ namespace cheap {
 			const double aBegin_time,
 			const double aDuration,
 			const unsigned int aCount,
-			const relationship aRelationship)
+			const relationship aRelationship,
+			const bool aIs_shuttle)
 			:
 			animation(
 				type::TRANSLATION,
+				aIs_shuttle,
 				aBegin_time,
 				aDuration,
 				aCount,
@@ -50,9 +54,10 @@ namespace cheap {
 
 		}
 
-		[[nodiscard]] glm::mat4 get(const double aCurrent_time) const
+		[[nodiscard]] glm::mat4 get(const double aCurrent_time)
 		{
 			const double factor = get_frame(aCurrent_time);
+
 			return transform::get_translate(
 				mOffset[0] * factor,
 				mOffset[1] * factor,

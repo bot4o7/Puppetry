@@ -10,10 +10,12 @@ namespace cheap {
 			const float aOpacity,
 			const double aBegin_time,
 			const double aDuration,
-			const relationship aRelationship)
+			const relationship aRelationship,
+			const bool aIs_shuttle)
 			:
 			animation(
 				type::OPACITY,
+				aIs_shuttle,
 				aBegin_time,
 				aDuration,
 				aRelationship),
@@ -26,10 +28,12 @@ namespace cheap {
 			const double aBegin_time,
 			const double aDuration,
 			const unsigned int aCount,
-			const relationship aRelationship)
+			const relationship aRelationship,
+			const bool aIs_shuttle)
 			:
 			animation(
 				type::OPACITY,
+				aIs_shuttle,
 				aBegin_time,
 				aDuration,
 				aCount,

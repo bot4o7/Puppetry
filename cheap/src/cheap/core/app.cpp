@@ -4,6 +4,7 @@
 #include "../events/event.h"
 #include "../graphics/renderer.h"
 #include "../graphics/animations/scale_animation.h"
+#include "../graphics/animations/translation_animation.h"
 
 #ifdef CP_OPENGL_API
 namespace cheap {
@@ -67,8 +68,8 @@ namespace cheap {
 		mRenderer->add_new_task(&task2);
 		double a_time = glfwGetTime();
 
-		task.mAnimation = new scale_animation(1.5f, 1.5f, 1.0f, a_time, 20, animation::relationship::LINEAR);
-		task2.mAnimation = new scale_animation(1.5f, 1.5f, 1.0f, a_time, 20, animation::relationship::LINEAR);
+		task.mAnimation = new translation_animation(-0.5f, -0.2f, 1.0f, a_time, 4, animation::relationship::LINEAR, true);
+		task2.mAnimation = new scale_animation(1.5f, 1.5f, 1.0f, a_time, 4, animation::relationship::LINEAR, true);
 
 		task.mAnimation->replay(a_time + 1);
 		task2.mAnimation->replay(a_time + 2);
@@ -81,8 +82,8 @@ namespace cheap {
 			}*/
 			float current = glfwGetTime();
 
-			if (task.mAnimation->is_finished()) task.mAnimation->replay(current);
-			if (task2.mAnimation->is_finished()) task2.mAnimation->replay(current);
+			//if (task.mAnimation->is_finished()) task.mAnimation->replay(current);
+			//if (task2.mAnimation->is_finished()) task2.mAnimation->replay(current);
 
 			mRenderer->clear();
 			mRenderer->draw_layers(current);

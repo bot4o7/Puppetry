@@ -43,11 +43,12 @@ namespace cheap {
 
 		[[nodiscard]] double get_frame(const double aCurrent_time) const
 		{
-			return get_time_ratio(aCurrent_time) * get_y(aCurrent_time);
+			return  get_y(aCurrent_time - mBegin_time);
 		}
 		// 根据所给时间进行一次动画
 		animation(
 			const type  aType,
+			const bool aIs_shuttle,
 			const double aBegin_time,
 			const double aDuration,
 			const relationship aRelationship
@@ -55,17 +56,20 @@ namespace cheap {
 			:
 			mType(aType),
 			mRelationship(aRelationship),
-			mParam(calculate_param(aRelationship, aDuration)),
 			mCount(1),
 			mIs_loop(false),
+			mIs_shuttle(aIs_shuttle),
 			mBegin_time(aBegin_time),
-			mEnd_time(aBegin_time + aDuration)
+			mDuration(aDuration),
+			mEnd_time(aBegin_time + aDuration),
+			mParam(calculate_param(aRelationship))
 		{
 			LOG();
 		}
 		// 根据所给时间进行 count 次动画
 		animation(
 			const type  aType,
+			const bool aIs_shuttle,
 			const double aBegin_time,
 			const double aDuration,
 			const unsigned int aCount,
@@ -73,17 +77,20 @@ namespace cheap {
 			:
 			mType(aType),
 			mRelationship(aRelationship),
-			mParam(calculate_param(aRelationship, aDuration)),
 			mCount(aCount),
 			mIs_loop(false),
+			mIs_shuttle(aIs_shuttle),
 			mBegin_time(aBegin_time),
-			mEnd_time(aBegin_time + aDuration)
+			mDuration(aDuration),
+			mEnd_time(aBegin_time + aDuration),
+			mParam(calculate_param(aRelationship))
 		{
 			LOG();
 		}
 		// 根据所给时间进行 循环动画
 		animation(
 			const type  aType,
+			const bool aIs_shuttle,
 			const double aBegin_time,
 			const double aDuration,
 			const bool aIs_loop,
@@ -91,27 +98,32 @@ namespace cheap {
 			:
 			mType(aType),
 			mRelationship(aRelationship),
-			mParam(calculate_param(aRelationship, aDuration)),
 			mCount(1),
 			mIs_loop(aIs_loop),
+			mIs_shuttle(aIs_shuttle),
 			mBegin_time(aBegin_time),
-			mEnd_time(aBegin_time + aDuration)
+			mDuration(aDuration),
+			mEnd_time(aBegin_time + aDuration),
+			mParam(calculate_param(aRelationship))
 		{
 			LOG();
 		}
 		// 给一个未设置 开始时间、次数的非循环动画， 但是有运行周期
 		animation(
 			const type  aType,
+			const bool aIs_shuttle,
 			const double aDuration,
 			const relationship aRelationship)
 			:
 			mType(aType),
 			mRelationship(aRelationship),
-			mParam(calculate_param(aRelationship, aDuration)),
 			mCount(0),
 			mIs_loop(false),
+			mIs_shuttle(aIs_shuttle),
 			mBegin_time(0.0),
-			mEnd_time(aDuration)
+			mDuration(aDuration),
+			mEnd_time(aDuration),
+			mParam(calculate_param(aRelationship))
 		{
 			LOG();
 		}
@@ -144,9 +156,8 @@ namespace cheap {
 			const double aBegin_time)
 		{
 			LOG();
-			const double duration_time = mEnd_time - mBegin_time;
 			mBegin_time = aBegin_time;
-			mEnd_time = mBegin_time + duration_time;
+			mEnd_time = mBegin_time + mDuration;
 		}
 		void update_time(
 			const double aBegin_time,
@@ -208,6 +219,7 @@ namespace cheap {
 			mCount = 1;
 			mIs_loop = false;
 			mEnd_time = mBegin_time;
+			mBegin_time -= mDuration;
 		}
 
 		// 没有剩余次数 count，就无法进行
@@ -236,23 +248,29 @@ namespace cheap {
 	private:
 		type mType;
 		relationship mRelationship;
-		double mParam;
 		// if count > 0,  do it, and then count -= 1;
 		// if count <= 0, end;
 		// if mBegin_time > mEnd_time, loop forever until set it stop
 		unsigned int mCount;
 		bool mIs_loop;
+		bool mIs_shuttle;
 		// if > current time, delay
 		// if <= current time, do it;
 		double mBegin_time;
+		double mDuration;
 		// if > current time, do it.
 		// if <= current time, need to end it OR need to update it.
 		double mEnd_time;
+		double mParam;
 
 
 
-		[[nodiscard]] double get_y(const double aX) const
+		[[nodiscard]] double get_y(double aX) const
 		{
+			if (mIs_shuttle)
+				if (aX + aX > mDuration)
+					aX = mDuration - aX;
+
 			switch (mRelationship) {
 				case relationship::LINEAR:
 					return do_linear(aX);
@@ -265,12 +283,6 @@ namespace cheap {
 			}
 			return 0;
 		}
-
-		[[nodiscard]] double get_time_ratio(const double aCurrent_time) const
-		{
-			return (aCurrent_time - mBegin_time) / (mEnd_time - mBegin_time);
-		}
-
 
 		// y = ax
 		// a = 1 / duration
@@ -293,15 +305,17 @@ namespace cheap {
 		{
 			return sin(mParam * aX);
 		}
-		double static calculate_param(relationship aRelationship, const double aDuration)
+
+		[[nodiscard]] double calculate_param(
+			const relationship aRelationship) const
 		{
 			switch (aRelationship) {
 				case relationship::LINEAR:
-					return 1.0 / aDuration;
+					return (mIs_shuttle ? 2.0 : 1.0) / mDuration;
 				case relationship::SIN:
-					return 1.0 / aDuration / aDuration;
+					return  (mIs_shuttle ? 2.0 : 1.0) / mDuration / mDuration;
 				case relationship::SQUARE:
-					return 0.5 * PI / aDuration;
+					return  (mIs_shuttle ? 1.0 : 0.5) * PI / mDuration;
 				default:
 					LOG_INFO("no such animation::relationship");
 			}
