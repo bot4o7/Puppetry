@@ -83,6 +83,11 @@ namespace cheap {
 		 */
 		static void unbind();
 
+
+		[[nodiscard]] float* get_vertices() const { return mVertices; }
+
+		void update_vbo() const;
+
 	private:
 		bool mIs_these_array_need_to_be_delete_in_dtor;
 		float* mVertices;

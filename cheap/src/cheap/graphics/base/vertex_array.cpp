@@ -40,6 +40,22 @@ namespace cheap {
 		glBindVertexArray(mVertex_array_object_id);
 	}
 
+	void vertex_array::update_vbo() const
+	{
+		LOG();
+		// bind VBO
+		glBindBuffer(VBO_TARGET,
+			mVertex_buffer_object_id);
+		// TODO 因为我这里的 mVertices 是指针，不是显式数组，需要指定数量，否则 sizeof(mVertices)只是一个指针的大小
+		glBufferData(
+			VBO_TARGET,
+			(VERTICES_LENGTH + LAYOUT_LENGTH) * sizeof(VERTICES_TYPE),
+			mVertices,
+			BUFFER_USAGE);
+		glBindBuffer(VBO_TARGET,
+			0);
+	}
+
 	void vertex_array::bind() const
 	{
 		LOG();

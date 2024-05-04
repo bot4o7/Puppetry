@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "../../entity/graphics_entity.h"
+
 namespace cheap {
 
 	#define PI 3.1415926535897931
@@ -51,9 +53,11 @@ namespace cheap {
 			const bool aIs_shuttle,
 			const double aBegin_time,
 			const double aDuration,
-			const relationship aRelationship
+			const relationship aRelationship,
+			graphics_entity* aGraphics_entity = nullptr
 		)
 			:
+			mGraphics_entity(aGraphics_entity),
 			mType(aType),
 			mRelationship(aRelationship),
 			mCount(1),
@@ -66,6 +70,7 @@ namespace cheap {
 		{
 			LOG();
 		}
+
 		// 根据所给时间进行 count 次动画
 		animation(
 			const type  aType,
@@ -73,8 +78,10 @@ namespace cheap {
 			const double aBegin_time,
 			const double aDuration,
 			const unsigned int aCount,
-			const relationship aRelationship)
+			const relationship aRelationship,
+			graphics_entity* aGraphics_entity = nullptr)
 			:
+			mGraphics_entity(aGraphics_entity),
 			mType(aType),
 			mRelationship(aRelationship),
 			mCount(aCount),
@@ -94,8 +101,10 @@ namespace cheap {
 			const double aBegin_time,
 			const double aDuration,
 			const bool aIs_loop,
-			const relationship aRelationship)
+			const relationship aRelationship,
+			graphics_entity* aGraphics_entity = nullptr)
 			:
+			mGraphics_entity(aGraphics_entity),
 			mType(aType),
 			mRelationship(aRelationship),
 			mCount(1),
@@ -113,8 +122,10 @@ namespace cheap {
 			const type  aType,
 			const bool aIs_shuttle,
 			const double aDuration,
-			const relationship aRelationship)
+			const relationship aRelationship,
+			graphics_entity* aGraphics_entity = nullptr)
 			:
+			mGraphics_entity(aGraphics_entity),
 			mType(aType),
 			mRelationship(aRelationship),
 			mCount(0),
@@ -127,6 +138,7 @@ namespace cheap {
 		{
 			LOG();
 		}
+
 		virtual ~animation()
 		{
 			LOG();
@@ -234,8 +246,24 @@ namespace cheap {
 			if (is_loop() || --mCount > 0)
 				return update_replay_time_and_return_false();
 
+
+			if (mIs_shuttle) return true;
+
+			//TODO
+			if (mGraphics_entity != nullptr)
+				on_end_update_graphics_entity_vertices();
+			else
+				LOG_INFO("mAinimation_end_callback: is nullptr");
+
 			return true;
 		}
+
+		// TODO MUST be Implemented
+		virtual void on_end_update_graphics_entity_vertices()
+		{
+			LOG_INFO("do nothing.");
+		}
+
 		// 如果有剩余次数/循环、更新时间。然后为 is_end() 函数返回一个 false 
 		bool update_replay_time_and_return_false()
 		{
@@ -245,6 +273,19 @@ namespace cheap {
 
 			return false;
 		}
+
+		void set_graphics_entity(graphics_entity* aGraphics_entity)
+		{
+			mGraphics_entity = aGraphics_entity;
+		}
+
+		unsigned int get_graphics_entity_id() const
+		{
+			return mGraphics_entity->mId;
+		}
+
+	protected:
+		graphics_entity* mGraphics_entity;
 	private:
 		type mType;
 		relationship mRelationship;

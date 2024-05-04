@@ -69,6 +69,11 @@ namespace cheap {
 
 		}
 
+		// TODO
+		void on_end_update_graphics_entity_vertices() override
+		{
+			//mGraphics_entity->mGraphics_rectangle
+		}
 	private:
 		float mAngle_degree;
 		float mAxis[3];

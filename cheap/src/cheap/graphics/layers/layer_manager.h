@@ -15,24 +15,8 @@ namespace cheap {
 			:
 			mAbove(nullptr),
 			mBelow(nullptr),
-			mLayer(nullptr)
+			mLayer(new layer(aGraphics_entity))
 		{
-			if (aGraphics_entity->mWidth > 0.f) {
-				if (aGraphics_entity->mHeight > 0.f)
-					mLayer = new layer(aGraphics_entity);
-				else
-					mLayer = new layer(aGraphics_entity, true);
-			} else {
-				if (aGraphics_entity->mHeight > 0.f)
-					mLayer = new layer(true, aGraphics_entity);
-				else {
-					LOG_INFO("操你妈。你他妈刚刚是不是传了一个长宽都不是正数的 graphics_entity");
-					aGraphics_entity->mWidth = 1.f;
-					aGraphics_entity->mHeight = 1.f;
-					mLayer = new layer(aGraphics_entity);
-				}
-			}
-
 			LOG();
 		}
 
@@ -91,8 +75,19 @@ namespace cheap {
 			add(lvl);
 		}
 
+		void add_anime(
+			const unsigned int aGraphics_entity_id,
+			animation* aAnimation)
+		{
+			if (mHash_id_to_layer.contains(aGraphics_entity_id)) {
+				mHash_id_to_layer[aGraphics_entity_id]->mLayer->set_anim(aAnimation);
+			} else {
+				LOG_INFO("操你妈，你给的这个animation对应的graphics_entity的id不在layer_manager里面，怎么回事，是layer_manager错了还是哪里");
+			}
+		}
+
 		void add_layer_above(
-			unsigned int aTarget_id,
+			const unsigned int aTarget_id,
 			graphics_entity* aGraphics_entity)
 		{
 			LOG();
@@ -106,7 +101,7 @@ namespace cheap {
 
 
 		void add_layer_below(
-			unsigned int aTarget_id,
+			const unsigned int aTarget_id,
 			graphics_entity* aGraphics_entity)
 		{
 			LOG();

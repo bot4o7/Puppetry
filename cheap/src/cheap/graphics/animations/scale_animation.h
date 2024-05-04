@@ -43,7 +43,8 @@ namespace cheap {
 				aBegin_time,
 				aDuration,
 				aCount,
-				aRelationship),
+				aRelationship
+			),
 			mScalar{ aX_scale - 1.f,aY_scale - 1.f,aZ_scale - 1.f }
 		{
 			LOG();
@@ -64,6 +65,12 @@ namespace cheap {
 				1.f + mScalar[0] * factor,
 				1.f + mScalar[1] * factor,
 				1.f + mScalar[2] * factor);
+		}
+
+
+		void on_end_update_graphics_entity_vertices() override
+		{
+			mGraphics_entity->mGraphics_rectangle.update_scale(mScalar[0], mScalar[1], mScalar[2]);
 		}
 
 	private:

@@ -48,11 +48,77 @@ namespace cheap {
 		// 目前，VAO 和 texture 似乎不必手动 unbind, texture 似乎不必unbind，只需你不用的时候释放掉内存就行 glDeleteTextures
 		void before_draw(int aTexture_slot) const;
 
+
 		// TODO
-		void update()
+		void update_translation(
+			const float aX_offset,
+			const float aY_offset,
+			const float aZ_offset) const
 		{
-			LOG_INFO("graphics_rectangle::update() : NOT IMPLEMENTED YET.......");
+			LOG();
+
+			float* vertices = mVertex_array->get_vertices();
+
+			vertices[20] += aX_offset;
+			vertices[21] += aY_offset;
+			vertices[22] += aZ_offset;
+
+			vertices[23] += aX_offset;
+			vertices[24] += aY_offset;
+			vertices[25] += aZ_offset;
+
+			vertices[26] += aX_offset;
+			vertices[27] += aY_offset;
+			vertices[28] += aZ_offset;
+
+			vertices[29] += aX_offset;
+			vertices[30] += aY_offset;
+			vertices[31] += aZ_offset;
+
+			mVertex_array->update_vbo();
 		}
+		// TODO 暂时真不想做旋转的更新，等会
+		void update_rotation(
+			float   aX,
+			float            aY,
+			float aZ,
+			bool   aPlaceholder_width,
+			float        aHeight)
+		{
+		}
+		// TODO  暂时不考虑 z 轴的缩放。。。。因为都是图片
+		void update_scale(
+			float   aX_scale,
+			float   aY_scale,
+			float   aZ_scale)
+		{
+			LOG();
+
+			float* vertices = mVertex_array->get_vertices();
+
+			// top right
+			vertices[0] *= aX_scale;
+			vertices[1] *= aY_scale;
+			vertices[2] *= aZ_scale;
+
+			// bottom ri*=aX_scale;
+			vertices[5] *= aX_scale;
+			vertices[6] *= aY_scale;
+			vertices[7] *= aZ_scale;
+
+			// bottom le*=aX_scale;
+			vertices[10] *= aX_scale;
+			vertices[11] *= aY_scale;
+			vertices[12] *= aZ_scale;
+
+			// top left	*=aX_scale;
+			vertices[15] *= aX_scale;
+			vertices[16] *= aY_scale;
+			vertices[17] *= aZ_scale;
+
+			mVertex_array->update_vbo();
+		}
+
 	private:
 		texture* mTexture;
 		vertex_array* mVertex_array;

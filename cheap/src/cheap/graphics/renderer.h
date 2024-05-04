@@ -72,6 +72,12 @@ namespace cheap {
 				mShader_program.bind_color();
 		}
 
+		void add_anime(unsigned int aGraphics_entity_id,
+			animation* aAnimation)
+		{
+			mLayer_manager->add_anime(aGraphics_entity_id,
+				aAnimation);
+		}
 
 	private:
 		std::string mShader_path;

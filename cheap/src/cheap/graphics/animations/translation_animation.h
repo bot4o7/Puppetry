@@ -64,6 +64,10 @@ namespace cheap {
 				mOffset[2] * factor);
 		}
 
+		void on_end_update_graphics_entity_vertices() override
+		{
+			mGraphics_entity->mGraphics_rectangle.update_translation(mOffset[0], mOffset[1], mOffset[2]);
+		}
 	private:
 		float mOffset[3];
 	};

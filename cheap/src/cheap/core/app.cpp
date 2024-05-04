@@ -43,7 +43,8 @@ namespace cheap {
 			1,
 			graphics_entity::type::OBJ,
 			0.5f, 0.0f, -0.1f,
-			-1.f, 0.5f,
+			true,
+			0.5f,
 			1.0f,
 			"data/images/ys.png",
 			true,
@@ -55,7 +56,7 @@ namespace cheap {
 			2,
 			graphics_entity::type::OBJ,
 			-0.2f, 0.0f, 0.1f,
-			-1.f, 0.5f,
+			true, 0.5f,
 			1.0f,
 			"data/images/friends.png",
 			true,
@@ -68,11 +69,25 @@ namespace cheap {
 		mRenderer->add_new_task(&task2);
 		double a_time = glfwGetTime();
 
-		task.mAnimation = new translation_animation(-0.5f, -0.2f, 1.0f, a_time, 4, animation::relationship::LINEAR, true);
-		task2.mAnimation = new scale_animation(1.5f, 1.5f, 1.0f, a_time, 4, animation::relationship::LINEAR, true);
 
-		task.mAnimation->replay(a_time + 1);
-		task2.mAnimation->replay(a_time + 2);
+
+		animation* anim1 = new translation_animation(-0.5f, -0.2f, 1.0f, a_time, 4, animation::relationship::LINEAR, false);
+		animation* anim2 = new scale_animation(1.5f, 1.5f, 1.0f, a_time, 4, animation::relationship::LINEAR, true);
+
+
+
+
+		anim1->set_graphics_entity(&task);
+		anim2->set_graphics_entity(&task2);
+
+
+		mRenderer->add_anime(anim1->get_graphics_entity_id(), anim1);
+		mRenderer->add_anime(anim2->get_graphics_entity_id(), anim2);
+
+
+
+		anim1->replay(a_time + 1);
+		anim2->replay(a_time + 2);
 		while (app::is_running()) {
 			/*if (const float current_frame = static_cast<float>(glfwGetTime()); current_frame - last_frame > 2.0f) {
 				constexpr float       pace = 0.1f;
@@ -82,8 +97,12 @@ namespace cheap {
 			}*/
 			float current = glfwGetTime();
 
-			//if (task.mAnimation->is_finished()) task.mAnimation->replay(current);
-			//if (task2.mAnimation->is_finished()) task2.mAnimation->replay(current);
+
+
+			/*if (anim1->is_finished())
+				anim1->replay(current);
+			if (anim2->is_finished())
+				anim2->replay(current);*/
 
 			mRenderer->clear();
 			mRenderer->draw_layers(current);

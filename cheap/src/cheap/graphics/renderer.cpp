@@ -40,6 +40,8 @@ namespace cheap {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
+
+
 	void renderer::draw_layers(const double current_time, const int aTexture_slot)
 	{
 		// 0.proj
@@ -50,14 +52,12 @@ namespace cheap {
 		// 5.opacity
 		// 6.color
 		static bool to_reset_uniform[7] = { false, false, false, false, false, false, false };
-		for (auto task = mLayer_manager->get_top_layer_level(); task != nullptr;) {
+		for (auto task = mLayer_manager->get_top_layer_level(); task != nullptr;)
 			if (task->mLayer->is_show()) {
 				mShader_program.set_opacity(task->mLayer->get_opacity());
 
-				mShader_program.set_transform();
-
-				if (task->mLayer->get_anim() != nullptr) {
-					if (animation* anim = task->mLayer->get_anim(); anim->is_to_play(current_time)) {
+				if (task->mLayer->get_anim() != nullptr)
+					if (animation* anim = task->mLayer->get_anim(); anim->is_to_play(current_time))
 						switch (anim->get_type()) {
 							case animation::type::TRANSLATION:
 								to_reset_uniform[2] = true;
@@ -82,8 +82,6 @@ namespace cheap {
 							default:
 								LOG_INFO("unkown animation type : " << static_cast<unsigned>(anim->get_type()));
 						}
-					}
-				}
 
 
 				task->mLayer->before_draw(aTexture_slot);
@@ -93,7 +91,6 @@ namespace cheap {
 
 				task = task->mBelow;
 			}
-		}
 	}
 
 	void renderer::update() const
