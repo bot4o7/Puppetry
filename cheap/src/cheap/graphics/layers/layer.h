@@ -41,14 +41,18 @@ namespace cheap {
 		}
 
 		// don't delete mGraphics_entity, because you may need it to create a new layer;
+		// TODO 我现在让layer删除时，同时删除动画
+		// 但是以后我要考虑动画的生命周期怎么管理！
 		~layer()
-			= default;
+		{
+			delete mAnimation;
+		}
 
 		[[nodiscard]] graphics_entity::type get_type() const { return mGraphics_entity->mType; }
 		[[nodiscard]] unsigned int get_id() const { return mGraphics_entity->mId; }
 		[[nodiscard]] float get_depth() const { return mGraphics_entity->mZ; }
 		[[nodiscard]] float get_opacity() const { return mGraphics_entity->mOpacity; }
-		[[nodiscard]] bool                      is_show() const { return mGraphics_entity->mIs_show; }
+		[[nodiscard]] bool                      is_show() const { return mGraphics_entity->mIs_visible; }
 		[[nodiscard]] bool                      is_block_mouse() const { return mGraphics_entity->mIs_block_mouse; }
 		[[nodiscard]] bool                      is_receive_mouse() const { return mGraphics_entity->mIs_receive_mouse; }
 		[[nodiscard]] bool                      is_receive_keyboard() const { return mGraphics_entity->mIs_receive_keyboard; }

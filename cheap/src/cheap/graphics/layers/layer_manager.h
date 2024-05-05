@@ -4,41 +4,64 @@
 
 namespace cheap {
 
-	class level
-	{
-	public:
-		level* mAbove;
-		level* mBelow;
-		layer* mLayer;
 
-		explicit level(graphics_entity* aGraphics_entity)
-			:
-			mAbove(nullptr),
-			mBelow(nullptr),
-			mLayer(new layer(aGraphics_entity))
-		{
-			LOG();
-		}
-
-		level()
-			:
-			mAbove(nullptr),
-			mBelow(nullptr),
-			mLayer(nullptr)
-		{
-			LOG();
-		}
-
-		~level()
-		{
-			LOG();
-			delete mLayer;
-		}
-	};
 
 	class layer_manager
 	{
 	public:
+		class level
+		{
+		public:
+			level* mAbove;
+			level* mBelow;
+			layer* mLayer;
+
+			explicit level(graphics_entity* aGraphics_entity)
+				:
+				mAbove(nullptr),
+				mBelow(nullptr),
+				mLayer(new layer(aGraphics_entity))
+			{
+				LOG();
+			}
+
+			level()
+				:
+				mAbove(nullptr),
+				mBelow(nullptr),
+				mLayer(nullptr)
+			{
+				LOG();
+			}
+
+			~level()
+			{
+				LOG();
+				delete mLayer;
+			}
+
+			// but will NOT delete level itself
+			void remove_and_delete_layer()
+			{
+				if (mAbove != nullptr)
+					mAbove->mBelow = mBelow;
+
+				if (mBelow != nullptr)
+					mBelow->mAbove = mAbove;
+
+				delete mLayer;
+			}
+			// but will NOT delete level itself
+			void remove()
+			{
+				if (mAbove != nullptr)
+					mAbove->mBelow = mBelow;
+
+				if (mBelow != nullptr)
+					mBelow->mAbove = mAbove;
+			}
+		};
+
 		layer_manager()
 			:
 			mHash_id_to_layer(std::unordered_map<unsigned int, level*>()),
@@ -121,6 +144,16 @@ namespace cheap {
 				mHash_id_to_layer[aId]->mLayer->update();
 		}
 
+		// TODO
+		void remove_and_delete_layer(const unsigned int aGraphics_entity_id)
+		{
+			if (mHash_id_to_layer.contains(aGraphics_entity_id)) {
+				level* to_remove = mHash_id_to_layer[aGraphics_entity_id];
+				to_remove->remove();
+				delete to_remove;
+				mHash_id_to_layer.erase(aGraphics_entity_id);
+			}
+		}
 
 	private:
 

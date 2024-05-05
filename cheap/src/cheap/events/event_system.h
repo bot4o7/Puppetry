@@ -13,12 +13,10 @@ namespace cheap {
 	public:
 		event_system(
 			const std::shared_ptr<window>& aWindow,
-			const std::shared_ptr<layer_manager>& aLayer_manager,
 			const std::shared_ptr<renderer>& aRenderer,
 			const std::shared_ptr<input_system>& aInput_system
 		) :
 			mWindow(aWindow),
-			mLayer_manager(aLayer_manager),
 			mRenderer(aRenderer),
 			mInput_system(aInput_system),
 			mEvent_list_per_frame(std::vector<event*>())
@@ -55,7 +53,6 @@ namespace cheap {
 
 	private:
 		std::shared_ptr<window> mWindow;
-		std::shared_ptr<layer_manager> mLayer_manager;
 		std::shared_ptr<renderer> mRenderer;
 		std::shared_ptr<input_system> mInput_system;
 

@@ -119,6 +119,23 @@ namespace cheap {
 			mVertex_array->update_vbo();
 		}
 
+		[[nodiscard]] bool is_pos_in_rectangle2D(const double aPos_x, const double aPos_y)const
+		{
+			// top right x
+			if (aPos_x > mVertex_array->get_vertices()[0]) return false;
+
+			// top right y
+			if (aPos_y > mVertex_array->get_vertices()[1]) return false;
+
+			// bottom left x
+			if (aPos_x < mVertex_array->get_vertices()[10]) return false;
+
+			// bottom left y
+			if (aPos_y < mVertex_array->get_vertices()[11]) return false;
+
+			return true;
+		}
+
 	private:
 		texture* mTexture;
 		vertex_array* mVertex_array;

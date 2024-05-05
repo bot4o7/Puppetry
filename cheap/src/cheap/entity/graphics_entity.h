@@ -22,7 +22,7 @@ namespace cheap {
 		float mOpacity;
 		std::string mPic_file_path;
 		bool mIs_RGBA;
-		bool mIs_show;
+		bool mIs_visible;
 		bool mIs_block_mouse;
 		bool mIs_receive_mouse;
 		bool mIs_receive_keyboard;
@@ -47,7 +47,7 @@ namespace cheap {
 			const float        aOpacity,
 			const std::string& aPic_file_path,
 			const bool         aIs_RGBA,
-			const bool         aIs_show,
+			const bool         aIs_visible,
 			const bool         aIs_block_mouse,
 			const bool         aIs_receive_mouse,
 			const bool         aIs_receive_keyboard)
@@ -62,7 +62,7 @@ namespace cheap {
 			mOpacity(aOpacity),
 			mPic_file_path(aPic_file_path),
 			mIs_RGBA(aIs_RGBA),
-			mIs_show(aIs_show),
+			mIs_visible(aIs_visible),
 			mIs_block_mouse(aIs_block_mouse),
 			mIs_receive_mouse(aIs_receive_mouse),
 			mIs_receive_keyboard(aIs_receive_keyboard),
@@ -88,7 +88,7 @@ namespace cheap {
 			const float        aOpacity,
 			const std::string& aPic_file_path,
 			const bool         aIs_RGBA,
-			const bool         aIs_show,
+			const bool         aIs_visible,
 			const bool         aIs_block_mouse,
 			const bool         aIs_receive_mouse,
 			const bool         aIs_receive_keyboard)
@@ -103,7 +103,7 @@ namespace cheap {
 			mOpacity(aOpacity),
 			mPic_file_path(aPic_file_path),
 			mIs_RGBA(aIs_RGBA),
-			mIs_show(aIs_show),
+			mIs_visible(aIs_visible),
 			mIs_block_mouse(aIs_block_mouse),
 			mIs_receive_mouse(aIs_receive_mouse),
 			mIs_receive_keyboard(aIs_receive_keyboard),
@@ -129,7 +129,7 @@ namespace cheap {
 			const float        aOpacity,
 			const std::string& aPic_file_path,
 			const bool         aIs_RGBA,
-			const bool         aIs_show,
+			const bool         aIs_visible,
 			const bool         aIs_block_mouse,
 			const bool         aIs_receive_mouse,
 			const bool         aIs_receive_keyboard)
@@ -144,7 +144,7 @@ namespace cheap {
 			mOpacity(aOpacity),
 			mPic_file_path(aPic_file_path),
 			mIs_RGBA(aIs_RGBA),
-			mIs_show(aIs_show),
+			mIs_visible(aIs_visible),
 			mIs_block_mouse(aIs_block_mouse),
 			mIs_receive_mouse(aIs_receive_mouse),
 			mIs_receive_keyboard(aIs_receive_keyboard),
@@ -169,6 +169,11 @@ namespace cheap {
 		{
 			LOG();
 			return category::GRAPHICS;
+		}
+
+		[[nodiscard]] bool is_pos_in_region(const double aPos_x, const double aPos_y) const
+		{
+			return mGraphics_rectangle.is_pos_in_rectangle2D(aPos_x, aPos_y);
 		}
 
 		[[nodiscard]] bool is_category(const category aCategory) const override

@@ -156,10 +156,13 @@ namespace cheap {
 			const double current_time)
 		{
 			if (is_finished()) return false;
+			LOG_INFO("is not finished");
 
 			if (is_not_begin(current_time)) return false;
+			LOG_INFO("is begin");
 
 			if (is_end(current_time)) return false;
+			LOG_INFO("is not end");
 
 			return true;
 		}
@@ -179,6 +182,12 @@ namespace cheap {
 
 			mBegin_time = aBegin_time;
 			mEnd_time = mBegin_time + aDuration;
+		}
+
+		void update_time()
+		{
+			mBegin_time = mEnd_time;
+			mEnd_time += mDuration;
 		}
 
 		// reset Begin, End
@@ -243,13 +252,17 @@ namespace cheap {
 		{
 			if (aCurrent_time < mEnd_time) return false;
 
+			//LOG_INFO("mCount = " << mCount);
 			if (is_loop() || --mCount > 0)
 				return update_replay_time_and_return_false();
 
+			//LOG_INFO("--mCount = " << mCount);
 
+
+			// 这句的意思是，如果是 shuttle 往复动画，动画起点与终点的状态相同，就不需要更改 顶点信息
 			if (mIs_shuttle) return true;
 
-			//TODO
+			// 如果 gfx entity 不为空，在动画结束时，更新 顶点数据
 			if (mGraphics_entity != nullptr)
 				on_end_update_graphics_entity_vertices();
 			else
@@ -267,9 +280,7 @@ namespace cheap {
 		// 如果有剩余次数/循环、更新时间。然后为 is_end() 函数返回一个 false 
 		bool update_replay_time_and_return_false()
 		{
-			update_time(
-				mEnd_time,
-				mEnd_time - mBegin_time);
+			update_time();
 
 			return false;
 		}

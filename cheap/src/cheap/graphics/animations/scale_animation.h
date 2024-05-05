@@ -58,7 +58,7 @@ namespace cheap {
 		[[nodiscard]] glm::mat4 get(const double aCurrent_time) const
 		{
 			const double factor = get_frame(aCurrent_time);
-			if (factor > 1.)
+			if (factor > 1.0)
 				LOG_INFO("factor 炸了，操你妈，怎么 > 1 啊？？？");
 
 			return transform::get_scale(
@@ -70,10 +70,10 @@ namespace cheap {
 
 		void on_end_update_graphics_entity_vertices() override
 		{
-			mGraphics_entity->mGraphics_rectangle.update_scale(mScalar[0], mScalar[1], mScalar[2]);
+			mGraphics_entity->mGraphics_rectangle.update_scale(mScalar[0] + 1.f, mScalar[1] + 1.f, mScalar[2] + 1.f);
 		}
 
-	private:
+	protected:
 		float mScalar[3];
 	};
 

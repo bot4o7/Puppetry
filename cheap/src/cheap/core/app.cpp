@@ -16,11 +16,11 @@ namespace cheap {
 				aWidth,
 				aHeight,
 				[this](event* aEvent) {this->on_event(aEvent); },
-				[this]() {this->update(); })), mLayer_manager(std::make_shared<layer_manager>()),
-		mRenderer(std::make_shared<renderer>(mWindow, mLayer_manager)),
+				[this]() {this->update(); })),
+		mRenderer(std::make_shared<renderer>(mWindow)),
 		mInput_system(std::make_shared<input_system>(mWindow->get_raw_window())
 		),
-		mEvent_system(std::make_shared <event_system>(mWindow, mLayer_manager, mRenderer, mInput_system))
+		mEvent_system(std::make_shared <event_system>(mWindow, mRenderer, mInput_system))
 	{
 		LOG();
 	}
@@ -65,14 +65,16 @@ namespace cheap {
 			true,
 			true);
 
-		mRenderer->add_new_task(&task);
-		mRenderer->add_new_task(&task2);
+		page mPage("src/cheap/graphics/base/shaders/vertex", "src/cheap/graphics/base/shaders/fragment", mWindow->get_aspect_ratio());
+
+		mPage.mLayer_manager.add_layer(&task);
+		mPage.mLayer_manager.add_layer(&task2);
 		double a_time = glfwGetTime();
 
 
 
-		animation* anim1 = new translation_animation(-0.5f, -0.2f, 1.0f, a_time, 4, animation::relationship::LINEAR, false);
-		animation* anim2 = new scale_animation(1.5f, 1.5f, 1.0f, a_time, 4, animation::relationship::LINEAR, true);
+		animation* anim1 = new translation_animation(-0.5f, -0.2f, 1.0f, a_time, 4, 999, animation::relationship::LINEAR, true);
+		animation* anim2 = new scale_animation(-1.5f, 1.5f, 1.0f, a_time, 4, 999, animation::relationship::LINEAR, false);
 
 
 
@@ -81,13 +83,13 @@ namespace cheap {
 		anim2->set_graphics_entity(&task2);
 
 
-		mRenderer->add_anime(anim1->get_graphics_entity_id(), anim1);
-		mRenderer->add_anime(anim2->get_graphics_entity_id(), anim2);
+		mPage.mLayer_manager.add_anime(anim1->get_graphics_entity_id(), anim1);
+		mPage.mLayer_manager.add_anime(anim2->get_graphics_entity_id(), anim2);
 
 
 
-		anim1->replay(a_time + 1);
-		anim2->replay(a_time + 2);
+		//anim1->replay(a_time + 1);
+		//anim2->replay(a_time + 2);
 		while (app::is_running()) {
 			/*if (const float current_frame = static_cast<float>(glfwGetTime()); current_frame - last_frame > 2.0f) {
 				constexpr float       pace = 0.1f;
@@ -105,7 +107,8 @@ namespace cheap {
 				anim2->replay(current);*/
 
 			mRenderer->clear();
-			mRenderer->draw_layers(current);
+			//mRenderer->draw_layers(&mPage, current);
+			mRenderer->draw(current);
 			mRenderer->update();
 
 		}
