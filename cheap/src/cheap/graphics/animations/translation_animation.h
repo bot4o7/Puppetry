@@ -54,7 +54,17 @@ namespace cheap {
 
 		}
 
-		[[nodiscard]] glm::mat4 get(const double aCurrent_time)
+		void set(const double aCurrent_time) const
+		{
+			const double factor = get_frame(aCurrent_time);
+
+			mGraphics_entity->mUniform.mTranslation = transform::get_translate(
+				mOffset[0] * factor,
+				mOffset[1] * factor,
+				mOffset[2] * factor);
+		}
+
+		[[nodiscard]] glm::mat4 get(const double aCurrent_time) const
 		{
 			const double factor = get_frame(aCurrent_time);
 
@@ -66,9 +76,10 @@ namespace cheap {
 
 		void on_end_update_graphics_entity_vertices() override
 		{
-			mGraphics_entity->mGraphics_rectangle.update_translation(mOffset[0], mOffset[1], mOffset[2]);
+			//mGraphics_entity->mVertex_layout.update_translation(mOffset[0], mOffset[1], mOffset[2]);
+			mGraphics_entity->mVertex_layout.update_translation(mOffset[0], mOffset[1], mOffset[2]);
 		}
-	private:
+	protected:
 		float mOffset[3];
 	};
 

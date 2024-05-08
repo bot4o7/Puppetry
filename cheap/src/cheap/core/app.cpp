@@ -38,53 +38,15 @@ namespace cheap {
 		//const float                   begin_frame = static_cast<float>(glfwGetTime());
 		//float     last_frame = begin_frame;
 
-
-		graphics_entity task(
-			1,
-			graphics_entity::type::OBJ,
-			0.5f, 0.0f, -0.1f,
-			true,
-			0.5f,
-			1.0f,
-			"data/images/ys.png",
-			true,
-			true,
-			false,
-			true,
-			true);
-		graphics_entity task2(
-			2,
-			graphics_entity::type::OBJ,
-			-0.2f, 0.0f, 0.1f,
-			true, 0.5f,
-			1.0f,
-			"data/images/friends.png",
-			true,
-			true,
-			false,
-			true,
-			true);
-
-		page mPage("src/cheap/graphics/base/shaders/vertex", "src/cheap/graphics/base/shaders/fragment", mWindow->get_aspect_ratio());
-
-		mPage.mLayer_manager.add_layer(&task);
-		mPage.mLayer_manager.add_layer(&task2);
+		//mPage.mLayer_manager.add_layer(&task);
+		//mPage.mLayer_manager.add_layer(&task2);
 		double a_time = glfwGetTime();
 
 
 
-		animation* anim1 = new translation_animation(-0.5f, -0.2f, 1.0f, a_time, 4, 999, animation::relationship::LINEAR, true);
-		animation* anim2 = new scale_animation(-1.5f, 1.5f, 1.0f, a_time, 4, 999, animation::relationship::LINEAR, false);
 
-
-
-
-		anim1->set_graphics_entity(&task);
-		anim2->set_graphics_entity(&task2);
-
-
-		mPage.mLayer_manager.add_anime(anim1->get_graphics_entity_id(), anim1);
-		mPage.mLayer_manager.add_anime(anim2->get_graphics_entity_id(), anim2);
+		//mPage.mLayer_manager.add_anime(anim1->get_graphics_entity_id(), anim1);
+		//mPage.mLayer_manager.add_anime(anim2->get_graphics_entity_id(), anim2);
 
 
 

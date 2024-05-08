@@ -72,6 +72,41 @@ namespace cheap {
 			float aScale_x,
 			float aScale_y,
 			float aScale_z);
+		// set a scale transform
+		[[nodiscard]] static glm::mat4 update_scale(
+			const glm::mat4& aTo_scale,
+			const float      aScale_x,
+			const float      aScale_y,
+			const float      aScale_z)
+		{
+			return scale(
+				aTo_scale,
+				glm::vec3(aScale_x, aScale_y, aScale_z));
+		}
+		// set a rotate transform
+		[[nodiscard]] static glm::mat4 update_rotate(
+			const glm::mat4& aTo_rotate,
+			const float      aAngle_degree,
+			const float      aAxis_x,
+			const float      aAxis_y,
+			const float      aAxis_z)
+		{
+			return rotate(
+				aTo_rotate,
+				glm::radians(aAngle_degree),
+				glm::vec3(aAxis_x, aAxis_y, aAxis_z));
+		}
+		// set a translation transform
+		[[nodiscard]] static glm::mat4 set_translate(
+			const glm::mat4& aTo_translate,
+			const float      aOffset_x,
+			const float      aOffset_y,
+			const float      aOffset_z)
+		{
+			return translate(
+				aTo_translate,
+				glm::vec3(aOffset_x, aOffset_y, aOffset_z));
+		}
 		// get a rotate transform
 		[[nodiscard]] static glm::mat4 get_rotate(
 			float aAngle_degree,

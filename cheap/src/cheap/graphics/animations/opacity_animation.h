@@ -53,6 +53,17 @@ namespace cheap {
 			return mOpacity * static_cast<float>(get_frame(aCurrent_time));
 		}
 
+		void set(const double aCurrent_time) const
+		{
+			mGraphics_entity->mUniform.mOpacity = mOpacity * static_cast<float>(get_frame(aCurrent_time));
+		}
+
+
+		void on_end_update_graphics_entity_vertices() override
+		{
+			mGraphics_entity->mUniform.mOpacity = mOpacity;
+		}
+
 	private:
 		float mOpacity;
 	};

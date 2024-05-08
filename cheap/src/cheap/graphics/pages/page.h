@@ -2,9 +2,11 @@
 
 #include <ranges>
 
-#include "../layers/layer_manager.h"
 #include "../../entity/graphics_entity.h"
 #include "../animations/animation.h"
+#include "../animations/translation_animation.h"
+#include "../animations/scale_animation.h"
+#include "../animations/opacity_animation.h"
 #include "../base/shader_program.h"
 
 namespace cheap {
@@ -33,12 +35,12 @@ namespace cheap {
 
 		std::vector<unsigned int> mOn_hover_list;
 		//animation* mOn_hover_animation;
-
-		void add_hover_animation_to_layer(unsigned int aGraphics_entity_id)
+		// TODO
+		static void add_hover_animation_to_layer(unsigned int aGraphics_entity_id, const double current_time)
 		{
-			if (layer* target_layer = mLayer_manager.get_layer(aGraphics_entity_id); target_layer != nullptr) {
-				target_layer->set_anim()
-			}
+			/*if (layer* target_layer = mLayer_manager.get_layer(aGraphics_entity_id); target_layer != nullptr) {
+				target_layer->set_anim(new animation())
+			}*/
 		}
 
 
@@ -50,14 +52,24 @@ namespace cheap {
 			const float aWindow_aspect_ratio)
 			:
 			mId(aId),
-			mHash_graphics_entity(std::unordered_map<unsigned int, graphics_entity*>()),
-			mLayer_manager(layer_manager()),
+			mHash_graphics_entity(std::unordered_map<unsigned int, element*>()),
 			mShader_program(
 				aVertex_path,
 				aFragment_path,
 				aWindow_aspect_ratio)
 		{
+			LOG();
+		}
 
+		page(
+			page&& aPage) noexcept
+			:
+			mId(aPage.mId),
+			mHash_graphics_entity(aPage.mHash_graphics_entity),
+			mShader_program(
+				aPage.mShader_program)
+		{
+			LOG();
 		}
 
 		// TODO 我现在把 gfx entity 生命周期在page里结束，但以后我要
@@ -69,28 +81,26 @@ namespace cheap {
 		}
 
 
-		void bind()
+		void bind() const
 		{
 			mShader_program.bind();
 		}
 
 
-		layer_manager* get_layer_manager()
-		{
-			return &mLayer_manager;
-		}
-
+		//TODO
 		// add on top
 		void add_new_layer(graphics_entity* aGraphics_entity)
 		{
-			mLayer_manager.add_layer(aGraphics_entity);
+			//mLayer_manager.add_layer(aGraphics_entity);
+			mHash_graphics_entity.emplace(aGraphics_entity->mId, new element(aGraphics_entity));
 		}
 
+		// TODO
 		// remove
 		void remove_and_delete_layer(
 			const unsigned int aGraphics_entity_id)
 		{
-			mLayer_manager.remove_and_delete_layer(aGraphics_entity_id);
+			//mLayer_manager.remove_and_delete_layer(aGraphics_entity_id);
 		}
 
 		// set graphics_entity invisible or visible
@@ -98,52 +108,110 @@ namespace cheap {
 			const unsigned int aGraphics_entity_id, const bool aIs_visible = true)
 		{
 			if (mHash_graphics_entity.contains(aGraphics_entity_id))
-				mHash_graphics_entity[aGraphics_entity_id]->mIs_visible = aIs_visible;
+				mHash_graphics_entity[aGraphics_entity_id]->mGraphics_entity->mIs_visible = aIs_visible;
 		}
 
 		// 我认为，“收到输入事件后，决定做什么” 并不是 graphics_entity 的职责
 		// graphics_entity，甚至 graphics 相关的类，都应该只是负责图形相关的内容，
 		// 事件处理什么的，顶多做到 “记录事件处理器的id”、”记录详细处理事件的类的指针“ 之类的
 
-		//std::unordered_map<unsigned int, graphics_entity> mHash_graphics_entity;
+
+
+		void use_gfx_entity_uniform(
+			const graphics_entity* aGraphics_entity) const
+		{
+			mShader_program.bind_projection();
+			mShader_program.bind_view();
+
+			mShader_program.use_translation(aGraphics_entity->mUniform.mTranslation);
+			mShader_program.use_rotation(aGraphics_entity->mUniform.mRotation);
+			mShader_program.use_scale(aGraphics_entity->mUniform.mScale);
+
+			mShader_program.use_opacity(aGraphics_entity->mUniform.mOpacity);
 
 
 
+			mShader_program.use_color(aGraphics_entity->mUniform.mColor);
 
-		void add_anime(unsigned int aGraphics_entity_id,
+
+		}
+
+		void static update_gfx_entity_animation(animation* aAnimation,
+			const double current_time)
+		{
+			if (aAnimation->is_to_play(current_time)) {
+				switch (aAnimation->get_type()) {
+					case animation::type::SCALE:
+						dynamic_cast<scale_animation*>(aAnimation)->set(current_time);
+						break;
+					case animation::type::OPACITY:
+						dynamic_cast<opacity_animation*>(aAnimation)->set(current_time);
+					case animation::type::COLOR:
+						break;
+					case animation::type::REFLECTION:
+						break;
+					case animation::type::ROTATION:
+						break;
+					case animation::type::SHIFT:
+						break;
+					case animation::type::TRANSLATION:
+						dynamic_cast<translation_animation*>(aAnimation)->set(current_time);
+					default:
+						LOG_INFO("no such type");
+				}
+			}
+		}
+
+		void draw(
+			const unsigned int aTexture_slot,
+			const double       current_time) const
+		{
+			mShader_program.use(aTexture_slot);
+
+			for (const auto val : mHash_graphics_entity | std::views::values) {
+				val->mGraphics_entity->before_draw(aTexture_slot);
+				for (const auto anim : val->mAnimation_list) {
+					update_gfx_entity_animation(anim, current_time);
+				}
+				use_gfx_entity_uniform(val->mGraphics_entity);
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
+			}
+		}
+
+		// TODO
+		void add_anime(
+			const unsigned int aGraphics_entity_id,
 			animation* aAnimation)
 		{
-			mLayer_manager.add_anime(aGraphics_entity_id,
-				aAnimation);
+			if (mHash_graphics_entity.contains(aGraphics_entity_id)) {
+				aAnimation->set_graphics_entity(mHash_graphics_entity[aGraphics_entity_id]->mGraphics_entity);
+				mHash_graphics_entity[aGraphics_entity_id]->mAnimation_list.emplace_back(aAnimation);
+			}
 		}
 
-		void reset_uniform(bool* aIndex)
+		struct element
 		{
-			if (aIndex[0])
-				mShader_program.bind_projection();
-			if (aIndex[1])
-				mShader_program.bind_view();
-			if (aIndex[2])
-				mShader_program.bind_translation();
-			if (aIndex[3])
-				mShader_program.bind_rotation();
-			if (aIndex[4])
-				mShader_program.bind_scale();
-			if (aIndex[5])
-				mShader_program.bind_opacity();
-			if (aIndex[6])
-				mShader_program.bind_color();
-		}
+			graphics_entity* mGraphics_entity;
+			std::vector<animation*> mAnimation_list;
+
+			explicit element(graphics_entity* aGraphics_entity) :
+				mGraphics_entity(aGraphics_entity),
+				mAnimation_list(std::vector<animation*>())
+			{
+				LOG();
+			}
+			~element()
+			{
+				delete mGraphics_entity;
+				for (const auto animation : mAnimation_list)
+					delete animation;
+			}
+		};
 
 
-
-
-		std::unordered_map<unsigned int, graphics_entity*> mHash_graphics_entity;
-
-		layer_manager mLayer_manager;
+		std::unordered_map<unsigned int, element*> mHash_graphics_entity;
 		shader_program mShader_program;
-
-
 
 	};
 }

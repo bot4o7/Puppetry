@@ -3,7 +3,6 @@
 #include "../events/event_system.h"
 #include "../events/input_system.h"
 #include "../graphics/renderer.h"
-#include "../graphics/layers/layer_manager.h"
 
 #ifdef CP_OPENGL_API
 namespace cheap {

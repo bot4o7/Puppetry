@@ -73,6 +73,7 @@ namespace cheap {
 		void on_end_update_graphics_entity_vertices() override
 		{
 			//mGraphics_entity->mGraphics_rectangle
+			//mGraphics_entity->mUniform
 		}
 	private:
 		float mAngle_degree;

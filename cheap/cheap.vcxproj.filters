@@ -63,15 +63,6 @@
     <ClInclude Include="src\cheap\graphics\base\base.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\graphics\base\vertex_array.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cheap\graphics\base\texture.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cheap\graphics\graphics_rectangle.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\cheap\graphics\base\transform.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -84,19 +75,10 @@
     <ClInclude Include="src\cheap\events\input_system.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\graphics\layers\layer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cheap\graphics\layers\layer_manager.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\cheap\entity\graphics_entity.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\cheap\events\input\mouse_button.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cheap\graphics\graphics_text.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\cheap\graphics\animations\animation.h">
@@ -132,6 +114,9 @@
     <ClInclude Include="src\cheap\commands\render_command.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\cheap\entity\new_texture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cheap\core\app.cpp">
@@ -158,15 +143,6 @@
     <ClCompile Include="src\cheap\graphics\base\shader_program.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\graphics\base\vertex_array.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cheap\graphics\base\texture.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cheap\graphics\graphics_rectangle.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\cheap\graphics\base\transform.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -176,19 +152,10 @@
     <ClCompile Include="src\cheap\events\input_system.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\graphics\layers\layer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cheap\graphics\layers\layer_manager.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\cheap\entity\entity.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\cheap\entity\graphics_entity.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cheap\graphics\graphics_text.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\cheap\graphics\animations\animation.cpp">
@@ -222,6 +189,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\cheap\commands\render_command.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cheap\entity\new_texture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

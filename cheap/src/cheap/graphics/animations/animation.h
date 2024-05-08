@@ -42,6 +42,8 @@ namespace cheap {
 			SQUARE,
 		};
 
+		graphics_entity* mGraphics_entity;
+
 
 		[[nodiscard]] double get_frame(const double aCurrent_time) const
 		{
@@ -295,8 +297,7 @@ namespace cheap {
 			return mGraphics_entity->mId;
 		}
 
-	protected:
-		graphics_entity* mGraphics_entity;
+
 	private:
 		type mType;
 		relationship mRelationship;
