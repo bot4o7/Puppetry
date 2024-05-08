@@ -48,7 +48,7 @@ namespace cheap {
 		void add_new_task(unsigned int aPage_id, graphics_entity* aGraphics_entity)
 		{
 			if (mHash_page_list.contains(aPage_id)) {
-				mHash_page_list[aPage_id].add_new_layer(aGraphics_entity);
+				mHash_page_list[aPage_id]->add_new_layer(aGraphics_entity);
 			} else {
 				LOG_INFO("renderer::could not find page with id=" << aPage_id);
 			}
@@ -58,7 +58,7 @@ namespace cheap {
 		{
 			if (mCurrent_page->mId != aPage_id) {
 				if (mHash_page_list.contains(aPage_id)) {
-					mCurrent_page = &mHash_page_list[aPage_id];
+					mCurrent_page = mHash_page_list[aPage_id];
 				}
 			}
 		}
@@ -70,7 +70,7 @@ namespace cheap {
 		void draw_page(unsigned int aPage_id, double current_time, int aTexture_slot = GL_TEXTURE0)
 		{
 			if (mHash_page_list.contains(aPage_id)) {
-				draw_page(&mHash_page_list[aPage_id], current_time, aTexture_slot);
+				draw_page(mHash_page_list[aPage_id], current_time, aTexture_slot);
 			} else {
 				LOG_INFO("renderer::could not find page with id=" << aPage_id);
 			}
@@ -139,11 +139,15 @@ namespace cheap {
 
 		void init_current_page()
 		{
-			mCurrent_page = new page(
+
+
+			mCurrent_page = new page(0,
 				(mShader_path + VERTEX_SHADER_FILENAME).c_str(),
 				(mShader_path + FRAGMENT_SHADER_FILENAME).c_str(),
 				mWindow->get_aspect_ratio()
 			);
+
+			mHash_page_list[0] = mCurrent_page;
 
 			mCurrent_page->add_new_layer
 			(new graphics_entity(
@@ -242,7 +246,7 @@ namespace cheap {
 		std::string mFragment_shader_filename;
 
 		// page_id to page
-		std::unordered_map<unsigned int, page> mHash_page_list;
+		std::unordered_map<unsigned int, page*> mHash_page_list;
 		// 我还需要做一个 default page?真麻烦啊
 		page* mCurrent_page;
 

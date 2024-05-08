@@ -12,7 +12,7 @@ namespace cheap {
 		mPic_path(PIC_PATH),
 		mVertex_shader_filename(VERTEX_SHADER_FILENAME),
 		mFragment_shader_filename(FRAGMENT_SHADER_FILENAME),
-		mHash_page_list(std::unordered_map<unsigned int, page>()),
+		mHash_page_list(std::unordered_map<unsigned int, page*>()),
 		mCurrent_page(nullptr),
 		mWindow(aWindow)
 	{
@@ -30,6 +30,9 @@ namespace cheap {
 	renderer::~renderer()
 	{
 		LOG();
+		for (const auto page_ptr : mHash_page_list | std::views::values) {
+			delete page_ptr;
+		}
 	}
 
 	void renderer::clear()

@@ -39,7 +39,7 @@ namespace cheap {
 		//float     last_frame = begin_frame;
 
 
-		graphics_entity task(
+		/*graphics_entity task(
 			1,
 			graphics_entity::type::OBJ,
 			0.5f, 0.0f, -0.1f,
@@ -65,7 +65,7 @@ namespace cheap {
 			true,
 			true);
 
-		page mPage("src/cheap/graphics/base/shaders/vertex", "src/cheap/graphics/base/shaders/fragment", mWindow->get_aspect_ratio());
+		page mPage(0, "src/cheap/graphics/base/shaders/vertex", "src/cheap/graphics/base/shaders/fragment", mWindow->get_aspect_ratio());
 
 		mPage.mLayer_manager.add_layer(&task);
 		mPage.mLayer_manager.add_layer(&task2);
@@ -85,11 +85,11 @@ namespace cheap {
 
 		mPage.mLayer_manager.add_anime(anim1->get_graphics_entity_id(), anim1);
 		mPage.mLayer_manager.add_anime(anim2->get_graphics_entity_id(), anim2);
+*/
 
 
-
-		//anim1->replay(a_time + 1);
-		//anim2->replay(a_time + 2);
+//anim1->replay(a_time + 1);
+//anim2->replay(a_time + 2);
 		while (app::is_running()) {
 			/*if (const float current_frame = static_cast<float>(glfwGetTime()); current_frame - last_frame > 2.0f) {
 				constexpr float       pace = 0.1f;
