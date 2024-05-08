@@ -84,6 +84,14 @@ namespace cheap {
 			}
 		}
 
+		layer* get_layer(unsigned int aGraphics_entity_id)
+		{
+			if (mHash_id_to_layer.contains(aGraphics_entity_id)) {
+				return mHash_id_to_layer[aGraphics_entity_id]->mLayer;
+			}
+			return nullptr;
+		}
+
 		[[nodiscard]] level* get_top_layer_level() const
 		{
 			//LOG();

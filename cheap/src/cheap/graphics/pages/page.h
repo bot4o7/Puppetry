@@ -11,28 +11,45 @@ namespace cheap {
 	class page
 	{
 	public:
-		struct item
-		{
-			graphics_entity* mGraphics_entity;
-			std::vector<animation*> mAnimation_list;
+		//struct item
+		//{
+		//	graphics_entity* mGraphics_entity;
+		//	std::vector<animation*> mAnimation_list;
 
-			// 初始化时，由高层往底层遍历、添加，这样如果有拦截的，就可以直接结束遍历了
-			std::vector<unsigned int> mOn_hover_list;
-			std::vector<unsigned int> mOn_click_list;
-			std::vector<unsigned int> mOn_key_press_list;
-			std::vector<unsigned int> mOn_key_repeat_list;
-		};
+		//	// 初始化时，由高层往底层遍历、添加，这样如果有拦截的，就可以直接结束遍历了
+		//	std::vector<unsigned int> mOn_hover_list;
+		//	std::vector<unsigned int> mOn_click_list;
+		//	std::vector<unsigned int> mOn_key_press_list;
+		//	std::vector<unsigned int> mOn_key_repeat_list;
+		//};
 		// 程序在页面page切换时，记录当前page为current page
 		// 用户点击屏幕时，程序得到一个点击事件、移动光标时，也得到点击事件
 		// 点击事件会被拿到current page检查是否有接受点击的，如果有，那么接收后做什么
 		// 光标悬停事件也如此。
 
 
+		unsigned int mId;
+
+
+		std::vector<unsigned int> mOn_hover_list;
+		//animation* mOn_hover_animation;
+
+		void add_hover_animation_to_layer(unsigned int aGraphics_entity_id)
+		{
+			if (layer* target_layer = mLayer_manager.get_layer(aGraphics_entity_id); target_layer != nullptr) {
+				target_layer->set_anim()
+			}
+		}
+
+
+
 		page(
+			const unsigned int aId,
 			const char* aVertex_path,
 			const char* aFragment_path,
 			const float aWindow_aspect_ratio)
 			:
+			mId(aId),
 			mHash_graphics_entity(std::unordered_map<unsigned int, graphics_entity*>()),
 			mLayer_manager(layer_manager()),
 			mShader_program(
@@ -120,8 +137,13 @@ namespace cheap {
 
 
 
+
 		std::unordered_map<unsigned int, graphics_entity*> mHash_graphics_entity;
+
 		layer_manager mLayer_manager;
 		shader_program mShader_program;
+
+
+
 	};
 }

@@ -108,7 +108,7 @@ namespace cheap {
 
 			mRenderer->clear();
 			//mRenderer->draw_layers(&mPage, current);
-			mRenderer->draw(current);
+			mRenderer->draw_current_page(current);
 			mRenderer->update();
 
 		}

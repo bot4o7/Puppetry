@@ -11,7 +11,6 @@
 
 namespace cheap {
 
-
 	// --------------------- file path ---------------------------------
 	#define SHADER_PATH "src/cheap/graphics/base/shaders/"
 	#define PIC_PATH "src/cheap/graphics/pic/"
@@ -39,17 +38,46 @@ namespace cheap {
 
 		~renderer();
 
+		// add to current_page
 		void add_new_task(graphics_entity* aGraphics_entity) const
 		{
 			if (mCurrent_page != nullptr)
 				mCurrent_page->add_new_layer(aGraphics_entity);
 		}
 
+		void add_new_task(unsigned int aPage_id, graphics_entity* aGraphics_entity)
+		{
+			if (mHash_page_list.contains(aPage_id)) {
+				mHash_page_list[aPage_id].add_new_layer(aGraphics_entity);
+			} else {
+				LOG_INFO("renderer::could not find page with id=" << aPage_id);
+			}
+		}
+
+		void switch_current_page(unsigned int aPage_id)
+		{
+			if (mCurrent_page->mId != aPage_id) {
+				if (mHash_page_list.contains(aPage_id)) {
+					mCurrent_page = &mHash_page_list[aPage_id];
+				}
+			}
+		}
+
 		static void clear();
+		// draw layers of page
+		void draw_page(page* aPage, double current_time, int aTexture_slot = GL_TEXTURE0);
 
-		void draw_layers(page* aPage, double current_time, int aTexture_slot = GL_TEXTURE0);
+		void draw_page(unsigned int aPage_id, double current_time, int aTexture_slot = GL_TEXTURE0)
+		{
+			if (mHash_page_list.contains(aPage_id)) {
+				draw_page(&mHash_page_list[aPage_id], current_time, aTexture_slot);
+			} else {
+				LOG_INFO("renderer::could not find page with id=" << aPage_id);
+			}
+		}
 
-		void draw(double current_time, int aTexture_slot = GL_TEXTURE0)
+		// draw layers of current_page
+		void draw_current_page(double current_time, int aTexture_slot = GL_TEXTURE0)
 		{
 			if (mCurrent_page == nullptr) return;
 
@@ -132,16 +160,6 @@ namespace cheap {
 				false,
 				false
 			));
-
-			/*mCurrent_page->add_anime(0, new opacity_animation(
-				0.2f,
-				glfwGetTime(),
-				10.0,
-				9999,
-				animation::relationship::LINEAR,
-				true
-			));*/
-
 
 			mCurrent_page->add_new_layer
 			(new graphics_entity(

@@ -94,13 +94,12 @@ namespace cheap {
 	//		}
 	//}
 
-	void renderer::draw_layers(page* aPage, const double current_time, const int aTexture_slot)
+	void renderer::draw_page(page* aPage, const double current_time, const int aTexture_slot)
 	{
 		if (aPage == nullptr) return;
 
 		aPage->bind();
 
-		static unsigned int current_page_id;
 		// 0.proj
 		// 1.view
 		// 2.trans
