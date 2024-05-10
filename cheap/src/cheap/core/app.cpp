@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "app.h"
 
+#include "visual_novel.h"
 #include "../events/event.h"
 #include "../graphics/renderer.h"
 #include "../graphics/animations/scale_animation.h"
@@ -34,82 +35,39 @@ namespace cheap {
 	{
 		LOG();
 
-		//const renderer                      my_renderer(mWindow, mLayer_manager);
-		//const float                   begin_frame = static_cast<float>(glfwGetTime());
-		//float     last_frame = begin_frame;
+		/*mRenderer->add_new_task(0, new graphics_entity(
+			9, graphics_entity::type::UI, 0.f, 0.f, -0.4f, 0.3f, 1.f, "data/images/fumo.jpg", false, true, false, true, false)
+		);*/
 
+		visual_novel vn(1, "data/1.txt");
 
-		/*graphics_entity task(
-			1,
-			graphics_entity::type::OBJ,
-			0.5f, 0.0f, -0.1f,
-			true,
-			0.5f,
-			1.0f,
-			"data/images/ys.png",
-			true,
-			true,
-			false,
-			true,
-			true);
-		graphics_entity task2(
-			2,
-			graphics_entity::type::OBJ,
-			-0.2f, 0.0f, 0.1f,
-			true, 0.5f,
-			1.0f,
-			"data/images/friends.png",
-			true,
-			true,
-			false,
-			true,
-			true);
+		mEvent_system->set_vn(&vn);
 
-		page mPage(0, "src/cheap/graphics/base/shaders/vertex", "src/cheap/graphics/base/shaders/fragment", mWindow->get_aspect_ratio());
+		//double begin = glfwGetTime();
+		//double space = 5;
 
-		mPage.mLayer_manager.add_layer(&task);
-		mPage.mLayer_manager.add_layer(&task2);
-		double a_time = glfwGetTime();
-
-
-
-		animation* anim1 = new translation_animation(-0.5f, -0.2f, 1.0f, a_time, 4, 999, animation::relationship::LINEAR, true);
-		animation* anim2 = new scale_animation(-1.5f, 1.5f, 1.0f, a_time, 4, 999, animation::relationship::LINEAR, false);
-
-
-
-
-		anim1->set_graphics_entity(&task);
-		anim2->set_graphics_entity(&task2);
-
-
-		mPage.mLayer_manager.add_anime(anim1->get_graphics_entity_id(), anim1);
-		mPage.mLayer_manager.add_anime(anim2->get_graphics_entity_id(), anim2);
-*/
-
-
-//anim1->replay(a_time + 1);
-//anim2->replay(a_time + 2);
 		while (app::is_running()) {
-			/*if (const float current_frame = static_cast<float>(glfwGetTime()); current_frame - last_frame > 2.0f) {
-				constexpr float       pace = 0.1f;
-				const float delta_frame = current_frame - begin_frame;
 
-				last_frame = current_frame;
-			}*/
 			float current = glfwGetTime();
 
-
-
-			/*if (anim1->is_finished())
-				anim1->replay(current);
-			if (anim2->is_finished())
-				anim2->replay(current);*/
-
 			mRenderer->clear();
-			//mRenderer->draw_layers(&mPage, current);
+			if (vn.is_ready_to_page()) {
+				vn.next_page();
+
+				LOG_INFO(vn.mCurrent.mId);
+				LOG_INFO(vn.mCurrent.mFile_path);
+				LOG_INFO(vn.mCurrent.mPage_param->id);
+				LOG_INFO(vn.mCurrent.mPage_param->graphics_entity_num);
+				LOG_INFO(vn.mCurrent.mPage_param->param_list);
+
+
+				mRenderer->prepare_page_param(vn.mCurrent.mPage_param);
+
+				vn.reset_is_ready_to_page();
+			}
 			mRenderer->draw_current_page(current);
 			mRenderer->update();
+
 
 		}
 	}

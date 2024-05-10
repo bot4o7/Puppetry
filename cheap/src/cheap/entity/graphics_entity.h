@@ -8,9 +8,9 @@ namespace cheap {
 	public:
 		enum class type
 		{
-			UI,
-			OBJ,
-			BG
+			UI = 1,
+			OBJ = 2,
+			BG = 3
 		};
 
 		type mType;
@@ -27,6 +27,7 @@ namespace cheap {
 		bool mIs_receive_mouse;
 		bool mIs_receive_keyboard;
 		graphics_rectangle mGraphics_rectangle;
+		bool mIs_playing_animation;
 
 		// data
 		// on_event_list
@@ -73,7 +74,8 @@ namespace cheap {
 				mWidth,
 				mHeight,
 				mPic_file_path.c_str(),
-				mIs_RGBA)
+				mIs_RGBA),
+			mIs_playing_animation(false)
 		{
 			LOG();
 		}
@@ -83,7 +85,6 @@ namespace cheap {
 			const float        aX,
 			const float        aY,
 			const float        aZ,
-			const bool         aPlaceholder_width,
 			const float        aHeight,
 			const float        aOpacity,
 			const std::string& aPic_file_path,
@@ -155,7 +156,8 @@ namespace cheap {
 				mWidth,
 				true,
 				mPic_file_path.c_str(),
-				mIs_RGBA)
+				mIs_RGBA),
+			mIs_playing_animation(false)
 		{
 			LOG();
 		}

@@ -15,14 +15,17 @@ namespace cheap {
 			const double aBegin_time,
 			const double aDuration,
 			const relationship aRelationship,
-			const bool aIs_shuttle)
+			const bool aIs_shuttle,
+			graphics_entity* aGraphics_entity = nullptr
+		)
 			:
 			animation(
 				type::TRANSLATION,
 				aIs_shuttle,
 				aBegin_time,
 				aDuration,
-				aRelationship),
+				aRelationship,
+				aGraphics_entity),
 			mOffset{ aX,aY,aZ }
 		{
 			LOG();
@@ -35,7 +38,9 @@ namespace cheap {
 			const double aDuration,
 			const unsigned int aCount,
 			const relationship aRelationship,
-			const bool aIs_shuttle)
+			const bool aIs_shuttle,
+			graphics_entity* aGraphics_entity = nullptr
+		)
 			:
 			animation(
 				type::TRANSLATION,
@@ -43,7 +48,8 @@ namespace cheap {
 				aBegin_time,
 				aDuration,
 				aCount,
-				aRelationship),
+				aRelationship,
+				aGraphics_entity),
 			mOffset{ aX,aY,aZ }
 		{
 			LOG();

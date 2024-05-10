@@ -6,6 +6,8 @@
 #include "../../entity/graphics_entity.h"
 #include "../animations/animation.h"
 #include "../base/shader_program.h"
+#include "../../events/input_event.h"
+#include "../animations/scale_animation.h"
 
 namespace cheap {
 	class page
@@ -34,14 +36,68 @@ namespace cheap {
 		std::vector<unsigned int> mOn_hover_list;
 		//animation* mOn_hover_animation;
 
-		void add_hover_animation_to_layer(unsigned int aGraphics_entity_id)
+		//void add_hover_animation_to_layer(unsigned int aGraphics_entity_id)
+		//{
+		//	if (layer* target_layer = mLayer_manager.get_layer(aGraphics_entity_id); target_layer != nullptr) {
+		//		//target_layer->set_anim()
+		//	}
+		//}
+
+		/*void mouse_call(mouse_event::action aAction, mouse_event* aEvent)
 		{
-			if (layer* target_layer = mLayer_manager.get_layer(aGraphics_entity_id); target_layer != nullptr) {
-				//target_layer->set_anim()
+			for (auto gfx_entity : mHash_graphics_entity | std::views::values) {
+				if (gfx_entity->mIs_receive_mouse) {
+
+				}
 			}
 		}
+		void key_call(mouse_event::action aAction, mouse_event* aEvent)
+		{
+			for (auto gfx_entity : mHash_graphics_entity | std::views::values) {
+				if (gfx_entity->mIs_receive_mouse) {
 
+				}
+			}
+		}*/
 
+		void mouse_call(mouse_event::action aAction, mouse_event* aEvent, double current_time)
+		{
+			static graphics_entity* current_highlight_gfx_entity = nullptr;
+
+			double pos_x;
+			double pos_y;
+			if (aAction == mouse_event::MOVE) {
+				pos_x = ((mouse_move_event*)aEvent)->mX;
+				pos_y = ((mouse_move_event*)aEvent)->mY;
+
+				if (current_highlight_gfx_entity != nullptr) {
+					if (!current_highlight_gfx_entity->is_pos_in_region(pos_x, pos_y)) {
+						mLayer_manager.add_anime(current_highlight_gfx_entity->mId, new scale_animation(0.8f, 0.8f, 1.f, current_time, 0.05, animation::relationship::LINEAR, false, current_highlight_gfx_entity));
+						current_highlight_gfx_entity = nullptr;
+					}
+				}
+			}
+
+			for (auto gfx_entity : mInteractive_entity_list) {
+				if (gfx_entity->mIs_receive_mouse) {
+					switch (aAction) {
+						case mouse_event::MOVE:
+							if (gfx_entity != current_highlight_gfx_entity && gfx_entity->is_pos_in_region(pos_x, pos_y)) {
+								mLayer_manager.add_anime(gfx_entity->mId, new scale_animation(1.25f, 1.25f, 1.f, current_time, 0.05, animation::relationship::LINEAR, false, gfx_entity));
+								current_highlight_gfx_entity = gfx_entity;
+							}
+							break;
+						case mouse_event::PRESS:
+							break;
+						case mouse_event::SCROLL:
+							break;
+						case mouse_event::RELEASE:
+
+							break;
+					}
+				}
+			}
+		}
 
 		page(
 			const unsigned int aId,
@@ -51,6 +107,7 @@ namespace cheap {
 			:
 			mId(aId),
 			mHash_graphics_entity(std::unordered_map<unsigned int, graphics_entity*>()),
+			mInteractive_entity_list(std::vector<graphics_entity*>()),
 			mLayer_manager(layer_manager()),
 			mShader_program(
 				aVertex_path,
@@ -84,6 +141,9 @@ namespace cheap {
 		void add_new_layer(graphics_entity* aGraphics_entity)
 		{
 			mLayer_manager.add_layer(aGraphics_entity);
+			if (aGraphics_entity->mIs_receive_keyboard || aGraphics_entity->mIs_receive_mouse) {
+				mInteractive_entity_list.emplace_back(aGraphics_entity);
+			}
 		}
 
 		// remove
@@ -139,6 +199,8 @@ namespace cheap {
 
 
 		std::unordered_map<unsigned int, graphics_entity*> mHash_graphics_entity;
+
+		std::vector<graphics_entity*> mInteractive_entity_list;
 
 		layer_manager mLayer_manager;
 		shader_program mShader_program;

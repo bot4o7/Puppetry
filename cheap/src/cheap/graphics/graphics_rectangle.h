@@ -99,22 +99,22 @@ namespace cheap {
 			// top right
 			vertices[0] *= aX_scale;
 			vertices[1] *= aY_scale;
-			vertices[2] *= aZ_scale;
+			//vertices[2] *= aZ_scale;
 
 			// bottom ri*=aX_scale;
 			vertices[5] *= aX_scale;
 			vertices[6] *= aY_scale;
-			vertices[7] *= aZ_scale;
+			//vertices[7] *= aZ_scale;
 
 			// bottom le*=aX_scale;
 			vertices[10] *= aX_scale;
 			vertices[11] *= aY_scale;
-			vertices[12] *= aZ_scale;
+			//vertices[12] *= aZ_scale;
 
 			// top left	*=aX_scale;
 			vertices[15] *= aX_scale;
 			vertices[16] *= aY_scale;
-			vertices[17] *= aZ_scale;
+			//vertices[17] *= aZ_scale;
 
 			mVertex_array->update_vbo();
 		}

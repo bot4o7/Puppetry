@@ -1,7 +1,9 @@
 ﻿#pragma once
 
+#include "../core/visual_novel.h"
 #include "base/shader_program.h"
 #include "../core/window.h"
+#include "../events/input_event.h"
 #include "../graphics/layers/layer_manager.h"
 #include "animations/opacity_animation.h"
 #include "animations/reflection_animation.h"
@@ -10,6 +12,7 @@
 #include "pages/page.h"
 
 namespace cheap {
+	struct page_param;
 
 	// --------------------- file path ---------------------------------
 	#define SHADER_PATH "src/cheap/graphics/base/shaders/"
@@ -45,7 +48,8 @@ namespace cheap {
 				mCurrent_page->add_new_layer(aGraphics_entity);
 		}
 
-		void add_new_task(unsigned int aPage_id, graphics_entity* aGraphics_entity)
+		void add_new_task(
+			const unsigned int aPage_id, graphics_entity* aGraphics_entity)
 		{
 			if (mHash_page_list.contains(aPage_id)) {
 				mHash_page_list[aPage_id]->add_new_layer(aGraphics_entity);
@@ -54,7 +58,17 @@ namespace cheap {
 			}
 		}
 
-		void switch_current_page(unsigned int aPage_id)
+		void add_new_task_current_page(graphics_entity* aGraphics_entity) const
+		{
+			if (mCurrent_page != nullptr) {
+				mCurrent_page->add_new_layer(aGraphics_entity);
+			} else {
+				LOG_INFO("renderer::current_page is null");
+			}
+		}
+
+		void switch_current_page(
+			const unsigned int aPage_id)
 		{
 			if (mCurrent_page->mId != aPage_id) {
 				if (mHash_page_list.contains(aPage_id)) {
@@ -65,9 +79,12 @@ namespace cheap {
 
 		static void clear();
 		// draw layers of page
-		void draw_page(page* aPage, double current_time, int aTexture_slot = GL_TEXTURE0);
+		void draw_page(page* aPage, double current_time, int aTexture_slot = GL_TEXTURE0) const;
 
-		void draw_page(unsigned int aPage_id, double current_time, int aTexture_slot = GL_TEXTURE0)
+		void draw_page(
+			const unsigned int aPage_id,
+			const double       current_time,
+			const int          aTexture_slot = GL_TEXTURE0)
 		{
 			if (mHash_page_list.contains(aPage_id)) {
 				draw_page(mHash_page_list[aPage_id], current_time, aTexture_slot);
@@ -77,7 +94,9 @@ namespace cheap {
 		}
 
 		// draw layers of current_page
-		void draw_current_page(double current_time, int aTexture_slot = GL_TEXTURE0)
+		void draw_current_page(
+			const double current_time,
+			const int    aTexture_slot = GL_TEXTURE0) const
 		{
 			if (mCurrent_page == nullptr) return;
 
@@ -91,14 +110,14 @@ namespace cheap {
 			// 4.scale
 			// 5.opacity
 			// 6.color
-			static bool to_reset_uniform[7] = { false, false, false, false, false, false, false };
+			bool to_reset_uniform[7] = { false, false, false, false, false, false, false };
 			for (auto task = mCurrent_page->mLayer_manager.get_top_layer_level(); task != nullptr;)
 				if (task->mLayer->is_show()) {
 					mCurrent_page->mShader_program.set_opacity(task->mLayer->get_opacity());
 
 					if (task->mLayer->get_anim() != nullptr) {
 						//LOG_INFO("anim is not nullptr");
-						if (animation* anim = task->mLayer->get_anim(); anim->is_to_play(current_time)) {
+						if (animation* anim = task->mLayer->get_anim(); !anim->is_graphics_entity_is_playing_anim() && anim->is_to_play(current_time)) {
 							//LOG_INFO("is to play : " << static_cast<unsigned int>(anim->get_type()));
 							switch (anim->get_type()) {
 								case animation::type::TRANSLATION:
@@ -136,6 +155,44 @@ namespace cheap {
 					task = task->mBelow;
 				}
 		}
+		void next_page(page* aPage)
+		{
+			if (aPage == mCurrent_page) return;
+
+
+			mHash_page_list.erase(mCurrent_page->mId);
+			delete mCurrent_page;
+			mCurrent_page = aPage;
+		}
+
+		void prepare_page_param(page_param* aParam)
+		{
+			page* aPage = new page(aParam->id, (mShader_path + VERTEX_SHADER_FILENAME).c_str(),
+				(mShader_path + FRAGMENT_SHADER_FILENAME).c_str(),
+				mWindow->get_aspect_ratio());
+
+			mHash_page_list[aParam->id] = aPage;
+
+			for (int i = 0; i < aParam->graphics_entity_num; ++i) {
+				aPage->add_new_layer(new graphics_entity(
+					aParam->param_list[i]->mId,
+					graphics_entity::type::OBJ,
+					aParam->param_list[i]->mX,
+					aParam->param_list[i]->mY,
+					aParam->param_list[i]->mZ,
+					aParam->param_list[i]->mHeight,
+					1.f,
+					aParam->param_list[i]->mPic_file_path,
+					aParam->param_list[i]->mIs_RGBA,
+					true,
+					false,
+					aParam->param_list[i]->mIs_receive_mouse,
+					true
+				));
+			}
+
+			next_page(aPage);
+		}
 
 		void init_current_page()
 		{
@@ -154,7 +211,6 @@ namespace cheap {
 				0,
 				graphics_entity::type::BG,
 				0.f, 0.f, 0.9f,
-				true,
 				1.f,
 				1.f,
 				"data/images/egyptian-768x536.jpg",
@@ -170,15 +226,14 @@ namespace cheap {
 				1,
 				graphics_entity::type::OBJ,
 				-0.3f, -0.1f, 0.f,
-				true,
 				0.6f,
 				1.f,
 				"data/images/friends.png",
 				true,
 				true,
 				false,
-				true,
-				true
+				false,
+				false
 			));
 
 			mCurrent_page->add_anime(1, new reflection_animation(
@@ -195,15 +250,14 @@ namespace cheap {
 				2,
 				graphics_entity::type::OBJ,
 				0.8f, 0.3f, 0.2f,
-				true,
 				0.4f,
 				1.f,
 				"data/images/ys.png",
 				true,
 				true,
 				false,
-				true,
-				true
+				false,
+				false
 			));
 
 			mCurrent_page->add_anime(2, new translation_animation(
@@ -226,17 +280,88 @@ namespace cheap {
 		// 5.opacity
 		// 6.color
 		// 7. tex NO
-		void reset_uniform(bool* aIndex)
+		void reset_uniform(bool* aIndex) const
 		{
 			if (mCurrent_page != nullptr)
 				mCurrent_page->reset_uniform(aIndex);
 		}
 
-		void add_anime(unsigned int aGraphics_entity_id,
-			animation* aAnimation)
+		void add_anime(
+			const unsigned int aGraphics_entity_id,
+			animation* aAnimation)const
 		{
 			if (mCurrent_page != nullptr)
 				mCurrent_page->add_anime(aGraphics_entity_id, aAnimation);
+		}
+
+
+		[[nodiscard]] page* get_current_page() const
+		{
+			return mCurrent_page;
+		}
+
+		void key_call(key_event* aEvent)
+		{
+			/*switch (aEvent->get_action()) {
+				case key_event::action::PRESS:
+					PRINTLN("key_event::press");
+					break;
+				case key_event::action::RELEASE:
+					PRINTLN("key_event::release");
+					break;
+				case key_event::action::REPEAT:
+					PRINTLN("key_event::repeat");
+					break;
+				case key_event::action::TEXT_INPUT:
+					PRINTLN("key_event::text_input");
+					break;
+				default:
+					LOG_INFO("key_event no such action");
+			}*/
+		}
+		void mouse_call(mouse_event* aEvent)
+		{
+			if (mCurrent_page == nullptr) return;
+
+			mCurrent_page->mouse_call(aEvent->get_action(), aEvent, glfwGetTime());
+			/*switch (aEvent->get_action()) {
+				case mouse_event::action::PRESS:
+					PRINTLN("mouse_event::press");
+					break;
+				case mouse_event::action::RELEASE:
+					PRINTLN("mouse_event::released");
+					break;
+				case mouse_event::action::MOVE:
+					PRINTLN("mouse_event::move");
+					break;
+				case mouse_event::action::SCROLL:
+					PRINTLN("mouse_event::scroll");
+					break;
+				case mouse_event::action::ENTER:
+					PRINTLN("mouse_event::enter");
+					break;
+				case mouse_event::action::LEAVE:
+					PRINTLN("mouse_event::leave");
+					break;
+				case mouse_event::action::REPEAT:
+					PRINTLN("mouse_event::repeat");
+					break;
+				default:
+					LOG_INFO("mouse event no such action");
+			}*/
+		}
+		void inform_current_page_of_input_event(input_event* aEvent)
+		{
+			switch (aEvent->get_type()) {
+				case input_event::type::KEYBOARD:
+					key_call(dynamic_cast<key_event*>(aEvent));
+					break;
+				case input_event::type::MOUSE:
+					mouse_call(dynamic_cast<mouse_event*>(aEvent));
+					break;
+				default:
+					LOG_INFO("the input_event's get_type() is not KEYBOARD or MOUSE");
+			}
 		}
 
 	private:

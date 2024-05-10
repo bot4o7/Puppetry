@@ -37,6 +37,7 @@ namespace cheap {
 					handle_app(dynamic_cast<app_event*>(aEvent));
 					break;
 				case event::category::INPUT:
+					LOG_INFO("is input event");
 					handle_input(dynamic_cast<input_event*>(aEvent));
 					break;
 				case event::category::GAME:
@@ -49,12 +50,18 @@ namespace cheap {
 			delete aEvent;
 		}
 
+		void set_vn(visual_novel* mVN)
+		{
+			mVisual_novel = mVN;
+		}
 
 
 	private:
 		std::shared_ptr<window> mWindow;
 		std::shared_ptr<renderer> mRenderer;
 		std::shared_ptr<input_system> mInput_system;
+		visual_novel* mVisual_novel;
+
 
 		std::vector <event*> mEvent_list_per_frame;
 
@@ -85,7 +92,14 @@ namespace cheap {
 
 		void handle_input(input_event* aEvent)
 		{
-			switch (aEvent->get_type()) {
+			mRenderer->inform_current_page_of_input_event(aEvent);
+
+
+			if (aEvent->get_type() == input_event::type::MOUSE && dynamic_cast<mouse_event*>(aEvent)->is_action(mouse_event::PRESS) && mVisual_novel != nullptr) {
+				LOG_INFO("Mouse Press, then update visual novel");
+				mVisual_novel->update_is_ready_to_page();
+			}
+			/*switch (aEvent->get_type()) {
 				case input_event::type::KEYBOARD:
 					switch ((dynamic_cast<key_event*>(aEvent))->get_action()) {
 						case key_event::action::PRESS:
@@ -133,7 +147,7 @@ namespace cheap {
 					break;
 				default:
 					LOG_INFO("the input_event's get_type() is not KEYBOARD or MOUSE");
-			}
+			}*/
 		}
 
 

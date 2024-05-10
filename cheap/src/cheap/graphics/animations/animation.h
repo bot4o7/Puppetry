@@ -69,6 +69,11 @@ namespace cheap {
 			mParam(calculate_param(aRelationship))
 		{
 			LOG();
+			if (mGraphics_entity != nullptr)
+				mGraphics_entity->mIs_playing_animation = true;
+			else {
+				LOG_INFO("is_to_play(): mGraphics_entity is nullptr");
+			}
 		}
 
 		// 根据所给时间进行 count 次动画
@@ -93,6 +98,11 @@ namespace cheap {
 			mParam(calculate_param(aRelationship))
 		{
 			LOG();
+			if (mGraphics_entity != nullptr)
+				mGraphics_entity->mIs_playing_animation = true;
+			else {
+				LOG_INFO("is_to_play(): mGraphics_entity is nullptr");
+			}
 		}
 		// 根据所给时间进行 循环动画
 		animation(
@@ -116,6 +126,11 @@ namespace cheap {
 			mParam(calculate_param(aRelationship))
 		{
 			LOG();
+			if (mGraphics_entity != nullptr)
+				mGraphics_entity->mIs_playing_animation = true;
+			else {
+				LOG_INFO("is_to_play(): mGraphics_entity is nullptr");
+			}
 		}
 		// 给一个未设置 开始时间、次数的非循环动画， 但是有运行周期
 		animation(
@@ -137,6 +152,11 @@ namespace cheap {
 			mParam(calculate_param(aRelationship))
 		{
 			LOG();
+			if (mGraphics_entity != nullptr)
+				mGraphics_entity->mIs_playing_animation = true;
+			else {
+				LOG_INFO("is_to_play(): mGraphics_entity is nullptr");
+			}
 		}
 
 		virtual ~animation()
@@ -156,13 +176,13 @@ namespace cheap {
 			const double current_time)
 		{
 			if (is_finished()) return false;
-			LOG_INFO("is not finished");
+			//LOG_INFO("is not finished");
 
 			if (is_not_begin(current_time)) return false;
-			LOG_INFO("is begin");
+			//LOG_INFO("is begin");
 
 			if (is_end(current_time)) return false;
-			LOG_INFO("is not end");
+			//LOG_INFO("is not end");
 
 			return true;
 		}
@@ -259,6 +279,7 @@ namespace cheap {
 			//LOG_INFO("--mCount = " << mCount);
 
 
+			mGraphics_entity->mIs_playing_animation = false;
 			// 这句的意思是，如果是 shuttle 往复动画，动画起点与终点的状态相同，就不需要更改 顶点信息
 			if (mIs_shuttle) return true;
 
@@ -288,6 +309,16 @@ namespace cheap {
 		void set_graphics_entity(graphics_entity* aGraphics_entity)
 		{
 			mGraphics_entity = aGraphics_entity;
+			if (mGraphics_entity != nullptr)
+				mGraphics_entity->mIs_playing_animation = true;
+			else {
+				LOG_INFO("is_to_play(): mGraphics_entity is nullptr");
+			}
+		}
+
+		bool is_graphics_entity_is_playing_anim() const
+		{
+			return mGraphics_entity != nullptr && mGraphics_entity->mIs_playing_animation;
 		}
 
 		unsigned int get_graphics_entity_id() const
@@ -295,7 +326,7 @@ namespace cheap {
 			return mGraphics_entity->mId;
 		}
 
-	protected:
+		//protected:
 		graphics_entity* mGraphics_entity;
 	private:
 		type mType;

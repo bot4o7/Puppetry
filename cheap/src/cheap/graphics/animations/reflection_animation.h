@@ -23,7 +23,9 @@ namespace cheap {
 			const bool aIs_shuttle,
 			const float aX_scale = NO_REFLECTION,
 			const float aY_scale = NO_REFLECTION,
-			const float aZ_scale = NO_REFLECTION)
+			const float aZ_scale = NO_REFLECTION,
+			graphics_entity* aGraphics_entity = nullptr
+		)
 			:
 			scale_animation(
 				-aX_scale,
@@ -32,7 +34,7 @@ namespace cheap {
 				aBegin_time,
 				aDuration,
 				aRelationship,
-				aIs_shuttle
+				aIs_shuttle, aGraphics_entity
 			)
 		{
 			LOG();
@@ -46,7 +48,9 @@ namespace cheap {
 			const bool aIs_shuttle,
 			const float aX_scale = NO_REFLECTION,
 			const float aY_scale = NO_REFLECTION,
-			const float aZ_scale = NO_REFLECTION)
+			const float aZ_scale = NO_REFLECTION,
+			graphics_entity* aGraphics_entity = nullptr
+		)
 			:
 			scale_animation(
 				-aX_scale,
@@ -56,7 +60,7 @@ namespace cheap {
 				aDuration,
 				aCount,
 				aRelationship,
-				aIs_shuttle
+				aIs_shuttle, aGraphics_entity
 			)
 		{
 			LOG();

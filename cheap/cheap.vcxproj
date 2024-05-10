@@ -116,7 +116,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)lib;$(ProjectDir)lib\glad\include;$(ProjectDir)lib\glfw\include;$(ProjectDir)lib\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)lib;$(ProjectDir)lib\glad\include;$(ProjectDir)lib\glfw\include;$(ProjectDir)lib\freetype\include;$(ProjectDir)lib\nlohmann_json\include;$(ProjectDir)lib\cereal\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,7 +135,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(ProjectDir)lib;$(ProjectDir)lib\glad\include;$(ProjectDir)lib\glfw\include;$(ProjectDir)lib\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)lib;$(ProjectDir)lib\glad\include;$(ProjectDir)lib\glfw\include;$(ProjectDir)lib\freetype\include;$(ProjectDir)lib\nlohmann_json\include;$(ProjectDir)lib\cereal\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="src\cheap\commands\command.h" />
     <ClInclude Include="src\cheap\commands\render_command.h" />
+    <ClInclude Include="src\cheap\core\visual_novel.h" />
     <ClInclude Include="src\cheap\graphics\animations\scale_animation.h" />
     <ClInclude Include="src\cheap\graphics\pages\page.h" />
     <ClInclude Include="src\cheap\graphics\animations\animation.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="src\cheap\events\game_event.h" />
     <ClInclude Include="src\cheap\events\input\key_code.h" />
     <ClInclude Include="src\cheap\events\input_event.h" />
+    <ClInclude Include="src\cheap\utils\json_system.h" />
     <ClInclude Include="src\cheap\utils\log.h" />
     <ClInclude Include="src\cheap\core\app.h" />
     <ClInclude Include="src\cheap.h" />
@@ -192,6 +194,7 @@
   <ItemGroup>
     <ClCompile Include="src\cheap\commands\command.cpp" />
     <ClCompile Include="src\cheap\commands\render_command.cpp" />
+    <ClCompile Include="src\cheap\core\visual_novel.cpp" />
     <ClCompile Include="src\cheap\graphics\animations\scale_animation.cpp" />
     <ClCompile Include="src\cheap\graphics\pages\page.cpp" />
     <ClCompile Include="src\cheap\graphics\animations\animation.cpp" />
