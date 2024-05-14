@@ -11,7 +11,8 @@
 // if not debug mode
 #define PRINT(x) 
 #define PRINTLN(x) 
-#define LOG() 
+#define LOG()
+#define LOG_INFO(info)
 #endif
 
 
