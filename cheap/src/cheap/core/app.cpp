@@ -4,9 +4,6 @@
 #include "visual_novel.h"
 #include "../events/event.h"
 #include "../graphics/renderer.h"
-#include "../graphics/animations/scale_animation.h"
-#include "../graphics/animations/translation_animation.h"
-
 
 #ifdef CP_OPENGL_API
 namespace cheap {
@@ -64,20 +61,12 @@ namespace cheap {
 	void app::clear() const
 	{
 		LOG();
-		// Clear past events
-		//m_event_system_->clear();
-		// Clear old graphics and poll events
 		mWindow->clear();
 	}
 	void app::update() const
 	{
 		LOG();
-		// Set the active entities to be processed in this frame
-		//m_event_system_->SetEntities(mEntityManager->GetEntities());
-		// Render all graphics visible in this frame
-		//m_renderer_->submit(mEntityManager->GetEntities());
-		//m_renderer_->submit();
-		// Update the graphics in the window
+
 		mWindow->update();
 	}
 	bool app::is_running() const
@@ -103,11 +92,5 @@ namespace cheap {
 		//LOG();
 		return mWindow.get();
 	}
-	// cursor_system* get();
-	// entity_system* get();
-	// state_system* get();
-	// font_system* get();
-	// audio_system get();
-	// file_system get();
 }
 #endif

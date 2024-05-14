@@ -92,8 +92,6 @@ namespace cheap {
 		void        set_up_window(bool aIs_turn_on_vsync = true);
 		void        set_up_callbacks() const;
 
-
-
 		[[nodiscard]] bool is_window_ptr_null() const;
 	};
 }

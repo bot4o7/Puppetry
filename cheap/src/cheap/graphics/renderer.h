@@ -302,7 +302,7 @@ namespace cheap {
 
 		int key_call(key_event* aEvent)
 		{
-			/*switch (aEvent->get_action()) {
+			switch (aEvent->get_action()) {
 				case key_event::action::PRESS:
 					PRINTLN("key_event::press");
 					break;
@@ -317,7 +317,7 @@ namespace cheap {
 					break;
 				default:
 					LOG_INFO("key_event no such action");
-			}*/
+			}
 			return -1;
 		}
 		int mouse_call(mouse_event* aEvent)
@@ -325,31 +325,6 @@ namespace cheap {
 			if (mCurrent_page == nullptr) return -1;
 
 			return mCurrent_page->mouse_call(aEvent->get_action(), aEvent, glfwGetTime());
-			/*switch (aEvent->get_action()) {
-				case mouse_event::action::PRESS:
-					PRINTLN("mouse_event::press");
-					break;
-				case mouse_event::action::RELEASE:
-					PRINTLN("mouse_event::released");
-					break;
-				case mouse_event::action::MOVE:
-					PRINTLN("mouse_event::move");
-					break;
-				case mouse_event::action::SCROLL:
-					PRINTLN("mouse_event::scroll");
-					break;
-				case mouse_event::action::ENTER:
-					PRINTLN("mouse_event::enter");
-					break;
-				case mouse_event::action::LEAVE:
-					PRINTLN("mouse_event::leave");
-					break;
-				case mouse_event::action::REPEAT:
-					PRINTLN("mouse_event::repeat");
-					break;
-				default:
-					LOG_INFO("mouse event no such action");
-			}*/
 		}
 		int inform_current_page_of_input_event(input_event* aEvent)
 		{

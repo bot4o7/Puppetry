@@ -2,8 +2,6 @@
 
 #include "../core/window.h"
 #include "input_event.h"
-#include "input/key_code.h"
-#include "input/mouse_button.h"
 
 namespace cheap {
 
@@ -119,13 +117,6 @@ namespace cheap {
 						const auto data = static_cast<window::window_data*>(glfwGetWindowUserPointer(aWindow));
 
 						if (aAction == GLFW_PRESS) {
-							/*if (glfwGetMouseButton(aWindow, aButton)) {
-								data->mEvent_callback(new mouse_repeat_event(aButton));
-								LOG_INFO(" mouse repeat");
-							} else {
-								data->mEvent_callback(new mouse_press_event(aButton));
-								LOG_INFO(" mouse ");
-							}*/
 							if (glfwGetMouseButton(aWindow, aButton)) {
 								data->mEvent_callback(new mouse_press_event(aButton));
 							} else {

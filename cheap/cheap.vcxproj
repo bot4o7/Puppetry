@@ -149,8 +149,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\cheap\commands\command.h" />
-    <ClInclude Include="src\cheap\commands\render_command.h" />
     <ClInclude Include="src\cheap\core\visual_novel.h" />
     <ClInclude Include="src\cheap\graphics\animations\scale_animation.h" />
     <ClInclude Include="src\cheap\graphics\pages\page.h" />
@@ -192,8 +190,6 @@
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\cheap\commands\command.cpp" />
-    <ClCompile Include="src\cheap\commands\render_command.cpp" />
     <ClCompile Include="src\cheap\core\visual_novel.cpp" />
     <ClCompile Include="src\cheap\graphics\animations\scale_animation.cpp" />
     <ClCompile Include="src\cheap\graphics\pages\page.cpp" />
@@ -244,8 +240,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\cheap\graphics\base\shaders\fragment" />
-    <None Include="src\cheap\graphics\base\shaders\text.fs" />
-    <None Include="src\cheap\graphics\base\shaders\text.vs" />
     <None Include="src\cheap\graphics\base\shaders\vertex" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

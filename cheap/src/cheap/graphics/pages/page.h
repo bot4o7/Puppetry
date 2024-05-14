@@ -13,11 +13,6 @@ namespace cheap {
 	class page
 	{
 	public:
-		//struct item
-		//{
-		//	graphics_entity* mGraphics_entity;
-		//	std::vector<animation*> mAnimation_list;
-
 		//	// 初始化时，由高层往底层遍历、添加，这样如果有拦截的，就可以直接结束遍历了
 		//	std::vector<unsigned int> mOn_hover_list;
 		//	std::vector<unsigned int> mOn_click_list;
@@ -34,31 +29,6 @@ namespace cheap {
 
 
 		std::vector<unsigned int> mOn_hover_list;
-		//animation* mOn_hover_animation;
-
-		//void add_hover_animation_to_layer(unsigned int aGraphics_entity_id)
-		//{
-		//	if (layer* target_layer = mLayer_manager.get_layer(aGraphics_entity_id); target_layer != nullptr) {
-		//		//target_layer->set_anim()
-		//	}
-		//}
-
-		/*void mouse_call(mouse_event::action aAction, mouse_event* aEvent)
-		{
-			for (auto gfx_entity : mHash_graphics_entity | std::views::values) {
-				if (gfx_entity->mIs_receive_mouse) {
-
-				}
-			}
-		}
-		void key_call(mouse_event::action aAction, mouse_event* aEvent)
-		{
-			for (auto gfx_entity : mHash_graphics_entity | std::views::values) {
-				if (gfx_entity->mIs_receive_mouse) {
-
-				}
-			}
-		}*/
 
 		int mouse_call(mouse_event::action aAction, mouse_event* aEvent, double current_time)
 		{

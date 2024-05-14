@@ -126,12 +126,6 @@
     <ClInclude Include="src\cheap\graphics\animations\scale_animation.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\cheap\commands\command.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cheap\commands\render_command.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\cheap\utils\json_system.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -224,12 +218,6 @@
     <ClCompile Include="src\cheap\graphics\animations\scale_animation.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\cheap\commands\command.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cheap\commands\render_command.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\cheap\core\visual_novel.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -237,7 +225,5 @@
   <ItemGroup>
     <None Include="src\cheap\graphics\base\shaders\fragment" />
     <None Include="src\cheap\graphics\base\shaders\vertex" />
-    <None Include="src\cheap\graphics\base\shaders\text.fs" />
-    <None Include="src\cheap\graphics\base\shaders\text.vs" />
   </ItemGroup>
 </Project>

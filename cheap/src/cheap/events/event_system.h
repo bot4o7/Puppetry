@@ -99,61 +99,11 @@ namespace cheap {
 				LOG_INFO("Mouse Press, then update visual novel");
 				mVisual_novel->update_is_ready_to_page(id);
 			}
-			/*switch (aEvent->get_type()) {
-				case input_event::type::KEYBOARD:
-					switch ((dynamic_cast<key_event*>(aEvent))->get_action()) {
-						case key_event::action::PRESS:
-							PRINTLN("key_event::press");
-							break;
-						case key_event::action::RELEASE:
-							PRINTLN("key_event::release");
-							break;
-						case key_event::action::REPEAT:
-							PRINTLN("key_event::repeat");
-							break;
-						case key_event::action::TEXT_INPUT:
-							PRINTLN("key_event::text_input");
-							break;
-						default:
-							LOG_INFO("key_event no such action");
-					}
-					break;
-				case input_event::type::MOUSE:
-					switch ((dynamic_cast<mouse_event*>(aEvent))->get_action()) {
-						case mouse_event::action::PRESS:
-							PRINTLN("mouse_event::press");
-							break;
-						case mouse_event::action::RELEASE:
-							PRINTLN("mouse_event::released");
-							break;
-						case mouse_event::action::MOVE:
-							PRINTLN("mouse_event::move");
-							break;
-						case mouse_event::action::SCROLL:
-							PRINTLN("mouse_event::scroll");
-							break;
-						case mouse_event::action::ENTER:
-							PRINTLN("mouse_event::enter");
-							break;
-						case mouse_event::action::LEAVE:
-							PRINTLN("mouse_event::leave");
-							break;
-						case mouse_event::action::REPEAT:
-							PRINTLN("mouse_event::repeat");
-							break;
-						default:
-							LOG_INFO("mouse event no such action");
-					}
-					break;
-				default:
-					LOG_INFO("the input_event's get_type() is not KEYBOARD or MOUSE");
-			}*/
 		}
 
 
 		void handle_game(game_event* aEvent)
 		{
-
 		}
 	};
 }

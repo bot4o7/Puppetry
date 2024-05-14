@@ -3,7 +3,6 @@
 #include "../events/event_system.h"
 #include "../events/input_system.h"
 #include "../graphics/renderer.h"
-#include "../graphics/layers/layer_manager.h"
 
 #ifdef CP_OPENGL_API
 namespace cheap {
@@ -28,27 +27,16 @@ namespace cheap {
 
 		// input* get_input() const;
 		window* get_window() const;
-		// cursor_system* get();
-		// entity_system* get();
-		// state_system* get();
-		// font_system* get();
-		// audio_system get();
-		// file_system get();
+
 	private:
 		// use shared pointers for each subsystem so that app can be copied
 
 		std::shared_ptr<window> mWindow;
 		std::shared_ptr<renderer> mRenderer;
-		// cursor_system* get();
-		// input*
-		//std::shared_ptr<renderer> m_renderer_;
-		// entity_system* get();
+
 		std::shared_ptr<input_system> mInput_system;
 		std::shared_ptr<event_system> mEvent_system;
-		// state_system* get();
-		// font_system* get();
-		// audio_system get();
-		// file_system get();
+
 	};
 }
 #endif

@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+// TODO
 namespace cheap {
 	class graphics_text
 	{
