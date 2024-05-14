@@ -133,6 +133,8 @@ namespace cheap {
 			// bottom left y
 			if (aPos_y < mVertex_array->get_vertices()[11]) return false;
 
+			LOG_INFO("in rectangle region");
+
 			return true;
 		}
 

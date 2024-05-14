@@ -42,10 +42,11 @@ namespace cheap {
 				pos_x = ((mouse_move_event*)aEvent)->mX;
 				pos_y = ((mouse_move_event*)aEvent)->mY;
 
+				LOG_INFO("x:" << pos_x << "  y:" << pos_y);
+
 				if (current_highlight_gfx_entity != nullptr) {
 					if (!current_highlight_gfx_entity->is_pos_in_region(pos_x, pos_y)) {
-						LOG();
-						mLayer_manager.add_anime(current_highlight_gfx_entity->mId, new scale_animation(0.8f, 0.8f, 1.f, current_time, 0.05, animation::relationship::LINEAR, false, current_highlight_gfx_entity));
+						mLayer_manager.add_anime(current_highlight_gfx_entity->mId, new scale_animation(0.8f, 0.8f, 1.f, current_time, 0.1, animation::relationship::LINEAR, false, current_highlight_gfx_entity));
 						current_highlight_gfx_entity = nullptr;
 					}
 				} else {
@@ -64,7 +65,7 @@ namespace cheap {
 					switch (aAction) {
 						case mouse_event::MOVE:
 							LOG_INFO("not here");
-							if (gfx_entity != current_highlight_gfx_entity && gfx_entity->is_pos_in_region(pos_x, pos_y)) {
+							if (gfx_entity != current_highlight_gfx_entity && gfx_entity->mIs_receive_mouse && gfx_entity->is_pos_in_region(pos_x, pos_y)) {
 								LOG_INFO("here");
 								if (gfx == nullptr) {
 									gfx = gfx_entity;
@@ -92,7 +93,8 @@ namespace cheap {
 				}
 			}
 			if (aAction == mouse_event::MOVE && gfx != nullptr) {
-				mLayer_manager.add_anime(gfx->mId, new scale_animation(1.25f, 1.25f, 1.f, current_time, 0.05, animation::relationship::LINEAR, false, gfx));
+				LOG_INFO("adding scale animation");
+				mLayer_manager.add_anime(gfx->mId, new scale_animation(1.25f, 1.25f, 1.f, glfwGetTime(), 0.1, animation::relationship::LINEAR, false, gfx));
 				current_highlight_gfx_entity = gfx;
 			}
 			return id;

@@ -63,7 +63,7 @@ namespace cheap {
 		{
 			const double factor = get_frame(aCurrent_time);
 			if (factor > 1.0)
-				LOG_INFO("factor 炸了，操你妈，怎么 > 1 啊？？？");
+				LOG_INFO("factor 炸了，怎么 > 1 啊？？？");
 
 			return transform::get_scale(
 				1.f + mScalar[0] * factor,

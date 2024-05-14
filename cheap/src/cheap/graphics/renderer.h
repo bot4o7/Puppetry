@@ -15,8 +15,8 @@ namespace cheap {
 	struct page_param;
 
 	// --------------------- file path ---------------------------------
-	#define SHADER_PATH "src/cheap/graphics/base/shaders/"
-	#define PIC_PATH "src/cheap/graphics/pic/"
+	#define SHADER_PATH "data/shaders/"
+	#define PIC_PATH "data/images/"
 	#define VERTEX_SHADER_FILENAME "vertex"
 	#define FRAGMENT_SHADER_FILENAME "fragment"
 	// --------------------- file path ---------------------------------
@@ -117,7 +117,8 @@ namespace cheap {
 
 					if (task->mLayer->get_anim() != nullptr) {
 						//LOG_INFO("anim is not nullptr");
-						if (animation* anim = task->mLayer->get_anim(); !anim->is_graphics_entity_is_playing_anim() && anim->is_to_play(current_time)) {
+						if (animation* anim = task->mLayer->get_anim(); anim->is_to_play(current_time)) {
+							//if (animation* anim = task->mLayer->get_anim(); !anim->is_graphics_entity_is_playing_anim() && anim->is_to_play(current_time)) {
 							LOG_INFO("is to play : " << static_cast<unsigned int>(anim->get_type()));
 							switch (anim->get_type()) {
 								case animation::type::TRANSLATION:
@@ -175,7 +176,7 @@ namespace cheap {
 			mHash_page_list[aParam->id] = aPage;
 			LOG_INFO("NUMBER: " << aParam->graphics_entity_num);
 			for (int i = 0; i < aParam->graphics_entity_num; ++i) {
-				aPage->add_new_layer(new graphics_entity(
+				graphics_entity* layer_to_add = new graphics_entity(
 					aParam->param_list[i]->mId,
 					graphics_entity::type::OBJ,
 					aParam->param_list[i]->mX,
@@ -189,7 +190,9 @@ namespace cheap {
 					false,
 					aParam->param_list[i]->mIs_receive_mouse,
 					true
-				));
+				);
+
+				aPage->add_new_layer(layer_to_add);
 			}
 			next_page(aPage);
 		}
