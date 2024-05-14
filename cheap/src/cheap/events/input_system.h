@@ -119,12 +119,22 @@ namespace cheap {
 						const auto data = static_cast<window::window_data*>(glfwGetWindowUserPointer(aWindow));
 
 						if (aAction == GLFW_PRESS) {
-							if (glfwGetMouseButton(aWindow, aButton))
+							/*if (glfwGetMouseButton(aWindow, aButton)) {
 								data->mEvent_callback(new mouse_repeat_event(aButton));
-							else
+								LOG_INFO(" mouse repeat");
+							} else {
 								data->mEvent_callback(new mouse_press_event(aButton));
-						} else
+								LOG_INFO(" mouse ");
+							}*/
+							if (glfwGetMouseButton(aWindow, aButton)) {
+								data->mEvent_callback(new mouse_press_event(aButton));
+							} else {
+								data->mEvent_callback(new mouse_repeat_event(aButton));
+							}
+						} else {
 							data->mEvent_callback(new mouse_release_event(aButton));
+							LOG_INFO(" mouse release");
+						}
 				});
 
 		}

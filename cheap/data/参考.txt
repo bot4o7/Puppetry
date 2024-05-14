@@ -1,0 +1,17 @@
+scene_id
+graphics_entity_num
+// gfx entity 1
+gfx_entity_id
+gfx_entity_x
+gfx_entity_y
+gfx_entity_z
+gfx_entity_height
+gfx_entity_pic_file_path
+gfx_entity_is_rgba
+gfx_entity_is_receive_mouse
+
+// gfx entity 2...3...4..
+...
+
+scene_next_id
+scene_next_file_path

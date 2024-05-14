@@ -56,7 +56,7 @@ namespace cheap {
 
 		~scale_animation()
 		{
-
+			LOG();
 		}
 
 		[[nodiscard]] glm::mat4 get(const double aCurrent_time) const

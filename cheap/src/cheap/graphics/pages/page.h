@@ -60,34 +60,56 @@ namespace cheap {
 			}
 		}*/
 
-		void mouse_call(mouse_event::action aAction, mouse_event* aEvent, double current_time)
+		int mouse_call(mouse_event::action aAction, mouse_event* aEvent, double current_time)
 		{
+			LOG_INFO("interactive_list :" << mInteractive_entity_list.size());
+			LOG_INFO("action :" << static_cast<unsigned>(aAction));
 			static graphics_entity* current_highlight_gfx_entity = nullptr;
 
-			double pos_x;
-			double pos_y;
+			static double pos_x;
+			static double pos_y;
 			if (aAction == mouse_event::MOVE) {
 				pos_x = ((mouse_move_event*)aEvent)->mX;
 				pos_y = ((mouse_move_event*)aEvent)->mY;
 
 				if (current_highlight_gfx_entity != nullptr) {
 					if (!current_highlight_gfx_entity->is_pos_in_region(pos_x, pos_y)) {
+						LOG();
 						mLayer_manager.add_anime(current_highlight_gfx_entity->mId, new scale_animation(0.8f, 0.8f, 1.f, current_time, 0.05, animation::relationship::LINEAR, false, current_highlight_gfx_entity));
 						current_highlight_gfx_entity = nullptr;
 					}
+				} else {
+					LOG_INFO("current is null");
 				}
+			} else {
+				LOG_INFO("action is not MOVE");
 			}
 
+			int id = -1;
+			float z = 2.f;
+			graphics_entity* gfx = nullptr;
 			for (auto gfx_entity : mInteractive_entity_list) {
+				LOG_INFO("for loop");
 				if (gfx_entity->mIs_receive_mouse) {
 					switch (aAction) {
 						case mouse_event::MOVE:
+							LOG_INFO("not here");
 							if (gfx_entity != current_highlight_gfx_entity && gfx_entity->is_pos_in_region(pos_x, pos_y)) {
-								mLayer_manager.add_anime(gfx_entity->mId, new scale_animation(1.25f, 1.25f, 1.f, current_time, 0.05, animation::relationship::LINEAR, false, gfx_entity));
-								current_highlight_gfx_entity = gfx_entity;
+								LOG_INFO("here");
+								if (gfx == nullptr) {
+									gfx = gfx_entity;
+								} else if (gfx_entity->mZ < gfx->mZ) {
+									gfx = gfx_entity;
+								}
 							}
 							break;
 						case mouse_event::PRESS:
+							if (gfx_entity->is_pos_in_region(pos_x, pos_y)) {
+								if (gfx_entity->mZ < z) {
+									id = gfx_entity->mId;
+									z = gfx_entity->mZ;
+								}
+							}
 							break;
 						case mouse_event::SCROLL:
 							break;
@@ -95,8 +117,15 @@ namespace cheap {
 
 							break;
 					}
+				} else {
+					LOG_INFO("no receive mouse");
 				}
 			}
+			if (aAction == mouse_event::MOVE && gfx != nullptr) {
+				mLayer_manager.add_anime(gfx->mId, new scale_animation(1.25f, 1.25f, 1.f, current_time, 0.05, animation::relationship::LINEAR, false, gfx));
+				current_highlight_gfx_entity = gfx;
+			}
+			return id;
 		}
 
 		page(
@@ -121,6 +150,7 @@ namespace cheap {
 		// 在其他地方单独管理 gfx entity 生命周期？
 		~page()
 		{
+			LOG();
 			for (const auto gfx_entity : mHash_graphics_entity | std::views::values)
 				delete gfx_entity;
 		}
@@ -142,6 +172,7 @@ namespace cheap {
 		{
 			mLayer_manager.add_layer(aGraphics_entity);
 			if (aGraphics_entity->mIs_receive_keyboard || aGraphics_entity->mIs_receive_mouse) {
+				LOG_INFO("add interactive");
 				mInteractive_entity_list.emplace_back(aGraphics_entity);
 			}
 		}

@@ -208,7 +208,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
-	glViewport(0, 0, width, height);
+	//glViewport(0, 0, width, height);
+	glViewport(-1.f, -1.f, 1.f, 1.f);
 }
 
 
@@ -233,6 +234,15 @@ void RenderText(Shader& shader, std::string text, float x, float y, float scale,
 		float w = ch.Size.x * scale;
 		float h = ch.Size.y * scale;
 		// update VBO for each character
+		/*float vertices[6][4] = {
+			{ xpos,     ypos + h,   0.0f, 0.0f },
+			{ xpos,     ypos,       0.0f, 1.0f },
+			{ xpos + w, ypos,       1.0f, 1.0f },
+
+			{ xpos,     ypos + h,   0.0f, 0.0f },
+			{ xpos + w, ypos,       1.0f, 1.0f },
+			{ xpos + w, ypos + h,   1.0f, 0.0f }
+		};*/
 		float vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0f, 0.0f },
 			{ xpos,     ypos,       0.0f, 1.0f },

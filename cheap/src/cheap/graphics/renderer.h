@@ -118,7 +118,7 @@ namespace cheap {
 					if (task->mLayer->get_anim() != nullptr) {
 						//LOG_INFO("anim is not nullptr");
 						if (animation* anim = task->mLayer->get_anim(); !anim->is_graphics_entity_is_playing_anim() && anim->is_to_play(current_time)) {
-							//LOG_INFO("is to play : " << static_cast<unsigned int>(anim->get_type()));
+							LOG_INFO("is to play : " << static_cast<unsigned int>(anim->get_type()));
 							switch (anim->get_type()) {
 								case animation::type::TRANSLATION:
 									to_reset_uniform[2] = true;
@@ -134,6 +134,7 @@ namespace cheap {
 									break;
 								case animation::type::SCALE:
 									to_reset_uniform[4] = true;
+									LOG_INFO("scale anime");
 									mCurrent_page->mShader_program.use_scale(dynamic_cast<scale_animation*>(anim)->get(current_time));
 									break;
 								case animation::type::REFLECTION:
@@ -172,7 +173,7 @@ namespace cheap {
 				mWindow->get_aspect_ratio());
 
 			mHash_page_list[aParam->id] = aPage;
-
+			LOG_INFO("NUMBER: " << aParam->graphics_entity_num);
 			for (int i = 0; i < aParam->graphics_entity_num; ++i) {
 				aPage->add_new_layer(new graphics_entity(
 					aParam->param_list[i]->mId,
@@ -190,7 +191,6 @@ namespace cheap {
 					true
 				));
 			}
-
 			next_page(aPage);
 		}
 
@@ -300,7 +300,7 @@ namespace cheap {
 			return mCurrent_page;
 		}
 
-		void key_call(key_event* aEvent)
+		int key_call(key_event* aEvent)
 		{
 			/*switch (aEvent->get_action()) {
 				case key_event::action::PRESS:
@@ -318,12 +318,13 @@ namespace cheap {
 				default:
 					LOG_INFO("key_event no such action");
 			}*/
+			return -1;
 		}
-		void mouse_call(mouse_event* aEvent)
+		int mouse_call(mouse_event* aEvent)
 		{
-			if (mCurrent_page == nullptr) return;
+			if (mCurrent_page == nullptr) return -1;
 
-			mCurrent_page->mouse_call(aEvent->get_action(), aEvent, glfwGetTime());
+			return mCurrent_page->mouse_call(aEvent->get_action(), aEvent, glfwGetTime());
 			/*switch (aEvent->get_action()) {
 				case mouse_event::action::PRESS:
 					PRINTLN("mouse_event::press");
@@ -350,14 +351,14 @@ namespace cheap {
 					LOG_INFO("mouse event no such action");
 			}*/
 		}
-		void inform_current_page_of_input_event(input_event* aEvent)
+		int inform_current_page_of_input_event(input_event* aEvent)
 		{
 			switch (aEvent->get_type()) {
 				case input_event::type::KEYBOARD:
-					key_call(dynamic_cast<key_event*>(aEvent));
+					return key_call(dynamic_cast<key_event*>(aEvent));
 					break;
 				case input_event::type::MOUSE:
-					mouse_call(dynamic_cast<mouse_event*>(aEvent));
+					return mouse_call(dynamic_cast<mouse_event*>(aEvent));
 					break;
 				default:
 					LOG_INFO("the input_event's get_type() is not KEYBOARD or MOUSE");

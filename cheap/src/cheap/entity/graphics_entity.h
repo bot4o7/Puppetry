@@ -115,10 +115,12 @@ namespace cheap {
 				true,
 				mHeight,
 				mPic_file_path.c_str(),
-				mIs_RGBA)
+				mIs_RGBA),
+			mIs_playing_animation(false)
 		{
 			LOG();
 		}
+
 		graphics_entity(
 			const unsigned     aId,
 			const type         aType,

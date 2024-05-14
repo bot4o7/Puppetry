@@ -45,6 +45,7 @@ namespace cheap {
 		// 但是以后我要考虑动画的生命周期怎么管理！
 		~layer()
 		{
+			LOG();
 			delete mAnimation;
 		}
 

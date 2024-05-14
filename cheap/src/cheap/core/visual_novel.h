@@ -137,11 +137,17 @@ namespace cheap {
 			return mIs_ready_to_page;
 		}
 
-		void update_is_ready_to_page()
+		void update_is_ready_to_page(int aId)
 		{
+			LOG();
 			mIs_ready_to_page = true;
+			if (aId > -1) {
+				mCurrent.mId = aId;
+				mCurrent.mPage_param->next_file_path = mCurrent.mPage_param->next_file_path.substr(0, 1 + mCurrent.mPage_param->next_file_path.find_last_of('/'));
+				mCurrent.mPage_param->next_file_path.append(std::to_string(aId));
+				LOG_INFO("update file path : " << mCurrent.mPage_param->next_file_path);
+			}
 		}
-
 		void reset_is_ready_to_page()
 		{
 			mIs_ready_to_page = false;

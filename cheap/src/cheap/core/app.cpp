@@ -7,6 +7,7 @@
 #include "../graphics/animations/scale_animation.h"
 #include "../graphics/animations/translation_animation.h"
 
+
 #ifdef CP_OPENGL_API
 namespace cheap {
 	app::app(unsigned int aWidth, unsigned int aHeight)
@@ -35,19 +36,11 @@ namespace cheap {
 	{
 		LOG();
 
-		/*mRenderer->add_new_task(0, new graphics_entity(
-			9, graphics_entity::type::UI, 0.f, 0.f, -0.4f, 0.3f, 1.f, "data/images/fumo.jpg", false, true, false, true, false)
-		);*/
-
-		visual_novel vn(1, "data/1.txt");
+		visual_novel vn(1, "data/1");
 
 		mEvent_system->set_vn(&vn);
 
-		//double begin = glfwGetTime();
-		//double space = 5;
-
 		while (app::is_running()) {
-
 			float current = glfwGetTime();
 
 			mRenderer->clear();
@@ -60,15 +53,12 @@ namespace cheap {
 				LOG_INFO(vn.mCurrent.mPage_param->graphics_entity_num);
 				LOG_INFO(vn.mCurrent.mPage_param->param_list);
 
-
 				mRenderer->prepare_page_param(vn.mCurrent.mPage_param);
 
 				vn.reset_is_ready_to_page();
 			}
 			mRenderer->draw_current_page(current);
 			mRenderer->update();
-
-
 		}
 	}
 	void app::clear() const

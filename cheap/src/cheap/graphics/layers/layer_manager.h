@@ -110,6 +110,7 @@ namespace cheap {
 			const unsigned int aGraphics_entity_id,
 			animation* aAnimation)
 		{
+			LOG();
 			if (mHash_id_to_layer.contains(aGraphics_entity_id)) {
 				mHash_id_to_layer[aGraphics_entity_id]->mLayer->set_anim(aAnimation);
 			} else {
