@@ -9,6 +9,7 @@ namespace cheap {
 	texture::texture(const char* aPic_file_path, bool aIs_RGBA)
 	{
 		LOG();
+		LOG_INFO("file path : " << aPic_file_path);
 		glGenTextures(1, &mId);
 		glBindTexture(TEXTURE_TARGET, mId);
 

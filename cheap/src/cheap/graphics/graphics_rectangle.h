@@ -121,17 +121,17 @@ namespace cheap {
 
 		[[nodiscard]] bool is_pos_in_rectangle2D(const double aPos_x, const double aPos_y)const
 		{
-			// top right x
-			if (aPos_x > mVertex_array->get_vertices()[0]) return false;
+			// right
+			if (mVertex_array->is_beyond_right_border(aPos_x)) return false;
 
-			// top right y
-			if (aPos_y > mVertex_array->get_vertices()[1]) return false;
+			// top
+			if (mVertex_array->is_beyond_top_border(aPos_y)) return false;
 
-			// bottom left x
-			if (aPos_x < mVertex_array->get_vertices()[10]) return false;
+			// left
+			if (mVertex_array->is_beyond_left_border(aPos_x)) return false;
 
-			// bottom left y
-			if (aPos_y < mVertex_array->get_vertices()[11]) return false;
+			// bottom
+			if (mVertex_array->is_beyond_bottom_border(aPos_y)) return false;
 
 			LOG_INFO("in rectangle region");
 

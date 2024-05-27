@@ -83,6 +83,30 @@ namespace cheap {
 		 */
 		static void unbind();
 
+		[[nodiscard]] bool is_beyond_left_border(
+			const double aX) const
+		{
+			if (aX < mVertices[10] + mVertices[20]) return true;
+			return false;
+		}
+		[[nodiscard]] bool is_beyond_right_border(
+			const double aX) const
+		{
+			if (aX > mVertices[0] + mVertices[20]) return true;
+			return false;
+		}
+		[[nodiscard]] bool is_beyond_top_border(
+			const double aY) const
+		{
+			if (aY > mVertices[1] + mVertices[21]) return true;
+			return false;
+		}
+		[[nodiscard]] bool is_beyond_bottom_border(
+			const double aY) const
+		{
+			if (aY < mVertices[11] + mVertices[21]) return true;
+			return false;
+		}
 
 		[[nodiscard]] float* get_vertices() const { return mVertices; }
 

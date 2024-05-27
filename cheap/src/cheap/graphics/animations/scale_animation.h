@@ -62,6 +62,7 @@ namespace cheap {
 		[[nodiscard]] glm::mat4 get(const double aCurrent_time) const
 		{
 			const double factor = get_frame(aCurrent_time);
+			//LOG_INFO("缩放动画 当前时间 ： " << aCurrent_time << "  变换系数 ： " << factor);
 			if (factor > 1.0)
 				LOG_INFO("factor 炸了，怎么 > 1 啊？？？");
 

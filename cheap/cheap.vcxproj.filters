@@ -225,5 +225,7 @@
   <ItemGroup>
     <None Include="src\cheap\graphics\base\shaders\fragment" />
     <None Include="src\cheap\graphics\base\shaders\vertex" />
+    <None Include="ClassDiagram.cd" />
+    <None Include="UML.cd" />
   </ItemGroup>
 </Project>

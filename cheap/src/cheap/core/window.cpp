@@ -14,6 +14,7 @@ namespace cheap {
 		const std::function<void(event*)>& aEvent_callback_function)
 		: mWidth(aWindow_width), mHeight(aWindow_height), mEvent_callback(aEvent_callback_function)
 	{
+		LOG();
 	}
 
 	window::window_data::~window_data()
@@ -97,6 +98,7 @@ namespace cheap {
 	}
 	void window::keep_aspect_ratio() const
 	{
+		LOG();
 		glfwSetWindowAspectRatio(
 			mRaw_window,
 			mAspect_ratio_numerator,
@@ -282,6 +284,7 @@ namespace cheap {
 		glClearColor(0.2f, 0.7f, 0.3f, 0.5f);
 		// Enable blending and properly rendering transparent pixels
 		glEnable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		// Associate the window data with the GLFW window
 		glfwSetWindowUserPointer(mRaw_window, &mWindow_data);

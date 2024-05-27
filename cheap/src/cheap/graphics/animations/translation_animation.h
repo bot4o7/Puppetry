@@ -63,6 +63,7 @@ namespace cheap {
 		[[nodiscard]] glm::mat4 get(const double aCurrent_time)
 		{
 			const double factor = get_frame(aCurrent_time);
+			//LOG_INFO("平移动画 当前时间 ： " << aCurrent_time << "  变换系数 ： " << factor);
 
 			return transform::get_translate(
 				mOffset[0] * factor,

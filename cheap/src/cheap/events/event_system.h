@@ -32,6 +32,7 @@ namespace cheap {
 
 		void handle(event* aEvent)
 		{
+			LOG();
 			switch (aEvent->get_category()) {
 				case event::category::APP:
 					handle_app(dynamic_cast<app_event*>(aEvent));
@@ -52,6 +53,7 @@ namespace cheap {
 
 		void set_vn(visual_novel* mVN)
 		{
+			LOG();
 			mVisual_novel = mVN;
 		}
 
@@ -67,6 +69,7 @@ namespace cheap {
 
 		void handle_app(app_event* aEvent) const
 		{
+			LOG();
 			switch (aEvent->get_type()) {
 				case app_event::type::RENDER:
 					PRINTLN("app_event::render");
@@ -92,6 +95,7 @@ namespace cheap {
 
 		void handle_input(input_event* aEvent)
 		{
+			LOG();
 			int id = mRenderer->inform_current_page_of_input_event(aEvent);
 
 
@@ -104,6 +108,7 @@ namespace cheap {
 
 		void handle_game(game_event* aEvent)
 		{
+			LOG();
 		}
 	};
 }

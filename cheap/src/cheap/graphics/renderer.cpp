@@ -19,8 +19,6 @@ namespace cheap {
 		LOG();
 		if (mWindow == nullptr)
 			LOG_INFO("aWindow ptr is nullptr");
-		glEnable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
 		if (mCurrent_page != nullptr)
 			mCurrent_page->bind();
 

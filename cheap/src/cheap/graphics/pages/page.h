@@ -47,6 +47,7 @@ namespace cheap {
 				if (current_highlight_gfx_entity != nullptr) {
 					if (!current_highlight_gfx_entity->is_pos_in_region(pos_x, pos_y)) {
 						mLayer_manager.add_anime(current_highlight_gfx_entity->mId, new scale_animation(0.8f, 0.8f, 1.f, current_time, 0.1, animation::relationship::LINEAR, false, current_highlight_gfx_entity));
+						//mLayer_manager.add_anime(current_highlight_gfx_entity->mId, new scale_animation(0.8f, 0.8f, 1.f, current_time, 0.1, animation::relationship::LINEAR, true, current_highlight_gfx_entity));
 						current_highlight_gfx_entity = nullptr;
 					}
 				} else {
@@ -95,6 +96,7 @@ namespace cheap {
 			if (aAction == mouse_event::MOVE && gfx != nullptr) {
 				LOG_INFO("adding scale animation");
 				mLayer_manager.add_anime(gfx->mId, new scale_animation(1.25f, 1.25f, 1.f, glfwGetTime(), 0.1, animation::relationship::LINEAR, false, gfx));
+				//mLayer_manager.add_anime(gfx->mId, new scale_animation(1.25f, 1.25f, 1.f, glfwGetTime(), 0.1, animation::relationship::LINEAR, true, gfx));
 				current_highlight_gfx_entity = gfx;
 			}
 			return id;

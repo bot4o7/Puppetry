@@ -119,7 +119,7 @@ namespace cheap {
 						//LOG_INFO("anim is not nullptr");
 						if (animation* anim = task->mLayer->get_anim(); anim->is_to_play(current_time)) {
 							//if (animation* anim = task->mLayer->get_anim(); !anim->is_graphics_entity_is_playing_anim() && anim->is_to_play(current_time)) {
-							LOG_INFO("is to play : " << static_cast<unsigned int>(anim->get_type()));
+							//LOG_INFO("is to play : " << static_cast<unsigned int>(anim->get_type()));
 							switch (anim->get_type()) {
 								case animation::type::TRANSLATION:
 									to_reset_uniform[2] = true;
@@ -135,7 +135,7 @@ namespace cheap {
 									break;
 								case animation::type::SCALE:
 									to_reset_uniform[4] = true;
-									LOG_INFO("scale anime");
+									//LOG_INFO("scale anime");
 									mCurrent_page->mShader_program.use_scale(dynamic_cast<scale_animation*>(anim)->get(current_time));
 									break;
 								case animation::type::REFLECTION:
@@ -216,7 +216,8 @@ namespace cheap {
 				0.f, 0.f, 0.9f,
 				1.f,
 				1.f,
-				"data/images/egyptian-768x536.jpg",
+				"data/images/bg.png",
+				//"data/images/egyptian-768x536.jpg",
 				false,
 				true,
 				false,
@@ -231,7 +232,7 @@ namespace cheap {
 				-0.3f, -0.1f, 0.f,
 				0.6f,
 				1.f,
-				"data/images/friends.png",
+				"data/images/sun.png",
 				true,
 				true,
 				false,
@@ -255,7 +256,7 @@ namespace cheap {
 				0.8f, 0.3f, 0.2f,
 				0.4f,
 				1.f,
-				"data/images/ys.png",
+				"data/images/moon.png",
 				true,
 				true,
 				false,

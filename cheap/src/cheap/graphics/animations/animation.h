@@ -68,7 +68,6 @@ namespace cheap {
 			mEnd_time(aBegin_time + aDuration),
 			mParam(calculate_param(aRelationship))
 		{
-			LOG();
 			if (mGraphics_entity != nullptr)
 				mGraphics_entity->mIs_playing_animation = true;
 			else {
@@ -190,7 +189,6 @@ namespace cheap {
 		void update_time(
 			const double aBegin_time)
 		{
-			LOG();
 			mBegin_time = aBegin_time;
 			mEnd_time = mBegin_time + mDuration;
 		}
@@ -198,8 +196,6 @@ namespace cheap {
 			const double aBegin_time,
 			const double aDuration)
 		{
-			LOG();
-
 			mBegin_time = aBegin_time;
 			mEnd_time = mBegin_time + aDuration;
 		}
@@ -216,8 +212,6 @@ namespace cheap {
 			const double       aBegin_time,
 			const double       aDuration = -1)
 		{
-			LOG();
-
 			if (aDuration < 0)
 				update_time(aBegin_time);
 			else
@@ -231,8 +225,6 @@ namespace cheap {
 			const double       aBegin_time,
 			const double       aDuration = -1)
 		{
-			LOG();
-
 			if (aDuration < 0)
 				update_time(aBegin_time);
 			else
@@ -254,8 +246,6 @@ namespace cheap {
 		// 复合动画怎么终止呢？ 
 		void end()
 		{
-			LOG();
-
 			// TODO
 			mCount = 1;
 			mIs_loop = false;
@@ -264,7 +254,10 @@ namespace cheap {
 		}
 
 		// 没有剩余次数 count，就无法进行
-		[[nodiscard]] bool is_finished() const { return mCount < 1; }
+		[[nodiscard]] bool is_finished() const
+		{
+			return mCount < 1;
+		}
 		// 到了开始时间 begin_time
 		[[nodiscard]] bool is_not_begin(const double aCurrent_time) const { return aCurrent_time < mBegin_time; }
 		// 到了结束时间 end_time 且无剩余次数、且非循环
@@ -301,6 +294,7 @@ namespace cheap {
 		// 如果有剩余次数/循环、更新时间。然后为 is_end() 函数返回一个 false 
 		bool update_replay_time_and_return_false()
 		{
+			LOG();
 			update_time();
 
 			return false;
@@ -308,6 +302,7 @@ namespace cheap {
 
 		void set_graphics_entity(graphics_entity* aGraphics_entity)
 		{
+			LOG();
 			mGraphics_entity = aGraphics_entity;
 			if (mGraphics_entity != nullptr)
 				mGraphics_entity->mIs_playing_animation = true;

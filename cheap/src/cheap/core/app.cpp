@@ -82,7 +82,7 @@ namespace cheap {
 
 	void app::on_event(event* aNew_event)
 	{
-		LOG();
+		LOG_INFO("app::on_event()事件回调，事件event : " << aNew_event);
 		mEvent_system->handle(aNew_event);
 	}
 

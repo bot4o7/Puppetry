@@ -21,7 +21,10 @@ namespace cheap {
 		event(const event& aExist_event) = delete;
 		event& operator=(const event& aExist_event) = delete;
 	protected:
-		event() : mIs_handled(false) { }
+		event() : mIs_handled(false)
+		{
+			LOG();
+		}
 	};
 
 	#define GET_CATEGORY(my_category) [[nodiscard]] category get_category() const override\

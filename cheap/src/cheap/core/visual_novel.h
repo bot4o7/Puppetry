@@ -27,9 +27,11 @@ namespace cheap {
 		page_param(unsigned aId, unsigned aNum)
 			:id(aId), graphics_entity_num(aNum), param_list(new gfx_entity_param* [graphics_entity_num]), next_id(0), next_file_path("")
 		{
+			LOG();
 		}
 		~page_param()
 		{
+			LOG();
 			for (int i = 0; i < graphics_entity_num; ++i) {
 				delete param_list[i];
 			}
@@ -40,7 +42,9 @@ namespace cheap {
 
 	static page_param* load_init_page(const std::string& file_path)
 	{
+		LOG();
 		static const unsigned size = 512;
+		//LOG_INFO("file path : " << file_path);
 		std::ifstream f(file_path.c_str());
 		char bufLine[size];
 		f.getline(bufLine, size); //读取一行
@@ -105,9 +109,13 @@ namespace cheap {
 			std::string mFile_path;
 			page_param* mPage_param; // 有选择分支时，不同选择分支可能会更改这个值
 			scene(unsigned           id,
-				const std::string& file_path) :mId(id), mFile_path(file_path), mPage_param(load_init_page(file_path)) { }
+				const std::string& file_path) :mId(id), mFile_path(file_path), mPage_param(load_init_page(file_path))
+			{
+				LOG();
+			}
 			~scene()
 			{
+				LOG();
 				delete mPage_param;
 			}
 		};
@@ -119,11 +127,13 @@ namespace cheap {
 			mCurrent(id, file_path),
 			mIs_ready_to_page(false)
 		{
+			LOG();
 		}
 
 
 		page_param* next_page()
 		{
+			LOG();
 			mCurrent.mId = mCurrent.mPage_param->next_id;
 			mCurrent.mFile_path = mCurrent.mPage_param->next_file_path;
 			mCurrent.mPage_param = load_init_page(mCurrent.mFile_path);
@@ -150,6 +160,7 @@ namespace cheap {
 		}
 		void reset_is_ready_to_page()
 		{
+			LOG();
 			mIs_ready_to_page = false;
 		}
 	private:

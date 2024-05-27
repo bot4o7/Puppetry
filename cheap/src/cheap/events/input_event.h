@@ -14,7 +14,10 @@ namespace cheap {
 			MOUSE
 		};
 
-		explicit input_event(const type aType) : mType(aType) { }
+		explicit input_event(const type aType) : mType(aType)
+		{
+			LOG();
+		}
 		~input_event() override = default;
 
 		GET_CATEGORY(event::category::INPUT);
@@ -55,7 +58,10 @@ namespace cheap {
 		GET_ACTION(action, mAction);
 
 	protected:
-		explicit key_event(const int aKey, action aAction) : input_event(type::KEYBOARD), mKey(aKey), mAction(aAction) { }
+		explicit key_event(const int aKey, action aAction) : input_event(type::KEYBOARD), mKey(aKey), mAction(aAction)
+		{
+			LOG();
+		}
 	private:
 		action mAction;
 	};
@@ -63,27 +69,39 @@ namespace cheap {
 	class key_press_event final : public key_event
 	{
 	public:
-		explicit key_press_event(const int aKey) : key_event(aKey, action::PRESS) { }
+		explicit key_press_event(const int aKey) : key_event(aKey, action::PRESS)
+		{
+			LOG();
+		}
 		~key_press_event() override = default;
 	};
 
 	class key_repeat_event final : public key_event
 	{
 	public:
-		explicit key_repeat_event(const int aKey) : key_event(aKey, action::REPEAT) { }
+		explicit key_repeat_event(const int aKey) : key_event(aKey, action::REPEAT)
+		{
+			LOG();
+		}
 		~key_repeat_event() override = default;
 	};
 
 	class key_release_event final : public key_event
 	{
 	public:
-		explicit key_release_event(const int aKey) : key_event(aKey, action::RELEASE) { }
+		explicit key_release_event(const int aKey) : key_event(aKey, action::RELEASE)
+		{
+			LOG();
+		}
 		~key_release_event() override = default;
 	};
 	class key_text_input_event final : public key_event
 	{
 	public:
-		explicit key_text_input_event(const int aKey) : key_event(aKey, action::TEXT_INPUT) { }
+		explicit key_text_input_event(const int aKey) : key_event(aKey, action::TEXT_INPUT)
+		{
+			LOG();
+		}
 		~key_text_input_event() override = default;
 	};
 	// -------------- key_event 键盘事件 -------------------
@@ -109,7 +127,10 @@ namespace cheap {
 		GET_ACTION(action, mAction);
 
 	protected:
-		mouse_event(char aButton, action aAction) : input_event(type::MOUSE), mButton(aButton), mAction(aAction) { }
+		mouse_event(char aButton, action aAction) : input_event(type::MOUSE), mButton(aButton), mAction(aAction)
+		{
+			LOG();
+		}
 	private:
 		action mAction;
 	};
@@ -120,7 +141,10 @@ namespace cheap {
 		double mX;
 		double mY;
 
-		mouse_move_event(const double aX, const double aY) : mouse_event(CP_MOUSE_MOVE, action::MOVE), mX(aX), mY(aY) { }
+		mouse_move_event(const double aX, const double aY) : mouse_event(CP_MOUSE_MOVE, action::MOVE), mX(aX), mY(aY)
+		{
+			LOG();
+		}
 
 		~mouse_move_event() override = default;
 	};
@@ -128,33 +152,48 @@ namespace cheap {
 	class mouse_enter_event : public mouse_event
 	{
 	public:
-		mouse_enter_event() : mouse_event(CP_MOUSE_ENTER, action::ENTER) { }
+		mouse_enter_event() : mouse_event(CP_MOUSE_ENTER, action::ENTER)
+		{
+			LOG();
+		}
 		~mouse_enter_event() override = default;
 	};
 
 	class mouse_leave_event : public mouse_event
 	{
 	public:
-		mouse_leave_event() : mouse_event(CP_MOUSE_LEAVE, action::LEAVE) { }
+		mouse_leave_event() : mouse_event(CP_MOUSE_LEAVE, action::LEAVE)
+		{
+			LOG();
+		}
 		~mouse_leave_event() override = default;
 	};
 
 	class mouse_press_event final :public  mouse_event
 	{
 	public:
-		explicit mouse_press_event(const char aButton) :mouse_event(aButton, action::PRESS) { }
+		explicit mouse_press_event(const char aButton) :mouse_event(aButton, action::PRESS)
+		{
+			LOG();
+		}
 		~mouse_press_event() override = default;
 	};
 	class mouse_repeat_event final :public  mouse_event
 	{
 	public:
-		explicit mouse_repeat_event(const char aButton) :mouse_event(aButton, action::REPEAT) { }
+		explicit mouse_repeat_event(const char aButton) :mouse_event(aButton, action::REPEAT)
+		{
+			LOG();
+		}
 		~mouse_repeat_event() override = default;
 	};
 	class mouse_release_event final :public  mouse_event
 	{
 	public:
-		explicit mouse_release_event(const char aButton) :mouse_event(aButton, action::RELEASE) { }
+		explicit mouse_release_event(const char aButton) :mouse_event(aButton, action::RELEASE)
+		{
+			LOG();
+		}
 		~mouse_release_event() override = default;
 	};
 
@@ -164,7 +203,10 @@ namespace cheap {
 		double mX_offset;
 		double mY_offset;
 
-		mouse_scroll_event(const double aX, const double aY) : mouse_event(CP_MOUSE_SCROLL, action::SCROLL), mX_offset(aX), mY_offset(aY) { }
+		mouse_scroll_event(const double aX, const double aY) : mouse_event(CP_MOUSE_SCROLL, action::SCROLL), mX_offset(aX), mY_offset(aY)
+		{
+			LOG();
+		}
 
 		~mouse_scroll_event() override = default;
 	};

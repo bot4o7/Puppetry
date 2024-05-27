@@ -26,16 +26,19 @@ namespace cheap {
 		[[nodiscard]] bool is_key_being_pressed(
 			const int aKey) const
 		{
+			LOG();
 			return GLFW_PRESS == glfwGetKey(mWindow, aKey);
 		}
 
 		[[nodiscard]] bool is_mouse_being_pressed(
 			const char aButton) const
 		{
+			LOG();
 			return GLFW_PRESS == glfwGetMouseButton(mWindow, aButton);
 		}
 		[[nodiscard]] std::pair<double, double> get_mouse_position() const
 		{
+			LOG();
 			double x, y;
 			glfwGetCursorPos(mWindow, &x, &y);
 			int width, height;
@@ -49,12 +52,14 @@ namespace cheap {
 
 		void set_up_callbacks() const
 		{
+			LOG();
 			glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 			LOG();
 			// Mouse Cursor Pos Callback
 			glfwSetCursorPosCallback(
 				mWindow, [](GLFWwindow* aWindow, const double aPos_x, const double aPos_y) {
 
+					LOG();
 					const auto data = static_cast<window::window_data*>(glfwGetWindowUserPointer(aWindow));
 
 					int width, height;
@@ -66,6 +71,7 @@ namespace cheap {
 			);
 
 			glfwSetKeyCallback(mWindow, [](GLFWwindow* aWindow, const int aKey, int aScancode, const int aAction, int aMods) {
+				LOG();
 
 				const auto data = static_cast<window::window_data*>(glfwGetWindowUserPointer(aWindow));
 
@@ -92,6 +98,7 @@ namespace cheap {
 			);
 
 			glfwSetCursorEnterCallback(mWindow, [](GLFWwindow* aWindow, const int aIs_entered) {
+				LOG();
 				const auto data = static_cast<window::window_data*>(glfwGetWindowUserPointer(aWindow));
 
 				if (aIs_entered)
@@ -104,6 +111,7 @@ namespace cheap {
 				[](GLFWwindow* aWindow,
 					const double aX_offset,
 					const double aY_offset) {
+						LOG();
 						const auto data = static_cast<window::window_data*>(glfwGetWindowUserPointer(aWindow));
 						data->mEvent_callback(
 							new mouse_scroll_event(aX_offset, aY_offset));
@@ -113,6 +121,7 @@ namespace cheap {
 				[](GLFWwindow* aWindow,
 					const int   aButton,
 					const int   aAction, int aMods) {
+						LOG();
 
 						const auto data = static_cast<window::window_data*>(glfwGetWindowUserPointer(aWindow));
 

@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv)
 {
-	LOG();
+	LOG("程序启动");
 
 	const auto app = new cheap::app();
 	app->run();

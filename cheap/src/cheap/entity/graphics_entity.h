@@ -166,6 +166,7 @@ namespace cheap {
 
 		~graphics_entity() override
 		{
+			LOG();
 		}
 
 
@@ -177,6 +178,7 @@ namespace cheap {
 
 		[[nodiscard]] bool is_pos_in_region(const double aPos_x, const double aPos_y) const
 		{
+			LOG();
 			return mGraphics_rectangle.is_pos_in_rectangle2D(aPos_x, aPos_y);
 		}
 
